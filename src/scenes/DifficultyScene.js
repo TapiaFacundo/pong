@@ -70,6 +70,6 @@ export default class DifficultyScene extends Phaser.Scene {
   }
 
   startGame() {
-    this.scene.start("GameScene", { mode: "1p", winScore: this.winScore, difficulty: this.difficulty });
+    this.scene.start("TutorialScene", { mode: "1p", winScore: this.winScore, difficulty: this.difficulty });
   }
 }

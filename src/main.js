@@ -2,7 +2,9 @@ import Phaser from "phaser";
 import { GAME_WIDTH, GAME_HEIGHT, COLORS } from "./config.js";
 import MenuScene from "./scenes/MenuScene.js";
 import DifficultyScene from "./scenes/DifficultyScene.js";
+import TutorialScene from "./scenes/TutorialScene.js";
 import GameScene from "./scenes/GameScene.js";
+import PauseScene from "./scenes/PauseScene.js";
 
 const config = {
   type: Phaser.AUTO,
@@ -16,7 +18,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MenuScene, DifficultyScene, GameScene],
+  scene: [MenuScene, DifficultyScene, TutorialScene, GameScene, PauseScene],
 };
 
 new Phaser.Game(config);

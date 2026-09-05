@@ -32,6 +32,7 @@ export default class GameScene extends Phaser.Scene {
     this.winScore = data.winScore ?? WIN_SCORE_SHORT;
     this.difficulty = data.difficulty ?? "normal";
     this.matchOver = false;
+    this.isPaused = false;
   }
 
   create() {
@@ -80,6 +81,16 @@ export default class GameScene extends Phaser.Scene {
       .setVisible(false);
 
     this.time.delayedCall(600, () => this.ballManager.primary.launch());
+
+    this.input.keyboard.on("keydown-ESC", () => this.pauseGame());
+  }
+
+  pauseGame() {
+    if (this.isPaused || this.matchOver) return;
+
+    this.isPaused = true;
+    this.scene.launch("PauseScene");
+    this.scene.pause();
   }
 
   update(time, delta) {

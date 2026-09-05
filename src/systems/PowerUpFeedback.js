@@ -35,7 +35,7 @@ export default class PowerUpFeedback {
       targets: text,
       y: y - 60,
       alpha: 0,
-      duration: 900,
+      duration: 1600,
       onComplete: () => text.destroy(),
     });
   }
