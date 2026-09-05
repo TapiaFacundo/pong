@@ -46,21 +46,25 @@ export default class BallManager {
   update() {
     const radius = BALL_SIZE / 2;
 
-    for (let i = this.balls.length - 1; i >= 0; i--) {
-      const ball = this.balls[i];
+    // onBallOut puede terminar el partido y vaciar this.balls (clearAll) o
+    // arrancar una ronda nueva (addBall) en medio de este recorrido, así que
+    // se itera sobre una copia y se revisa que la pelota siga en juego.
+    for (const ball of [...this.balls]) {
+      if (!this.balls.includes(ball)) continue;
 
       if (ball.x < -radius) {
-        this.removeBall(i);
+        this.removeBall(ball);
         this.onBallOut("left");
       } else if (ball.x > GAME_WIDTH + radius) {
-        this.removeBall(i);
+        this.removeBall(ball);
         this.onBallOut("right");
       }
     }
   }
 
-  removeBall(index) {
-    const [ball] = this.balls.splice(index, 1);
+  removeBall(ball) {
+    const index = this.balls.indexOf(ball);
+    if (index !== -1) this.balls.splice(index, 1);
     ball.destroy();
   }
 

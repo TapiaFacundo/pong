@@ -91,14 +91,17 @@ export default class GameScene extends Phaser.Scene {
     this.scoreTextRight.setText(String(this.scoreManager.scoreP2));
     playScore();
 
-    if (this.ballManager.count > 0) return;
-
+    // "Gana quien llegue primero": el partido termina apenas se alcanza el
+    // puntaje objetivo, aunque queden otras pelotas en cancha por salir.
     const winner = this.scoreManager.checkWinner();
     if (winner) {
       this.showWinner(winner);
-    } else {
-      this.resetRound(this.lastScoringSide);
+      return;
     }
+
+    if (this.ballManager.count > 0) return;
+
+    this.resetRound(this.lastScoringSide);
   }
 
   resetRound(scoringSide) {
