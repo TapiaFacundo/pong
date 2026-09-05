@@ -34,3 +34,12 @@ export function playPowerUpPickup() {
   playTone({ frequency: 660, duration: 0.12, type: "square" });
   playTone({ frequency: 990, duration: 0.1, type: "square", delay: 0.08 });
 }
+
+export function playPaddleHit() {
+  playTone({ frequency: 220, duration: 0.07, type: "sine", volume: 0.25 });
+}
+
+export function playScore() {
+  playTone({ frequency: 440, duration: 0.15, type: "sawtooth", volume: 0.22 });
+  playTone({ frequency: 220, duration: 0.25, type: "sawtooth", volume: 0.18, delay: 0.1 });
+}

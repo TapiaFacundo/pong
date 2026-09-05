@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { GAME_WIDTH, BALL_SIZE } from "../config.js";
 import Ball from "../entities/Ball.js";
+import { playPaddleHit } from "./SoundEffects.js";
 
 export default class BallManager {
   constructor(scene, paddleLeft, paddleRight, onBallOut) {
@@ -39,6 +40,7 @@ export default class BallManager {
     const offset = Phaser.Math.Clamp((ball.y - paddle.y) / (paddle.rect.height / 2), -1, 1);
     const directionX = paddle === this.paddleLeft ? 1 : -1;
     ball.bounceOffPaddle(offset, directionX);
+    playPaddleHit();
   }
 
   update() {

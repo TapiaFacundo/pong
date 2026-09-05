@@ -7,7 +7,7 @@ import ScoreManager from "../systems/ScoreManager.js";
 import PowerUpSpawner from "../systems/PowerUpSpawner.js";
 import PowerUpEffects from "../systems/PowerUpEffects.js";
 import PowerUpFeedback from "../systems/PowerUpFeedback.js";
-import { playPowerUpPickup } from "../systems/SoundEffects.js";
+import { playPowerUpPickup, playScore } from "../systems/SoundEffects.js";
 import BallManager from "../systems/BallManager.js";
 
 export default class GameScene extends Phaser.Scene {
@@ -88,6 +88,7 @@ export default class GameScene extends Phaser.Scene {
     this.scoreManager.addPoint(scoringSide);
     this.scoreTextLeft.setText(String(this.scoreManager.scoreP1));
     this.scoreTextRight.setText(String(this.scoreManager.scoreP2));
+    playScore();
 
     if (this.ballManager.count > 0) return;
 
