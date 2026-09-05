@@ -12,7 +12,7 @@ export const AI_DEAD_ZONE = 12;
 export const BALL_SIZE = 14;
 export const BALL_SPEED = 380;
 export const BALL_MAX_BOUNCE_ANGLE = Math.PI / 3;
-export const BALL_SPEED_INCREMENT = 1.05;
+export const BALL_SPEED_INCREMENT = 1.025;
 export const BALL_MAX_SPEED = 700;
 export const BALL_TURBO_MULTIPLIER = 1.5;
 
@@ -27,9 +27,9 @@ export const COLORS = {
   TEXT: "#ffffff",
 };
 
-export const POWERUP_RADIUS = 13;
-export const POWERUP_SPAWN_MIN_DELAY = 10000;
-export const POWERUP_SPAWN_MAX_DELAY = 15000;
+export const POWERUP_RADIUS = 18;
+export const POWERUP_SPAWN_MIN_DELAY = 5000;
+export const POWERUP_SPAWN_MAX_DELAY = 7500;
 export const POWERUP_MIN_DISTANCE = POWERUP_RADIUS * 3;
 export const POWERUP_SPAWN_AREA = { width: 160, height: 300 };
 
@@ -55,7 +55,7 @@ export const POWERUP_LABELS = {
   turbo: "¡Turbo!",
 };
 
-export const POWERUP_EFFECT_DURATION = 8000;
+export const POWERUP_EFFECT_DURATION = 15000;
 export const PADDLE_GROW_SCALE = 1.6;
 export const PADDLE_SHRINK_SCALE = 0.6;
 export const PADDLE_SPEED_UP_SCALE = 1.6;
