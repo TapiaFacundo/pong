@@ -8,11 +8,13 @@ export const PADDLE_SPEED = 400;
 
 export const AI_DEAD_ZONE = 10;
 
-// Velocidad máxima, tiempo de reacción (ms) y margen de error (px) al apuntar a la pelota.
+// Velocidad máxima, tiempo de reacción (ms), margen de error (px) al apuntar a
+// la pelota, y probabilidad de reaccionar igual aunque la pelota no venga
+// hacia su lado (anticipación, solo relevante en difícil).
 export const AI_DIFFICULTIES = {
-  easy: { speed: 180, reactionDelay: 350, errorMargin: 50 },
-  normal: { speed: 260, reactionDelay: 150, errorMargin: 20 },
-  hard: { speed: 340, reactionDelay: 40, errorMargin: 4 },
+  easy: { speed: 180, reactionDelay: 350, errorMargin: 50, anticipationChance: 0 },
+  normal: { speed: 260, reactionDelay: 150, errorMargin: 20, anticipationChance: 0 },
+  hard: { speed: 340, reactionDelay: 40, errorMargin: 4, anticipationChance: 0.35 },
 };
 
 export const BALL_SIZE = 14;
@@ -39,6 +41,10 @@ export const POWERUP_SPAWN_MAX_DELAY = 7500;
 export const POWERUP_MIN_DISTANCE = POWERUP_RADIUS * 3;
 export const POWERUP_SPAWN_AREA = { width: 160, height: 300 };
 
+// Mientras dura el power-up "Lluvia", el spawn usa este rango en vez del normal.
+export const POWERUP_RAIN_MIN_DELAY = 1500;
+export const POWERUP_RAIN_MAX_DELAY = 3000;
+
 export const POWERUP_COLORS = {
   yellow: 0xffdd33,
   green: 0x33dd55,
@@ -57,8 +63,13 @@ export const POWERUP_LABELS = {
   speedUp: "Pala rápida",
   slowDown: "Pala lenta",
   invert: "Controles invertidos",
+  doublePoint: "Punto doble",
   extraBall: "¡Bola extra!",
   turbo: "¡Turbo!",
+  erratic: "Pelota errática",
+  invisible: "Pelota invisible",
+  rain: "Lluvia de power-ups",
+  centerPaddle: "Paleta central",
 };
 
 export const POWERUP_EFFECT_DURATION = 15000;
@@ -69,7 +80,14 @@ export const PADDLE_SPEED_DOWN_SCALE = 0.6;
 
 export const PADDLE_POWERUP_KINDS = ["grow", "shrink", "speedUp", "slowDown", "invert"];
 
-// 5 tipos de pala (verde/roja) + 2 amarillos = 12 power-ups, según el GDD.
+export const BALL_ERRATIC_JITTER_INTERVAL = 220;
+export const BALL_ERRATIC_JITTER_ANGLE = Math.PI / 4;
+export const BALL_INVISIBLE_BLINK_INTERVAL = 220;
+
+export const CENTER_PADDLE_HEIGHT = 60;
+export const CENTER_PADDLE_SPEED = 180;
+
+// 6 tipos de pala/puntaje (verde/roja) + 6 amarillos = 18 power-ups, según el GDD.
 export const POWERUP_DEFINITIONS = [
   { id: "grow-green", kind: "grow", colorCategory: "green" },
   { id: "grow-red", kind: "grow", colorCategory: "red" },
@@ -81,8 +99,14 @@ export const POWERUP_DEFINITIONS = [
   { id: "slow-down-red", kind: "slowDown", colorCategory: "red" },
   { id: "invert-green", kind: "invert", colorCategory: "green" },
   { id: "invert-red", kind: "invert", colorCategory: "red" },
+  { id: "double-point-green", kind: "doublePoint", colorCategory: "green" },
+  { id: "double-point-red", kind: "doublePoint", colorCategory: "red" },
   { id: "extra-ball", kind: "extraBall", colorCategory: "yellow" },
   { id: "turbo", kind: "turbo", colorCategory: "yellow" },
+  { id: "erratic-ball", kind: "erratic", colorCategory: "yellow" },
+  { id: "invisible-ball", kind: "invisible", colorCategory: "yellow" },
+  { id: "powerup-rain", kind: "rain", colorCategory: "yellow" },
+  { id: "center-paddle", kind: "centerPaddle", colorCategory: "yellow" },
 ];
 
 export const KEYS = {

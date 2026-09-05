@@ -8,6 +8,8 @@ export default class AI {
     this.side = side;
 
     this.reactionTimer = 0;
+    this.anticipationTimer = 0;
+    this.isAnticipating = false;
     this.targetY = paddle.y;
     this.wasBallApproaching = false;
 
@@ -18,6 +20,7 @@ export default class AI {
     const settings = AI_DIFFICULTIES[difficulty] ?? AI_DIFFICULTIES.normal;
     this.reactionDelay = settings.reactionDelay;
     this.errorMargin = settings.errorMargin;
+    this.anticipationChance = settings.anticipationChance ?? 0;
     this.paddle.setBaseSpeed(settings.speed);
   }
 
@@ -34,8 +37,8 @@ export default class AI {
       (this.side === "right" && ball.velocityX > 0) || (this.side === "left" && ball.velocityX < 0);
 
     if (!ballApproaching) {
-      this.paddle.stop();
       this.wasBallApproaching = false;
+      this.updateAnticipation(ball, delta);
       return;
     }
 
@@ -54,6 +57,37 @@ export default class AI {
       this.targetY = ball.y + Phaser.Math.FloatBetween(-this.errorMargin, this.errorMargin);
     }
 
+    this.moveTowardTarget();
+  }
+
+  // Solo relevante en difícil: aunque la pelota no venga hacia este lado, cada
+  // "reactionDelay" hay una chance de igual reaccionar y reposicionarse (una
+  // anticipación ocasional), en vez de quedarse siempre quieta.
+  updateAnticipation(ball, delta) {
+    if (this.anticipationChance <= 0) {
+      this.paddle.stop();
+      return;
+    }
+
+    this.anticipationTimer += delta;
+
+    if (this.anticipationTimer >= this.reactionDelay) {
+      this.anticipationTimer -= this.reactionDelay;
+      this.isAnticipating = Math.random() < this.anticipationChance;
+
+      if (this.isAnticipating) {
+        this.targetY = ball.y + Phaser.Math.FloatBetween(-this.errorMargin, this.errorMargin);
+      }
+    }
+
+    if (this.isAnticipating) {
+      this.moveTowardTarget();
+    } else {
+      this.paddle.stop();
+    }
+  }
+
+  moveTowardTarget() {
     const diff = this.targetY - this.paddle.y;
 
     if (diff > AI_DEAD_ZONE) {

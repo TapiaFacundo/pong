@@ -6,7 +6,7 @@ import {
   PADDLE_SPEED_DOWN_SCALE,
 } from "../config.js";
 
-const BUFF_KINDS = ["grow", "speedUp"];
+const BUFF_KINDS = ["grow", "speedUp", "doublePoint"];
 const HEIGHT_KINDS = ["grow", "shrink"];
 const SPEED_KINDS = ["speedUp", "slowDown"];
 
@@ -17,12 +17,21 @@ export default class PowerUpEffects {
     this.timers = { p1: {}, p2: {} };
   }
 
-  applyPaddleEffect(kind, colorCategory, attackerSide) {
+  // A quién afecta un power-up de color: verde/rojo siguen siempre el mismo
+  // patrón (verde = a favor de quien lo agarra, rojo = a favor del rival),
+  // sea el efecto sobre una pala o, como con "punto doble", sobre el puntaje.
+  resolveTarget(kind, colorCategory, attackerSide) {
     if (!attackerSide) return null;
 
     const defenderSide = attackerSide === "p1" ? "p2" : "p1";
     const isBuff = BUFF_KINDS.includes(kind);
-    const targetSide = isBuff === (colorCategory === "green") ? attackerSide : defenderSide;
+    return isBuff === (colorCategory === "green") ? attackerSide : defenderSide;
+  }
+
+  applyPaddleEffect(kind, colorCategory, attackerSide) {
+    const targetSide = this.resolveTarget(kind, colorCategory, attackerSide);
+    if (!targetSide) return null;
+
     const slot = this.slotForKind(kind);
     const paddle = this.paddlesBySide[targetSide];
 

@@ -3,13 +3,21 @@ export default class ScoreManager {
     this.winScore = winScore;
     this.scoreP1 = 0;
     this.scoreP2 = 0;
+    this.doublePointSide = null;
+  }
+
+  setDoublePoint(side) {
+    this.doublePointSide = side;
   }
 
   addPoint(side) {
+    const amount = this.doublePointSide === side ? 2 : 1;
+    this.doublePointSide = null;
+
     if (side === "p1") {
-      this.scoreP1 += 1;
+      this.scoreP1 += amount;
     } else {
-      this.scoreP2 += 1;
+      this.scoreP2 += amount;
     }
   }
 

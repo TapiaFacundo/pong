@@ -1,5 +1,15 @@
 import Phaser from "phaser";
-import { GAME_WIDTH, GAME_HEIGHT, PADDLE_OFFSET_X, COLORS, KEYS, WIN_SCORE_SHORT, PADDLE_POWERUP_KINDS } from "../config.js";
+import {
+  GAME_WIDTH,
+  GAME_HEIGHT,
+  PADDLE_OFFSET_X,
+  COLORS,
+  KEYS,
+  WIN_SCORE_SHORT,
+  PADDLE_POWERUP_KINDS,
+  POWERUP_TEXT_COLORS,
+  POWERUP_EFFECT_DURATION,
+} from "../config.js";
 import Paddle from "../entities/Paddle.js";
 import PlayerController from "../systems/PlayerController.js";
 import AI from "../systems/AI.js";
@@ -9,6 +19,8 @@ import PowerUpEffects from "../systems/PowerUpEffects.js";
 import PowerUpFeedback from "../systems/PowerUpFeedback.js";
 import { playPowerUpPickup, playScore } from "../systems/SoundEffects.js";
 import BallManager from "../systems/BallManager.js";
+import BallEffects from "../systems/BallEffects.js";
+import CenterPaddleEffect from "../systems/CenterPaddleEffect.js";
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -55,10 +67,17 @@ export default class GameScene extends Phaser.Scene {
 
     this.powerUpEffects = new PowerUpEffects(this, { p1: this.paddleLeft, p2: this.paddleRight });
     this.powerUpFeedback = new PowerUpFeedback(this);
+    this.ballEffects = new BallEffects(this);
+    this.centerPaddleEffect = new CenterPaddleEffect(this, this.ballManager);
 
     this.powerUpSpawner = new PowerUpSpawner(this, this.ballManager, (definition, ball) =>
       this.onPowerUpActivated(definition, ball)
     );
+
+    this.doublePointIndicator = this.add
+      .text(0, 0, "×2", { fontSize: "18px", color: POWERUP_TEXT_COLORS.yellow })
+      .setOrigin(0.5)
+      .setVisible(false);
 
     this.time.delayedCall(600, () => this.ballManager.primary.launch());
   }
@@ -89,6 +108,7 @@ export default class GameScene extends Phaser.Scene {
     this.scoreManager.addPoint(scoringSide);
     this.scoreTextLeft.setText(String(this.scoreManager.scoreP1));
     this.scoreTextRight.setText(String(this.scoreManager.scoreP2));
+    this.updateDoublePointIndicator();
     playScore();
 
     // "Gana quien llegue primero": el partido termina apenas se alcanza el
@@ -107,10 +127,24 @@ export default class GameScene extends Phaser.Scene {
   resetRound(scoringSide) {
     this.powerUpSpawner.clearAll();
     this.powerUpEffects.clearAll();
+    this.ballEffects.clearAll();
+    this.centerPaddleEffect.clear();
 
     const directionTowardsLoser = scoringSide === "p1" ? 1 : -1;
     const ball = this.ballManager.addBall(GAME_WIDTH / 2, GAME_HEIGHT / 2);
     this.time.delayedCall(600, () => ball.launch(directionTowardsLoser));
+  }
+
+  updateDoublePointIndicator() {
+    const side = this.scoreManager.doublePointSide;
+
+    if (side === "p1") {
+      this.doublePointIndicator.setPosition(GAME_WIDTH / 2 - 60, 65).setVisible(true);
+    } else if (side === "p2") {
+      this.doublePointIndicator.setPosition(GAME_WIDTH / 2 + 60, 65).setVisible(true);
+    } else {
+      this.doublePointIndicator.setVisible(false);
+    }
   }
 
   onPowerUpActivated(definition, ball) {
@@ -121,12 +155,27 @@ export default class GameScene extends Phaser.Scene {
 
     if (PADDLE_POWERUP_KINDS.includes(definition.kind)) {
       targetPaddle = this.powerUpEffects.applyPaddleEffect(definition.kind, definition.colorCategory, attackerSide);
+    } else if (definition.kind === "doublePoint") {
+      const targetSide = this.powerUpEffects.resolveTarget(definition.kind, definition.colorCategory, attackerSide);
+      if (targetSide) {
+        this.scoreManager.setDoublePoint(targetSide);
+        this.updateDoublePointIndicator();
+      }
     } else if (definition.kind === "extraBall") {
       const newBall = this.ballManager.addBall(ball.x, ball.y);
       newBall.launch();
       this.powerUpSpawner.registerBall(newBall);
+      this.centerPaddleEffect.registerBall(newBall);
     } else if (definition.kind === "turbo") {
       ball.applyTurbo();
+    } else if (definition.kind === "erratic") {
+      this.ballEffects.applyErratic(ball);
+    } else if (definition.kind === "invisible") {
+      this.ballEffects.applyInvisible(ball);
+    } else if (definition.kind === "rain") {
+      this.powerUpSpawner.startRain(POWERUP_EFFECT_DURATION);
+    } else if (definition.kind === "centerPaddle") {
+      this.centerPaddleEffect.activate(POWERUP_EFFECT_DURATION);
     }
 
     this.powerUpFeedback.playPickup(pickupX, pickupY, definition, targetPaddle);
@@ -137,6 +186,8 @@ export default class GameScene extends Phaser.Scene {
     this.matchOver = true;
     this.powerUpSpawner.stop();
     this.powerUpEffects.clearAll();
+    this.ballEffects.clearAll();
+    this.centerPaddleEffect.clear();
     this.ballManager.clearAll();
 
     const label = winner === "p1" ? "Jugador 1" : this.mode === "2p" ? "Jugador 2" : "CPU";
@@ -153,7 +204,9 @@ export default class GameScene extends Phaser.Scene {
         fontSize: "20px",
         color: COLORS.TEXT,
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setInteractive({ useHandCursor: true })
+      .on("pointerdown", () => this.scene.start("MenuScene"));
 
     this.input.keyboard.once("keydown-ENTER", () => this.scene.start("MenuScene"));
   }

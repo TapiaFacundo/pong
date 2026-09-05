@@ -4,6 +4,8 @@ import {
   GAME_HEIGHT,
   POWERUP_SPAWN_MIN_DELAY,
   POWERUP_SPAWN_MAX_DELAY,
+  POWERUP_RAIN_MIN_DELAY,
+  POWERUP_RAIN_MAX_DELAY,
   POWERUP_MIN_DISTANCE,
   POWERUP_SPAWN_AREA,
   POWERUP_DEFINITIONS,
@@ -19,6 +21,8 @@ export default class PowerUpSpawner {
     this.onActivate = onActivate;
     this.activePowerUps = [];
     this.stopped = false;
+    this.rainActive = false;
+    this.rainTimer = null;
 
     this.scheduleNextSpawn();
   }
@@ -26,8 +30,25 @@ export default class PowerUpSpawner {
   scheduleNextSpawn() {
     if (this.stopped) return;
 
-    const delay = Phaser.Math.Between(POWERUP_SPAWN_MIN_DELAY, POWERUP_SPAWN_MAX_DELAY);
+    const [min, max] = this.rainActive
+      ? [POWERUP_RAIN_MIN_DELAY, POWERUP_RAIN_MAX_DELAY]
+      : [POWERUP_SPAWN_MIN_DELAY, POWERUP_SPAWN_MAX_DELAY];
+    const delay = Phaser.Math.Between(min, max);
     this.spawnTimer = this.scene.time.delayedCall(delay, () => this.spawn());
+  }
+
+  startRain(duration) {
+    this.rainActive = true;
+    if (this.rainTimer) this.rainTimer.remove();
+    this.rainTimer = this.scene.time.delayedCall(duration, () => this.stopRain());
+  }
+
+  stopRain() {
+    this.rainActive = false;
+    if (this.rainTimer) {
+      this.rainTimer.remove();
+      this.rainTimer = null;
+    }
   }
 
   spawn() {
@@ -81,6 +102,7 @@ export default class PowerUpSpawner {
   clearAll() {
     this.activePowerUps.forEach((powerUp) => powerUp.destroy());
     this.activePowerUps = [];
+    this.stopRain();
   }
 
   stop() {
