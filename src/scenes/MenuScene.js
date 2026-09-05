@@ -65,7 +65,11 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   startGame() {
-    this.scene.start("GameScene", { mode: this.mode, winScore: this.winScore });
+    if (this.mode === "1p") {
+      this.scene.start("DifficultyScene", { winScore: this.winScore });
+    } else {
+      this.scene.start("GameScene", { mode: this.mode, winScore: this.winScore });
+    }
   }
 
   setMode(mode) {

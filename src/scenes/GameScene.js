@@ -18,6 +18,7 @@ export default class GameScene extends Phaser.Scene {
   init(data) {
     this.mode = data.mode ?? "1p";
     this.winScore = data.winScore ?? WIN_SCORE_SHORT;
+    this.difficulty = data.difficulty ?? "normal";
     this.matchOver = false;
   }
 
@@ -43,7 +44,7 @@ export default class GameScene extends Phaser.Scene {
     this.controllerRight =
       this.mode === "2p"
         ? new PlayerController(this, this.paddleRight, { up: KEYS.P2_UP, down: KEYS.P2_DOWN })
-        : new AI(this.paddleRight, this.ballManager, "right");
+        : new AI(this.paddleRight, this.ballManager, "right", this.difficulty);
 
     this.scoreTextLeft = this.add
       .text(GAME_WIDTH / 2 - 60, 30, "0", { fontSize: "48px", color: COLORS.TEXT })
@@ -62,11 +63,11 @@ export default class GameScene extends Phaser.Scene {
     this.time.delayedCall(600, () => this.ballManager.primary.launch());
   }
 
-  update() {
+  update(time, delta) {
     if (this.matchOver) return;
 
-    this.controllerLeft.update();
-    this.controllerRight.update();
+    this.controllerLeft.update(delta);
+    this.controllerRight.update(delta);
     this.ballManager.update();
   }
 

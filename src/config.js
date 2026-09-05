@@ -6,8 +6,14 @@ export const PADDLE_HEIGHT = 100;
 export const PADDLE_OFFSET_X = 40;
 export const PADDLE_SPEED = 400;
 
-export const AI_PADDLE_SPEED = 260;
-export const AI_DEAD_ZONE = 12;
+export const AI_DEAD_ZONE = 10;
+
+// Velocidad máxima, tiempo de reacción (ms) y margen de error (px) al apuntar a la pelota.
+export const AI_DIFFICULTIES = {
+  easy: { speed: 180, reactionDelay: 350, errorMargin: 50 },
+  normal: { speed: 260, reactionDelay: 150, errorMargin: 20 },
+  hard: { speed: 340, reactionDelay: 40, errorMargin: 4 },
+};
 
 export const BALL_SIZE = 14;
 export const BALL_SPEED = 380;
