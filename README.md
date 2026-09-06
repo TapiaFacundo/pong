@@ -7,6 +7,8 @@ Pong clásico (1 jugador vs CPU o 2 jugadores en el mismo teclado) con 18 power-
 - Facundo Tapia
 - Valentino Batiston
 
+_Nota: trabajamos juntos, en conjunto, sobre la misma cuenta y sesión de Claude Code para aprovechar la suscripción de Facundo Tapia — por eso el historial de commits y las sesiones del agente quedan a nombre de una sola persona._
+
 ## Tecnologías
 
 - JavaScript
