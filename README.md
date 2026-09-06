@@ -78,13 +78,21 @@ El proyecto no tiene una carpeta `patterns/` separada: usa un **patrón Manager/
 
 ## Agentes de OpenCode utilizados
 
-_Completar: qué agente/modelo se usó durante el desarrollo._
+- Claude Code (Claude Sonnet 5).
 
 ## Principales instrucciones o prompts empleados
 
-_Completar con 2-3 ejemplos reales de prompts de Plan y de Build usados durante el desarrollo (ver plantilla recomendada en el enunciado)._
+Ejemplos reales usados con Claude Code durante el desarrollo del juego:
+
+- **Arranque del proyecto**: "lee los archivos que hay en la carpeta, hay que realizar un juego en phaser node.js y vite".
+- **Reporte de bug con pasos y comportamiento esperado**: "iba ganando 4 a 2, toco el power up de bola extra y anote la bola extra, quedando 5 a 2. pero el juego no termino hasta que se anoto la otra, en este caso donde se llego al puntaje maximo deberia terminar el juego".
+- **Feature con comportamiento esperado explícito**: "quiero también un sonido cuando se golpea la pelota y cuando se anota un punto, que sean distintos al agarrar un power up".
+- **Ajuste de una regla puntual de balance**: "el power up de aumento de velocidad debe poder romper el limite de 700px/s si ya se esta jugando a esta velocidad".
+- **Actualización de contenido a partir de un cambio en el GDD**: "en el gdd se agregaron nuevos power ups, ahora toca agregarlos. hazlo".
 
 ## Problemas encontrados y soluciones aplicadas
 
-- El partido no terminaba al llegar al puntaje configurado cuando había más de una pelota en cancha a la vez (por el power-up de pelota extra) — se corrigió la condición de victoria para que revise el puntaje sin depender de cuántas pelotas sigan activas.
-- _Completar con otros problemas reales que hayan surgido durante el desarrollo._
+- El partido no terminaba al llegar al puntaje configurado cuando había más de una pelota en cancha a la vez (por el power-up de bola extra) — se corrigió la condición de victoria para que se revise apenas se anota cada punto, sin esperar a que salgan todas las pelotas.
+- Ese mismo arreglo expuso un crash: `BallManager` recorría la lista de pelotas mientras `showWinner()` la vaciaba a mitad de camino (el partido terminaba mientras todavía se estaban evaluando otras pelotas del mismo frame) — se solucionó iterando sobre una copia y comprobando que cada pelota siguiera en juego antes de procesarla.
+- Al agregar soporte para más de una pelota en cancha, agregar cada pelota a un `Phaser.Physics.Group` (para simplificar la detección de colisiones con power-ups) rompía silenciosamente el rebote contra los bordes superior e inferior: el `Group` resetea `collideWorldBounds` y `bounce` a sus valores por defecto al agregar un cuerpo físico ya configurado. Se solucionó sacando el `Group` y registrando las colisiones pelota↔power-up directamente por par.
+- Al instalar dependencias en Windows, la política de ejecución de PowerShell bloqueaba el script `npm.ps1` (error "no se puede cargar... la ejecución de scripts está deshabilitada"). Se resolvió corriendo `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned` (alternativa rápida sin tocar la política: usar `npm.cmd` en vez de `npm`).
