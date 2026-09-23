@@ -21,6 +21,8 @@ import { playPowerUpPickup, playScore } from "../systems/SoundEffects.js";
 import BallManager from "../systems/BallManager.js";
 import BallEffects from "../systems/BallEffects.js";
 import CenterPaddleEffect from "../systems/CenterPaddleEffect.js";
+import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
+import { getPhrase } from "../services/translations.js";
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -201,17 +203,22 @@ export default class GameScene extends Phaser.Scene {
     this.centerPaddleEffect.clear();
     this.ballManager.clearAll();
 
-    const label = winner === "p1" ? "Jugador 1" : this.mode === "2p" ? "Jugador 2" : "CPU";
+    const label =
+      winner === "p1"
+        ? getPhrase(TRANSLATION_KEYS.JUGADOR_1)
+        : this.mode === "2p"
+          ? getPhrase(TRANSLATION_KEYS.JUGADOR_2)
+          : getPhrase(TRANSLATION_KEYS.CPU);
 
     this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 40, `¡Gana ${label}!`, {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 40, getPhrase(TRANSLATION_KEYS.GANA_LABEL).replace("{label}", label), {
         fontSize: "40px",
         color: COLORS.TEXT,
       })
       .setOrigin(0.5);
 
     this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 20, "ENTER: Volver al menú", {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 20, getPhrase(TRANSLATION_KEYS.ENTER_VOLVER_AL_MENU), {
         fontSize: "20px",
         color: COLORS.TEXT,
       })

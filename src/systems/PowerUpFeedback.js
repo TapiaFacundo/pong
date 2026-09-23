@@ -1,4 +1,5 @@
 import { POWERUP_COLORS, POWERUP_TEXT_COLORS, POWERUP_LABELS, COLORS } from "../config.js";
+import { getPhrase } from "../services/translations.js";
 
 export default class PowerUpFeedback {
   constructor(scene) {
@@ -8,7 +9,7 @@ export default class PowerUpFeedback {
   playPickup(x, y, definition, targetPaddle) {
     const color = POWERUP_COLORS[definition.colorCategory];
     const textColor = POWERUP_TEXT_COLORS[definition.colorCategory];
-    const label = POWERUP_LABELS[definition.kind] ?? definition.id;
+    const label = getPhrase(POWERUP_LABELS[definition.kind] ?? definition.id);
 
     this.spawnBurst(x, y, color);
     this.spawnLabel(x, y, label, textColor);

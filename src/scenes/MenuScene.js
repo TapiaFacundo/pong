@@ -1,5 +1,8 @@
 import Phaser from "phaser";
 import { GAME_WIDTH, COLORS, WIN_SCORE_SHORT, WIN_SCORE_LONG } from "../config.js";
+import { KEYS } from "../enums/keys.js";
+import { getTranslations, getPhrase, getLanguageConfig } from "../services/translations.js";
+import LanguagePanel from "../ui/LanguagePanel.js";
 
 const SELECTED_COLOR = "#66ff66";
 const UNSELECTED_COLOR = "#888888";
@@ -13,39 +16,45 @@ export default class MenuScene extends Phaser.Scene {
     this.mode = "1p";
     this.winScore = WIN_SCORE_SHORT;
 
-    this.add
-      .text(GAME_WIDTH / 2, 70, "PONG con Power-ups", { fontSize: "40px", color: COLORS.TEXT })
+    getTranslations(getLanguageConfig(), () => this.buildScene());
+  }
+
+  buildScene() {
+    this.titleText = this.add
+      .text(GAME_WIDTH / 2, 70, getPhrase(KEYS.PONG_CON_POWER_UPS), { fontSize: "40px", color: COLORS.TEXT })
       .setOrigin(0.5);
 
-    this.add
-      .text(GAME_WIDTH / 2, 130, "Elegí una opción de cada grupo y confirmá con ENTER", {
+    this.subtitleText = this.add
+      .text(GAME_WIDTH / 2, 130, getPhrase(KEYS.ELEGI_UNA_OPCION_DE_CADA_GRUPO_Y_CONFIRMA_CON_ENTER), {
         fontSize: "16px",
         color: "#888888",
       })
       .setOrigin(0.5);
 
-    this.modeOption1p = this.createOption(190, "1: 1 Jugador vs CPU", () => this.setMode("1p"));
-    this.modeOption2p = this.createOption(222, "2: 2 Jugadores", () => this.setMode("2p"));
+    this.modeOption1p = this.createOption(190, "1: ", KEYS.TEXT_1_JUGADOR_VS_CPU, () => this.setMode("1p"));
+    this.modeOption2p = this.createOption(222, "2: ", KEYS.TEXT_2_JUGADORES, () => this.setMode("2p"));
 
-    this.pointsOption5 = this.createOption(272, "5: Partida a 5 puntos", () =>
+    this.pointsOption5 = this.createOption(272, "5: ", KEYS.PARTIDA_A_5_PUNTOS, () =>
       this.setWinScore(WIN_SCORE_SHORT)
     );
-    this.pointsOption10 = this.createOption(304, "0: Partida a 10 puntos", () =>
+    this.pointsOption10 = this.createOption(304, "0: ", KEYS.PARTIDA_A_10_PUNTOS, () =>
       this.setWinScore(WIN_SCORE_LONG)
     );
 
-    this.add
-      .text(GAME_WIDTH / 2, 360, "Jugador 1: W / S     Jugador 2: Flechas arriba/abajo", {
+    this.controlsHintText = this.add
+      .text(GAME_WIDTH / 2, 360, getPhrase(KEYS.JUGADOR_1_W_S_JUGADOR_2_FLECHAS_ARRIBA_ABAJO), {
         fontSize: "16px",
         color: "#888888",
       })
       .setOrigin(0.5);
 
-    this.add
-      .text(GAME_WIDTH / 2, 440, "ENTER: Empezar", { fontSize: "22px", color: COLORS.TEXT })
+    this.startText = this.add
+      .text(GAME_WIDTH / 2, 440, getPhrase(KEYS.ENTER_EMPEZAR), { fontSize: "22px", color: COLORS.TEXT })
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true })
       .on("pointerdown", () => this.startGame());
+
+    this.createSettingsButton();
 
     this.updateOptionStyles();
 
@@ -56,12 +65,38 @@ export default class MenuScene extends Phaser.Scene {
     this.input.keyboard.on("keydown-ENTER", () => this.startGame());
   }
 
-  createOption(y, label, onClick) {
-    return this.add
-      .text(GAME_WIDTH / 2, y, label, { fontSize: "22px", color: UNSELECTED_COLOR })
+  createSettingsButton() {
+    this.settingsIcon = this.add
+      .text(GAME_WIDTH - 30, 24, "⚙", { fontSize: "26px", color: COLORS.TEXT })
+      .setOrigin(0.5)
+      .setInteractive({ useHandCursor: true })
+      .on("pointerdown", () => this.languagePanel.toggle());
+
+    this.languagePanel = new LanguagePanel(this, () => this.refreshTexts());
+  }
+
+  update() {
+    this.languagePanel?.update();
+  }
+
+  refreshTexts() {
+    this.titleText.setText(getPhrase(KEYS.PONG_CON_POWER_UPS));
+    this.subtitleText.setText(getPhrase(KEYS.ELEGI_UNA_OPCION_DE_CADA_GRUPO_Y_CONFIRMA_CON_ENTER));
+    this.controlsHintText.setText(getPhrase(KEYS.JUGADOR_1_W_S_JUGADOR_2_FLECHAS_ARRIBA_ABAJO));
+    this.startText.setText(getPhrase(KEYS.ENTER_EMPEZAR));
+    this.updateOptionStyles();
+  }
+
+  createOption(y, keyPrefix, labelKey, onClick) {
+    const text = this.add
+      .text(GAME_WIDTH / 2, y, keyPrefix + getPhrase(labelKey), { fontSize: "22px", color: UNSELECTED_COLOR })
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true })
       .on("pointerdown", onClick);
+
+    text.keyPrefix = keyPrefix;
+    text.labelKey = labelKey;
+    return text;
   }
 
   startGame() {
@@ -83,15 +118,15 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   updateOptionStyles() {
-    this.styleOption(this.modeOption1p, "1: 1 Jugador vs CPU", this.mode === "1p");
-    this.styleOption(this.modeOption2p, "2: 2 Jugadores", this.mode === "2p");
-    this.styleOption(this.pointsOption5, "5: Partida a 5 puntos", this.winScore === WIN_SCORE_SHORT);
-    this.styleOption(this.pointsOption10, "0: Partida a 10 puntos", this.winScore === WIN_SCORE_LONG);
+    this.styleOption(this.modeOption1p, this.mode === "1p");
+    this.styleOption(this.modeOption2p, this.mode === "2p");
+    this.styleOption(this.pointsOption5, this.winScore === WIN_SCORE_SHORT);
+    this.styleOption(this.pointsOption10, this.winScore === WIN_SCORE_LONG);
   }
 
-  styleOption(textObject, label, isSelected) {
+  styleOption(textObject, isSelected) {
     const prefix = isSelected ? "▶ " : "   ";
-    textObject.setText(prefix + label);
+    textObject.setText(prefix + textObject.keyPrefix + getPhrase(textObject.labelKey));
     textObject.setColor(isSelected ? SELECTED_COLOR : UNSELECTED_COLOR);
   }
 }

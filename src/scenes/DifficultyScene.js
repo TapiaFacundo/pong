@@ -1,13 +1,15 @@
 import Phaser from "phaser";
 import { GAME_WIDTH, COLORS, WIN_SCORE_SHORT } from "../config.js";
+import { KEYS } from "../enums/keys.js";
+import { getPhrase } from "../services/translations.js";
 
 const SELECTED_COLOR = "#66ff66";
 const UNSELECTED_COLOR = "#888888";
 
 const DIFFICULTIES = [
-  { key: "easy", label: "1: Fácil" },
-  { key: "normal", label: "2: Normal" },
-  { key: "hard", label: "3: Difícil" },
+  { key: "easy", prefix: "1: ", labelKey: KEYS.FACIL },
+  { key: "normal", prefix: "2: ", labelKey: KEYS.NORMAL },
+  { key: "hard", prefix: "3: ", labelKey: KEYS.DIFICIL },
 ];
 
 export default class DifficultyScene extends Phaser.Scene {
@@ -23,7 +25,7 @@ export default class DifficultyScene extends Phaser.Scene {
     this.difficulty = "normal";
 
     this.add
-      .text(GAME_WIDTH / 2, 120, "Elegí la dificultad de la CPU", { fontSize: "30px", color: COLORS.TEXT })
+      .text(GAME_WIDTH / 2, 120, getPhrase(KEYS.ELEGI_LA_DIFICULTAD_DE_LA_CPU), { fontSize: "30px", color: COLORS.TEXT })
       .setOrigin(0.5);
 
     this.options = DIFFICULTIES.map((difficulty, index) =>
@@ -31,7 +33,7 @@ export default class DifficultyScene extends Phaser.Scene {
     );
 
     this.add
-      .text(GAME_WIDTH / 2, 420, "ENTER: Empezar", { fontSize: "22px", color: COLORS.TEXT })
+      .text(GAME_WIDTH / 2, 420, getPhrase(KEYS.ENTER_EMPEZAR), { fontSize: "22px", color: COLORS.TEXT })
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true })
       .on("pointerdown", () => this.startGame());
@@ -46,13 +48,16 @@ export default class DifficultyScene extends Phaser.Scene {
 
   createOption(y, difficulty) {
     const text = this.add
-      .text(GAME_WIDTH / 2, y, difficulty.label, { fontSize: "24px", color: UNSELECTED_COLOR })
+      .text(GAME_WIDTH / 2, y, difficulty.prefix + getPhrase(difficulty.labelKey), {
+        fontSize: "24px",
+        color: UNSELECTED_COLOR,
+      })
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true })
       .on("pointerdown", () => this.setDifficulty(difficulty.key));
 
     text.difficultyKey = difficulty.key;
-    text.baseLabel = difficulty.label;
+    text.baseDifficulty = difficulty;
     return text;
   }
 
@@ -64,7 +69,8 @@ export default class DifficultyScene extends Phaser.Scene {
   updateOptionStyles() {
     this.options.forEach((option) => {
       const isSelected = option.difficultyKey === this.difficulty;
-      option.setText((isSelected ? "▶ " : "   ") + option.baseLabel);
+      const prefix = isSelected ? "▶ " : "   ";
+      option.setText(prefix + option.baseDifficulty.prefix + getPhrase(option.baseDifficulty.labelKey));
       option.setColor(isSelected ? SELECTED_COLOR : UNSELECTED_COLOR);
     });
   }
