@@ -85,7 +85,7 @@ export default class GameScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setVisible(false);
 
-    this.time.delayedCall(SERVE_DELAY_START, () => this.ballManager.primary.launch());
+    this.serveAfter(SERVE_DELAY_START, this.ballManager.primary);
 
     this.input.keyboard.on("keydown-ESC", () => this.pauseGame());
   }
@@ -151,7 +151,15 @@ export default class GameScene extends Phaser.Scene {
 
     const directionTowardsLoser = scoringSide === "p1" ? 1 : -1;
     const ball = this.ballManager.addBall(GAME_WIDTH / 2, GAME_HEIGHT / 2);
-    this.time.delayedCall(SERVE_DELAY_AFTER_POINT, () => ball.launch(directionTowardsLoser));
+    this.serveAfter(SERVE_DELAY_AFTER_POINT, ball, directionTowardsLoser);
+  }
+
+  // Saca la pelota después de "delay" y recién ahí arranca el spawn de power-ups.
+  serveAfter(delay, ball, directionX = null) {
+    this.time.delayedCall(delay, () => {
+      ball.launch(directionX);
+      this.powerUpSpawner.startTimer();
+    });
   }
 
   updateDoublePointIndicator() {

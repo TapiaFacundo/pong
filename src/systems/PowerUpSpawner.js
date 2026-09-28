@@ -23,8 +23,22 @@ export default class PowerUpSpawner {
     this.stopped = false;
     this.rainActive = false;
     this.rainTimer = null;
+    this.spawnTimer = null;
+  }
 
+  // El temporizador corre solo mientras hay pelota en juego: arranca con cada
+  // saque y se cancela al terminar la ronda (clearAll), para que no aparezcan
+  // power-ups en la trayectoria del saque antes de que nadie toque la pelota.
+  startTimer() {
+    this.cancelTimer();
     this.scheduleNextSpawn();
+  }
+
+  cancelTimer() {
+    if (this.spawnTimer) {
+      this.spawnTimer.remove();
+      this.spawnTimer = null;
+    }
   }
 
   scheduleNextSpawn() {
@@ -41,6 +55,10 @@ export default class PowerUpSpawner {
     this.rainActive = true;
     if (this.rainTimer) this.rainTimer.remove();
     this.rainTimer = this.scene.time.delayedCall(duration, () => this.stopRain());
+
+    // Reprograma el próximo spawn con el intervalo de la lluvia en vez de
+    // esperar al que ya estaba pendiente con el intervalo normal.
+    this.startTimer();
   }
 
   stopRain() {
@@ -100,6 +118,7 @@ export default class PowerUpSpawner {
   }
 
   clearAll() {
+    this.cancelTimer();
     this.activePowerUps.forEach((powerUp) => powerUp.destroy());
     this.activePowerUps = [];
     this.stopRain();
@@ -107,7 +126,6 @@ export default class PowerUpSpawner {
 
   stop() {
     this.stopped = true;
-    if (this.spawnTimer) this.spawnTimer.remove();
     this.clearAll();
   }
 }

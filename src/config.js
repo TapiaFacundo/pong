@@ -47,13 +47,14 @@ export const COLORS = {
 
 export const POWERUP_RADIUS = 18;
 export const POWERUP_SPAWN_MIN_DELAY = 5000;
-export const POWERUP_SPAWN_MAX_DELAY = 7500;
+export const POWERUP_SPAWN_MAX_DELAY = 6500;
 export const POWERUP_MIN_DISTANCE = POWERUP_RADIUS * 3;
 export const POWERUP_SPAWN_AREA = { width: 160, height: 300 };
 
-// Mientras dura el power-up "Lluvia", el spawn usa este rango en vez del normal.
+// Mientras dura el power-up "Lluvia", el spawn usa este rango en vez del normal
+// (con mínimo = máximo el intervalo es fijo: 10 power-ups en los 15 s).
 export const POWERUP_RAIN_MIN_DELAY = 1500;
-export const POWERUP_RAIN_MAX_DELAY = 3000;
+export const POWERUP_RAIN_MAX_DELAY = 1500;
 
 export const POWERUP_COLORS = {
   yellow: 0xffdd33,
