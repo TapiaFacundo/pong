@@ -202,9 +202,10 @@
 
 <h3>Guardado del progreso</h3>
 <ul>
-  <li>Se guarda en <code>localStorage</code> con una clave propia, separada de la de traducciones (el sistema de idiomas vacía esa clave cada vez que cambia el idioma).</li>
+  <li>Se guarda en <code>localStorage</code> con una clave propia, <code>ponger-up:story-progress</code>, separada de la de traducciones (el sistema de idiomas vacía esa clave cada vez que cambia el idioma).</li>
+  <li>Se guarda qué niveles se superaron, por ejemplo <code>{"version": 1, "completedLevels": [1, 2]}</code>. De eso sale qué niveles están desbloqueados: el 1 siempre, cada nivel superado y el siguiente a cada nivel superado.</li>
   <li>El progreso queda asociado al navegador y dispositivo: no se sincroniza entre dispositivos y se pierde si el usuario borra los datos del sitio o juega en ventana privada. Es aceptable porque el juego no tiene cuentas ni backend.</li>
-  <li>Si <code>localStorage</code> no está disponible o los datos guardados son inválidos, el juego arranca con solo el nivel 1 desbloqueado en vez de fallar.</li>
+  <li>Si <code>localStorage</code> no está disponible o los datos guardados son inválidos, el juego arranca con solo el nivel 1 desbloqueado en vez de fallar. Si no se puede escribir, el progreso vale igual mientras la página siga abierta.</li>
 </ul>
 
 <h3>Resumen de niveles</h3>
@@ -318,7 +319,8 @@
 │                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia)
 ├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel)
-├── services/      acceso a servicios externos y al navegador (translations: API de Traducila)
+├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;
+│                  ProgressStorage: progreso del Modo Historia en localStorage)
 └── enums/         constantes compartidas (claves de texto, idiomas, estados de carga)
 public/            assets estáticos servidos directo
 docs/
