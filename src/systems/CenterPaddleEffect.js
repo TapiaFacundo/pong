@@ -35,7 +35,8 @@ export default class CenterPaddleEffect {
       -1,
       1
     );
-    ball.circle.body.velocity.y = offset * Math.abs(ball.circle.body.velocity.x);
+    const velocityX = ball.circle.body.velocity.x;
+    ball.setDirection(velocityX, offset * Math.abs(velocityX));
     playPaddleHit();
   }
 

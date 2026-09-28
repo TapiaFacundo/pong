@@ -29,8 +29,8 @@
 <body>
 
 <h1>GDD — Ponger-up</h1>
-<div class="meta">Versión 2 · 28/09/2026 · Facundo Tapia, Valentino Batiston</div>
-<div class="legend"><span class="tag pend">pendiente</span> = decidido en diseño pero todavía no implementado en el juego.</div>
+<div class="meta">Versión 3 · 28/09/2026 · Facundo Tapia, Valentino Batiston</div>
+<div class="legend"><span class="tag pend">pendiente</span> = decidido en diseño pero todavía no implementado en el juego. <span class="tag pend">borrador</span> = propuesta a confirmar.</div>
 
 <h2>1. Concepto</h2>
 <p><b>Ponger-up</b> es un Pong clásico con power-ups que aparecen en el centro de la cancha y le meten caos a las rondas. Se juega en el navegador, de forma local: 1 jugador contra la CPU, 2 jugadores en el mismo teclado, o un Modo Historia de 10 niveles contra rivales cada vez más difíciles.</p>
@@ -120,17 +120,18 @@
   <tr><th style="width:26%">Power-up</th><th>Efecto</th><th style="width:22%">Valor</th></tr>
   <tr><td>Bola extra</td><td>Suma otra pelota en juego, lanzada desde donde se agarró el power-up</td><td>—</td></tr>
   <tr><td>Turbo</td><td>Acelera la pelota que lo agarró</td><td>× 1,5 de velocidad</td></tr>
-  <tr><td>Pelota errática</td><td>La trayectoria de la pelota se vuelve zigzagueante e impredecible</td><td>Desvío de hasta ±45° cada 0,22 s</td></tr>
+  <tr><td>Pelota zigzagueante</td><td>La pelota avanza haciendo un zigzag curvo y amplio alrededor de su trayectoria normal: en promedio va al mismo lugar, pero confunde dónde va a rebotar</td><td>Onda de ± 30 px, una ondulación cada 0,8 s</td></tr>
+  <tr><td>Pelota curva</td><td>Tiro de trivela: cada golpe descentrado en la pala hace que la pelota salga con el ángulo normal y después se curve hacia el lado contrario. Cuanto más cerca de la punta, más curva; los golpes en el centro salen rectos. Afecta los golpes de los dos jugadores</td><td>Curva desde el 30 % central hacia afuera: gira hasta 100°/s durante 0,9 s, arrancando 0,15 s después del golpe</td></tr>
   <tr><td>Pelota invisible</td><td>La pelota parpadea y desaparece por instantes</td><td>Parpadeo cada 0,22 s</td></tr>
   <tr><td>Lluvia de power-ups</td><td>Durante un tramo aparecen power-ups mucho más seguido</td><td>Un power-up cada 1,5 s exactos (10 durante los 15 s). El primero aparece 1,5 s después de agarrarla</td></tr>
   <tr><td>Paleta central</td><td>Aparece una paleta chica en el medio de la cancha que se mueve de arriba hacia abajo y bloquea tiros de ambos jugadores</td><td>60 px de alto, 180 px/s</td></tr>
 </table>
-<p class="note">Total: 6 tipos de pala/puntaje con variante verde y roja + 6 amarillos = 18 power-ups.</p>
+<p class="note">Total: 6 tipos de pala/puntaje con variante verde y roja + 7 amarillos = 19 power-ups. La pelota zigzagueante y la curva reemplazan a la antigua pelota errática, que se quitó por ser demasiado impredecible. Ninguna de las dos puede hacer que la pelota vuelva hacia el arco del que viene: su ángulo nunca pasa de 70° respecto de la horizontal. Si rebotan en una pared, el zigzag y la curva se espejan con el rebote.</p>
 
 <h3>Reglas de activación</h3>
 <ul>
   <li><b>A quién afecta:</b> lo decide el último jugador que tocó la pelota antes de que esta toque el power-up (quien la mandó hacia ahí). Si la pelota todavía no tocó ninguna pala, los power-ups verdes y rojos no tienen efecto.</li>
-  <li><b>Duración:</b> 15 s para los efectos de pala, la pelota errática, la pelota invisible, la lluvia y la paleta central. La bola extra y el turbo duran lo que dure la ronda. El punto doble no tiene duración en segundos: dura hasta que se anota el próximo punto, de cualquiera de los dos.</li>
+  <li><b>Duración:</b> 15 s para los efectos de pala, la pelota zigzagueante, la pelota curva, la pelota invisible, la lluvia y la paleta central. La bola extra y el turbo duran lo que dure la ronda. El punto doble no tiene duración en segundos: dura hasta que se anota el próximo punto, de cualquiera de los dos.</li>
   <li><b>Acumulación:</b> los efectos de distinto tipo se acumulan (por ejemplo, pala grande + pala rápida al mismo tiempo). Un efecto del mismo tipo sobre la misma pala (tamaño, velocidad o controles) reemplaza al anterior y reinicia los 15 s.</li>
   <li><b>Power-ups en cancha:</b> pueden coexistir varios. El spawn evita que aparezcan superpuestos (distancia mínima de 54 px entre centros).</li>
   <li><b>Reset:</b> los efectos activos se cancelan al terminar la ronda (cuando salieron todas las pelotas), no con cada pelota individual.</li>
@@ -192,6 +193,7 @@
   <li>Hay power-ups en todos los niveles.</li>
   <li>Cada nivel es un partido a 7 puntos.</li>
   <li>La dificultad sube de nivel a nivel: IA mejorada, enemigos con habilidades particulares, jefes (boss fights) y cambios en la cancha, como un campo más grande en algunos niveles.</li>
+  <li>La IA de cada nivel viene definida por el nivel. La pantalla de dificultad no se usa en este modo.</li>
   <li>Al empezar solo está disponible el nivel 1. Ganar un nivel desbloquea el siguiente.</li>
   <li>Solo se pueden elegir niveles desbloqueados. Los niveles ya superados se pueden repetir siempre.</li>
   <li>Si perdés un nivel, solo tenés que reintentar ese nivel. No se pierde progreso.</li>
@@ -205,8 +207,105 @@
   <li>Si <code>localStorage</code> no está disponible o los datos guardados son inválidos, el juego arranca con solo el nivel 1 desbloqueado en vez de fallar.</li>
 </ul>
 
-<h3>Diseño de niveles</h3>
-<p><span class="tag pend">pendiente</span> Detalle nivel por nivel (rival, habilidades, reglas de cancha y power-ups): a definir en la próxima versión de este documento.</p>
+<h3>Resumen de niveles</h3>
+<table>
+  <tr><th style="width:5%">#</th><th style="width:17%">Rival</th><th>Qué lo hace distinto</th><th style="width:22%">IA</th><th style="width:15%">Cancha</th></tr>
+  <tr><td>1</td><td>Novato</td><td>Sin habilidades</td><td>Fácil</td><td>800 × 600</td></tr>
+  <tr><td>2</td><td>Aprendiz</td><td>Sin habilidades</td><td>Normal</td><td>800 × 600</td></tr>
+  <tr><td>3</td><td>El Muro</td><td>Pala 60 % más alta todo el partido</td><td>Normal lenta</td><td>800 × 600</td></tr>
+  <tr><td>4</td><td>Velocista</td><td>Pelota más rápida y que acelera más</td><td>Normal rápida</td><td>800 × 600</td></tr>
+  <tr><td>5</td><td><b>Los Gemelos</b> (jefe)</td><td>Dos palas: una en el arco y una adelantada</td><td>Difícil</td><td>1000 × 750</td></tr>
+  <tr><td>6</td><td>Trivela</td><td>Tiros con efecto (curvos) intercalados con tiros rectos</td><td>Difícil</td><td>800 × 600</td></tr>
+  <tr><td>7</td><td>Estadio</td><td>Cancha grande, IA con predicción de trayectoria</td><td>Difícil + predicción</td><td>1200 × 900</td></tr>
+  <tr><td>8</td><td>Saboteador</td><td>Te aplica efectos rojos, más power-ups rojos</td><td>Difícil</td><td>800 × 600</td></tr>
+  <tr><td>9</td><td>Tormenta</td><td>2 pelotas por ronda y lluvia permanente</td><td>Difícil + predicción</td><td>800 × 600</td></tr>
+  <tr><td>10</td><td><b>El Campeón</b> (jefe final)</td><td>Tres fases que suman trucos; bola extra si el partido se alarga</td><td>Difícil + predicción → Imposible</td><td>1200 × 900</td></tr>
+</table>
+<p class="note">Todos los niveles tienen power-ups. Salvo que el nivel diga otra cosa, aparecen con el spawn normal (5 a 6,5 s) y con los 19 tipos.</p>
+
+<h3>IA por nivel</h3>
+<table>
+  <tr><th style="width:26%">Nivel</th><th>Velocidad</th><th>Reacción</th><th>Error</th><th>Anticipación</th><th>Predicción</th></tr>
+  <tr><td>1 · Novato</td><td>200 px/s</td><td>300 ms</td><td>± 50 px</td><td>No</td><td>No</td></tr>
+  <tr><td>2 · Aprendiz</td><td>280 px/s</td><td>100 ms</td><td>± 20 px</td><td>No</td><td>No</td></tr>
+  <tr><td>3 · El Muro</td><td>200 px/s</td><td>100 ms</td><td>± 20 px</td><td>No</td><td>No</td></tr>
+  <tr><td>4 · Velocista</td><td>380 px/s</td><td>100 ms</td><td>± 20 px</td><td>No</td><td>No</td></tr>
+  <tr><td>5 · Los Gemelos</td><td>340 px/s (× 1,25)</td><td>40 ms</td><td>± 4 px</td><td>35 %</td><td>No</td></tr>
+  <tr><td>6 · Trivela</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 %</td><td>No</td></tr>
+  <tr><td>7 · Estadio</td><td>340 px/s (× 1,5)</td><td>40 ms</td><td>± 4 px</td><td>35 %</td><td>Sí</td></tr>
+  <tr><td>8 · Saboteador</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 %</td><td>No</td></tr>
+  <tr><td>9 · Tormenta</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 %</td><td>Sí</td></tr>
+  <tr><td>10 · Fases 1 y 2</td><td>340 px/s (× 1,5)</td><td>40 ms</td><td>± 4 px</td><td>35 %</td><td>Sí</td></tr>
+  <tr><td>10 · Fase 3</td><td>450 px/s (× 1,5)</td><td>10 ms</td><td>± 2 px</td><td>50 %</td><td>Sí</td></tr>
+</table>
+<p class="note">“× 1,25” y “× 1,5”: en las canchas más altas, las palas de los dos jugadores se mueven más rápido en esa proporción, para que cruzar la cancha tarde lo mismo que en la normal. <b>Predicción de trayectoria</b> (mecánica nueva): la IA calcula dónde va a llegar la pelota contando los rebotes en las paredes, en vez de seguir su altura actual.</p>
+
+<h3>Detalle de cada nivel</h3>
+<table>
+  <tr><th style="width:18%">Nivel</th><th>Diseño</th></tr>
+  <tr><td>1 · Novato</td><td>Primer rival. Sirve para aprender los controles y cómo funcionan los power-ups sin mucha presión. Sin habilidades especiales.</td></tr>
+  <tr><td>2 · Aprendiz</td><td>Rival parejo y sin trucos: la primera partida donde hay que concentrarse de verdad. Sin habilidades especiales.</td></tr>
+  <tr><td>3 · El Muro</td><td>Su pala es un 60 % más alta durante todo el partido (como una pala grande permanente); los power-ups de tamaño que le toquen se aplican sobre esa altura. Es lento, así que hay que buscar los ángulos y las puntas de la pala.</td></tr>
+  <tr><td>4 · Velocista</td><td>La pelota sale a 440 px/s (en vez de 380) y acelera un 4 % por golpe (en vez de 2,5 %). Pone a prueba los reflejos.</td></tr>
+  <tr><td>5 · Los Gemelos<br><span class="note">jefe</span></td><td>Cancha de 1000 × 750. Controla dos palas: una en su arco y otra adelantada, a mitad de su lado de la cancha. La adelantada rebota la pelota como una pala normal; si la pelota la pasa, todavía queda la del arco. Las dos usan la misma IA, y los power-ups de pala que le toquen al jefe afectan a las dos.</td></tr>
+  <tr><td>6 · Trivela</td><td>Le pega de tres dedos. Cada vez que te devuelve la pelota, hay 50 % de chance de que el tiro salga con efecto: se curva como la pelota curva con la fuerza de un golpe en la punta, aunque le pegue con el centro de la pala. El resto de los tiros salen rectos, sin patrón fijo. Antes de un tiro con efecto, su pala destella en amarillo como aviso.</td></tr>
+  <tr><td>7 · Estadio</td><td>Cancha de 1200 × 900 con la cámara alejada: todo se ve a 2/3 de su tamaño. Estreno de la predicción de trayectoria. Los power-ups aparecen en una zona central proporcionalmente más grande.</td></tr>
+  <tr><td>8 · Saboteador</td><td>Cada 12 s te aplica un efecto rojo al azar durante 4 s: controles invertidos o pala lenta. Los power-ups rojos salen con el doble de probabilidad que en los otros niveles.</td></tr>
+  <tr><td>9 · Tormenta</td><td>Cada ronda empieza con 2 pelotas. Lluvia de power-ups permanente: aparece uno cada 1,5 s durante todo el partido. La IA sigue a la pelota que va a llegar antes a su lado (hoy solo sigue a la primera).</td></tr>
+  <tr><td>10 · El Campeón<br><span class="note">jefe final</span></td><td>Cancha de 1200 × 900. Tiene fases según tus puntos:
+    <ul>
+      <li><b>Fase 1</b> (desde el inicio): Difícil + predicción.</li>
+      <li><b>Fase 2</b> (cuando llegás a 3 puntos): suma el tiro con efecto de Trivela.</li>
+      <li><b>Fase 3</b> (cuando llegás a 5 puntos): pasa a Imposible y suma la pala adelantada de Los Gemelos.</li>
+    </ul>
+    <b>Bola extra por partido largo:</b> cuando entre los dos marcadores suman más de 10 puntos (por ejemplo 6-5 o 6-6) y el partido sigue, cada ronda empieza con 2 pelotas, como en Tormenta.</td></tr>
+</table>
+
+<h3>Rivales: frases y final <span class="tag pend">borrador</span></h3>
+<p>Antes de cada nivel, una tarjeta presenta al rival con su nombre, su habilidad y una frase suya.</p>
+<table>
+  <tr><th style="width:18%">Rival</th><th>Frase</th></tr>
+  <tr><td>Novato</td><td>“Tranqui, yo también estoy aprendiendo.”</td></tr>
+  <tr><td>Aprendiz</td><td>“Ya practiqué. Esta vez no te la hago fácil.”</td></tr>
+  <tr><td>El Muro</td><td>“Por acá no pasa nada.”</td></tr>
+  <tr><td>Velocista</td><td>“Pestañeá y te la perdiste.”</td></tr>
+  <tr><td>Los Gemelos</td><td>“Dos contra uno no es trampa si somos gemelos.”</td></tr>
+  <tr><td>Trivela</td><td>“Le pego de afuera del pie. Suerte adivinando.”</td></tr>
+  <tr><td>Estadio</td><td>“Bienvenido a la cancha grande.”</td></tr>
+  <tr><td>Saboteador</td><td>“¿Tus controles andan raro? Qué casualidad.”</td></tr>
+  <tr><td>Tormenta</td><td>“Espero que te guste el caos.”</td></tr>
+  <tr><td>El Campeón</td><td>“Llegaste lejos. Acá se termina.”</td></tr>
+</table>
+<p><b>Final:</b> al ganarle al Campeón aparece una pantalla con “¡Sos el nuevo campeón de Ponger-up!”, los 10 rivales derrotados y los créditos (Facundo Tapia y Valentino Batiston). Enter o clic vuelve a la selección de nivel.</p>
+
+<h3>Pantallas del modo <span class="tag pend">pendiente</span></h3>
+<pre>Menú principal ──(Modo Historia)──► Selección de nivel ──► Presentación del rival ──► Partida ⇄ Pausa
+                                          ▲                                           │
+                                          └──────────── Resultado ◄──────────────────┘
+                                                            │ (ganaste el nivel 10)
+                                                            └──► Final</pre>
+<table>
+  <tr><th style="width:22%">Pantalla</th><th>Contenido</th></tr>
+  <tr><td>Menú principal</td><td>Se suma “Modo Historia” como tercera opción de modo (tecla 3). Al elegirlo no se usa la elección de puntaje: siempre se juega a 7.</td></tr>
+  <tr><td>Selección de nivel</td><td>Los 10 niveles en una grilla de 5 × 2. Los superados llevan una marca, el siguiente disponible se resalta y los bloqueados se ven en gris con un candado. Se elige con flechas + Enter o con clic; Esc vuelve al menú.</td></tr>
+  <tr><td>Presentación del rival</td><td>Número de nivel, nombre del rival, su habilidad en una línea y su frase. Enter o clic empieza. Antes del nivel 1 se muestra además el tutorial.</td></tr>
+  <tr><td>Partida y pausa</td><td>Igual que en casual. En la pausa, “Volver al menú” lleva a la selección de nivel.</td></tr>
+  <tr><td>Resultado</td><td>Si ganaste: “Siguiente nivel” o “Selección de nivel”. Si perdiste: “Reintentar” o “Selección de nivel”.</td></tr>
+  <tr><td>Final</td><td>Ver “Rivales: frases y final”.</td></tr>
+</table>
+
+<h3>Mecánicas nuevas que requiere</h3>
+<ul>
+  <li><b>Configuración por nivel:</b> cada nivel se describe como datos (IA, cancha, reglas de pelota, power-ups, habilidades) y la partida se arma a partir de eso.</li>
+  <li><b>Cancha de tamaño variable:</b> 1000 × 750 y 1200 × 900, con la cámara alejada para que entre en la pantalla, y palas más rápidas en proporción.</li>
+  <li><b>Pala adelantada:</b> segunda pala de la IA a mitad de su lado (niveles 5 y 10).</li>
+  <li><b>Predicción de trayectoria de la IA</b> (niveles 7, 9 y 10).</li>
+  <li><b>IA con varias pelotas:</b> sigue a la que va a llegar antes (niveles 9 y 10).</li>
+  <li><b>Habilidades de rival:</b> tiro con efecto de Trivela (niveles 6 y 10) y sabotaje con efectos rojos (nivel 8).</li>
+  <li><b>Reglas de partida por nivel:</b> pala más alta (3), velocidad y aceleración de la pelota (4), pelotas por ronda (9 y 10), lluvia permanente (9) y probabilidad de cada color de power-up (8).</li>
+  <li><b>Fases de jefe</b> que cambian la IA y las habilidades según el marcador (10).</li>
+  <li><b>Progreso guardado</b> y las pantallas del modo.</li>
+</ul>
 
 <h2>13. Arquitectura del código</h2>
 <pre>src/
@@ -216,7 +315,7 @@
 ├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle)
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
-│                  PlayerController, SoundEffects)
+│                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion)
 ├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila)
 └── enums/         constantes compartidas (claves de texto, idiomas, estados de carga)

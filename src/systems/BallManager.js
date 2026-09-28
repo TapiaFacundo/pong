@@ -43,7 +43,7 @@ export default class BallManager {
     playPaddleHit();
   }
 
-  update() {
+  update(delta) {
     const radius = BALL_SIZE / 2;
 
     // onBallOut puede terminar el partido y vaciar this.balls (clearAll) o
@@ -51,6 +51,8 @@ export default class BallManager {
     // se itera sobre una copia y se revisa que la pelota siga en juego.
     for (const ball of [...this.balls]) {
       if (!this.balls.includes(ball)) continue;
+
+      ball.update(delta);
 
       if (ball.x < -radius) {
         this.removeBall(ball);

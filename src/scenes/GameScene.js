@@ -103,7 +103,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.controllerLeft.update(delta);
     this.controllerRight.update(delta);
-    this.ballManager.update();
+    this.ballManager.update(delta);
   }
 
   drawMidLine() {
@@ -195,8 +195,8 @@ export default class GameScene extends Phaser.Scene {
       this.centerPaddleEffect.registerBall(newBall);
     } else if (definition.kind === "turbo") {
       ball.applyTurbo();
-    } else if (definition.kind === "erratic") {
-      this.ballEffects.applyErratic(ball);
+    } else if (definition.kind === "zigzag" || definition.kind === "curve") {
+      this.ballEffects.applyMotion(ball, definition.kind);
     } else if (definition.kind === "invisible") {
       this.ballEffects.applyInvisible(ball);
     } else if (definition.kind === "rain") {

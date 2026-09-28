@@ -1,6 +1,6 @@
 ### Ponger-up
 
-Pong clásico (1 jugador vs CPU o 2 jugadores en el mismo teclado) con 18 power-ups que agrandan/achican palas, invierten controles, duplican puntos, multiplican pelotas y más, según lo definido en `docs/GDD.pdf`.
+Pong clásico (1 jugador vs CPU o 2 jugadores en el mismo teclado) con 19 power-ups que agrandan/achican palas, invierten controles, duplican puntos, multiplican pelotas y más, según lo definido en `docs/GDD.pdf`.
 
 ## Integrantes
 
@@ -43,7 +43,7 @@ Ganar el punto llevando la pelota más allá de la pala rival. Gana la partida q
 ### Mecánicas principales
 
 - Pong de 1 jugador (vs CPU, con 4 niveles de dificultad) o 2 jugadores en el mismo teclado.
-- 18 power-ups (amarillo/verde/rojo) que aparecen en el centro de la cancha y se activan al tocarlos con la pelota: agrandar/achicar pala, acelerarla/frenarla, invertir controles, punto doble, pelota extra, turbo, pelota errática o invisible, paleta central, entre otros.
+- 19 power-ups (amarillo/verde/rojo) que aparecen en el centro de la cancha y se activan al tocarlos con la pelota: agrandar/achicar pala, acelerarla/frenarla, invertir controles, punto doble, pelota extra, turbo, pelota zigzagueante, curva o invisible, paleta central, entre otros.
 - IA con velocidad, tiempo de reacción, margen de error y anticipación configurables por dificultad.
 - Pantalla de tutorial antes de cada partida, pausa en cualquier momento y pantalla de victoria al terminar.
 

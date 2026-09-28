@@ -77,7 +77,8 @@ export const POWERUP_LABELS = {
   doublePoint: "Punto doble",
   extraBall: "¡Bola extra!",
   turbo: "¡Turbo!",
-  erratic: "Pelota errática",
+  zigzag: "Pelota zigzagueante",
+  curve: "Pelota curva",
   invisible: "Pelota invisible",
   rain: "Lluvia de power-ups",
   centerPaddle: "Paleta central",
@@ -91,14 +92,27 @@ export const PADDLE_SPEED_DOWN_SCALE = 0.6;
 
 export const PADDLE_POWERUP_KINDS = ["grow", "shrink", "speedUp", "slowDown", "invert"];
 
-export const BALL_ERRATIC_JITTER_INTERVAL = 220;
-export const BALL_ERRATIC_JITTER_ANGLE = Math.PI / 4;
+// Tope de ángulo (respecto del avance horizontal) para las pelotas con
+// efectos de movimiento: garantiza que nunca vuelvan hacia su propio arco.
+export const BALL_MAX_MOTION_ANGLE = (70 * Math.PI) / 180;
+
+// Bola zigzagueante: onda de ±30 px, una ondulación completa cada 0,8 s.
+export const BALL_ZIGZAG_AMPLITUDE = 30;
+export const BALL_ZIGZAG_PERIOD = 800;
+
+// Bola curva: los golpes fuera del 30 % central de la pala curvan la pelota.
+// Arranca recta y, pasados BALL_CURVE_DELAY ms, gira hasta 100°/s (golpe en
+// la punta) durante BALL_CURVE_DURATION ms.
+export const BALL_CURVE_MIN_OFFSET = 0.3;
+export const BALL_CURVE_MAX_TURN_RATE = (100 * Math.PI) / 180;
+export const BALL_CURVE_DELAY = 150;
+export const BALL_CURVE_DURATION = 900;
 export const BALL_INVISIBLE_BLINK_INTERVAL = 220;
 
 export const CENTER_PADDLE_HEIGHT = 60;
 export const CENTER_PADDLE_SPEED = 180;
 
-// 6 tipos de pala/puntaje (verde/roja) + 6 amarillos = 18 power-ups, según el GDD.
+// 6 tipos de pala/puntaje (verde/roja) + 7 amarillos = 19 power-ups, según el GDD.
 export const POWERUP_DEFINITIONS = [
   { id: "grow-green", kind: "grow", colorCategory: "green" },
   { id: "grow-red", kind: "grow", colorCategory: "red" },
@@ -114,7 +128,8 @@ export const POWERUP_DEFINITIONS = [
   { id: "double-point-red", kind: "doublePoint", colorCategory: "red" },
   { id: "extra-ball", kind: "extraBall", colorCategory: "yellow" },
   { id: "turbo", kind: "turbo", colorCategory: "yellow" },
-  { id: "erratic-ball", kind: "erratic", colorCategory: "yellow" },
+  { id: "zigzag-ball", kind: "zigzag", colorCategory: "yellow" },
+  { id: "curve-ball", kind: "curve", colorCategory: "yellow" },
   { id: "invisible-ball", kind: "invisible", colorCategory: "yellow" },
   { id: "powerup-rain", kind: "rain", colorCategory: "yellow" },
   { id: "center-paddle", kind: "centerPaddle", colorCategory: "yellow" },

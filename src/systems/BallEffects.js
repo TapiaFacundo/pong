@@ -1,50 +1,38 @@
-import Phaser from "phaser";
-import {
-  POWERUP_EFFECT_DURATION,
-  BALL_ERRATIC_JITTER_INTERVAL,
-  BALL_ERRATIC_JITTER_ANGLE,
-  BALL_INVISIBLE_BLINK_INTERVAL,
-} from "../config.js";
+import { POWERUP_EFFECT_DURATION, BALL_INVISIBLE_BLINK_INTERVAL } from "../config.js";
+import ZigzagMotion from "./ZigzagMotion.js";
+import CurveMotion from "./CurveMotion.js";
+
+const MOTION_CLASSES = {
+  zigzag: ZigzagMotion,
+  curve: CurveMotion,
+};
 
 export default class BallEffects {
   constructor(scene) {
     this.scene = scene;
-    this.erraticTimers = new Map();
     this.invisibleTimers = new Map();
+    this.motionTimers = { zigzag: new Map(), curve: new Map() };
   }
 
-  applyErratic(ball) {
-    this.clearErratic(ball);
+  // Efectos que cambian la trayectoria de una pelota (zigzag, curva) durante
+  // POWERUP_EFFECT_DURATION. Volver a agarrar el mismo reinicia el tiempo.
+  applyMotion(ball, kind) {
+    this.clearMotion(ball, kind);
 
-    const jitterEvent = this.scene.time.addEvent({
-      delay: BALL_ERRATIC_JITTER_INTERVAL,
-      loop: true,
-      callback: () => this.jitterBall(ball),
-    });
-    const expireEvent = this.scene.time.delayedCall(POWERUP_EFFECT_DURATION, () => this.clearErratic(ball));
+    const motion = new MOTION_CLASSES[kind]();
+    ball.addMotion(motion);
+    const expireEvent = this.scene.time.delayedCall(POWERUP_EFFECT_DURATION, () => this.clearMotion(ball, kind));
 
-    this.erraticTimers.set(ball, { jitterEvent, expireEvent });
+    this.motionTimers[kind].set(ball, { motion, expireEvent });
   }
 
-  jitterBall(ball) {
-    if (!ball.circle.body) {
-      this.clearErratic(ball);
-      return;
-    }
+  clearMotion(ball, kind) {
+    const entry = this.motionTimers[kind].get(ball);
+    if (!entry) return;
 
-    const body = ball.circle.body;
-    const currentAngle = Math.atan2(body.velocity.y, body.velocity.x);
-    const newAngle = currentAngle + Phaser.Math.FloatBetween(-BALL_ERRATIC_JITTER_ANGLE, BALL_ERRATIC_JITTER_ANGLE);
-    body.setVelocity(Math.cos(newAngle) * ball.speed, Math.sin(newAngle) * ball.speed);
-  }
-
-  clearErratic(ball) {
-    const timers = this.erraticTimers.get(ball);
-    if (!timers) return;
-
-    timers.jitterEvent.remove();
-    timers.expireEvent.remove();
-    this.erraticTimers.delete(ball);
+    entry.expireEvent.remove();
+    this.motionTimers[kind].delete(ball);
+    ball.removeMotion(entry.motion);
   }
 
   applyInvisible(ball) {
@@ -78,7 +66,9 @@ export default class BallEffects {
   }
 
   clearAll() {
-    Array.from(this.erraticTimers.keys()).forEach((ball) => this.clearErratic(ball));
     Array.from(this.invisibleTimers.keys()).forEach((ball) => this.clearInvisible(ball));
+    for (const kind of Object.keys(this.motionTimers)) {
+      Array.from(this.motionTimers[kind].keys()).forEach((ball) => this.clearMotion(ball, kind));
+    }
   }
 }
