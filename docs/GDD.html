@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>GDD — Pong con Power-ups</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10.5pt; line-height: 1.45; color: #1a1a1a; margin: 0; }
+  h1 { font-size: 22pt; margin: 0 0 2px; }
+  .meta { color: #666; font-size: 9.5pt; margin-bottom: 18px; }
+  h2 { font-size: 14pt; margin: 22px 0 8px; padding-bottom: 3px; border-bottom: 2px solid #222; page-break-after: avoid; }
+  h3 { font-size: 11.5pt; margin: 14px 0 6px; page-break-after: avoid; }
+  p { margin: 6px 0; }
+  ul { margin: 6px 0; padding-left: 20px; }
+  li { margin: 2px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 10px; font-size: 9.5pt; page-break-inside: avoid; }
+  th, td { border: 1px solid #bbb; padding: 4px 7px; text-align: left; vertical-align: top; }
+  th { background: #eee; }
+  code { font-family: Consolas, monospace; font-size: 9pt; background: #f2f2f2; padding: 0 3px; border-radius: 2px; }
+  pre { font-family: Consolas, monospace; font-size: 8.8pt; background: #f5f5f5; border: 1px solid #ddd; padding: 8px 10px; line-height: 1.35; page-break-inside: avoid; }
+  .note { color: #555; font-size: 9.5pt; font-style: italic; }
+  .tag { display: inline-block; font-size: 8pt; font-weight: 600; padding: 0 5px; border-radius: 3px; vertical-align: 1px; }
+  .pend { background: #fff1cc; color: #7a5600; border: 1px solid #e6c766; }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: 0; border: 1px solid #0003; }
+  .y { background: #ffdd33; } .g { background: #33dd55; } .r { background: #dd3333; }
+  .legend { font-size: 9pt; color: #555; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+
+<h1>GDD — Pong con Power-ups</h1>
+<div class="meta">Versión 2 · 28/09/2026 · Facundo Tapia, Valentino Batiston</div>
+<div class="legend"><span class="tag pend">pendiente</span> = decidido en diseño pero todavía no implementado en el juego.</div>
+
+<h2>1. Concepto</h2>
+<p>Pong clásico con power-ups que aparecen en el centro de la cancha y le meten caos a las rondas. Se juega en el navegador, de forma local: 1 jugador contra la CPU, 2 jugadores en el mismo teclado, o un Modo Historia de 10 niveles contra rivales cada vez más difíciles.</p>
+
+<h2>2. Plataforma, stack y publicación</h2>
+<ul>
+  <li><b>Motor:</b> Phaser 3 (físicas Arcade).</li>
+  <li><b>Bundler / dev server:</b> Vite.</li>
+  <li><b>Node.js:</b> solo para el entorno de desarrollo y el build.</li>
+  <li><b>Publicación:</b> sitio estático en Vercel (salida de <code>npm run build</code>). No hay backend propio ni juego online.</li>
+  <li><b>Servicios externos:</b> las traducciones se descargan de la API de Traducila (ver sección 10). Es la única llamada de red del juego.</li>
+  <li><b>Persistencia:</b> solo <code>localStorage</code> del navegador (idioma elegido y progreso del Modo Historia). No hay cuentas de usuario.</li>
+</ul>
+
+<h2>3. Modos de juego</h2>
+<table>
+  <tr><th style="width:24%">Modo</th><th>Descripción</th></tr>
+  <tr><td>1 Jugador vs CPU (casual)</td><td>La IA controla la pala derecha. Antes de la partida se elige la dificultad: fácil, normal o difícil (sección 8).</td></tr>
+  <tr><td>2 Jugadores (casual)</td><td>Mismo teclado, cada jugador con su pala.</td></tr>
+  <tr><td>Modo Historia <span class="tag pend">pendiente</span></td><td>1 jugador vs CPU a lo largo de 10 niveles con dificultad y mecánicas crecientes, jefes y enemigos con habilidades. El progreso se guarda (sección 12).</td></tr>
+</table>
+
+<h2>4. Controles</h2>
+<table>
+  <tr><th style="width:45%">Acción</th><th>Control</th></tr>
+  <tr><td>Mover pala Jugador 1 (izquierda)</td><td>W / S</td></tr>
+  <tr><td>Mover pala Jugador 2 (derecha)</td><td>Flecha arriba / Flecha abajo</td></tr>
+  <tr><td>Menú: elegir modo</td><td>1 (1 jugador) / 2 (2 jugadores), o clic</td></tr>
+  <tr><td>Menú: elegir puntaje</td><td>5 / 7 <span class="tag pend">pendiente</span> / 0 (10 puntos), o clic</td></tr>
+  <tr><td>Elegir dificultad de la CPU</td><td>1 (Fácil) / 2 (Normal) / 3 (Difícil), o clic</td></tr>
+  <tr><td>Confirmar / avanzar de pantalla</td><td>Enter o clic</td></tr>
+  <tr><td>Pausar la partida</td><td>Esc</td></tr>
+  <tr><td>En pausa: reanudar / volver al menú</td><td>Enter o Esc / M</td></tr>
+  <tr><td>Cambiar idioma</td><td>Ícono ⚙ del menú principal, u “Opciones” en la pausa</td></tr>
+</table>
+<p class="note">No hay menú de reasignación de teclas.</p>
+
+<h2>5. Reglas de partida</h2>
+<ul>
+  <li>Cancha rectangular, una pala vertical a cada lado. La pelota rebota en los bordes superior e inferior.</li>
+  <li>Punto para el rival cuando la pelota sale por tu lado.</li>
+  <li>Partidas casuales a <b>5</b> (rápida), <b>7</b> (intermedia) <span class="tag pend">pendiente</span> o <b>10</b> puntos (larga). El Modo Historia se juega siempre a 7.</li>
+  <li>Gana quien llega primero al puntaje objetivo. La partida termina en el mismo momento en que se alcanza, aunque todavía queden otras pelotas en cancha.</li>
+  <li>Si hay más de una pelota en juego (por la bola extra), la ronda sigue hasta que salieron todas. Cada pelota que sale suma un punto para el rival del lado por el que salió.</li>
+  <li>Al terminar la ronda se limpian los power-ups en cancha y todos los efectos activos, y se relanza una pelota desde el centro.</li>
+</ul>
+
+<h2>6. Pelota y física</h2>
+<table>
+  <tr><th style="width:45%">Parámetro</th><th>Valor</th></tr>
+  <tr><td>Cancha</td><td>800 × 600 px</td></tr>
+  <tr><td>Pala</td><td>16 × 100 px, a 40 px del borde; velocidad del jugador 400 px/s</td></tr>
+  <tr><td>Pelota</td><td>14 px de diámetro</td></tr>
+  <tr><td>Velocidad inicial de la pelota</td><td>380 px/s</td></tr>
+  <tr><td>Aceleración por golpe de pala</td><td>+2,5 % por golpe, con tope de 700 px/s</td></tr>
+  <tr><td>Ángulo de rebote en la pala</td><td>Según dónde pega: centro = recto, puntas = hasta 60°</td></tr>
+  <tr><td>Saque inicial</td><td>Hacia un lado al azar, con ángulo aleatorio de hasta ±30°, 0,6 s después de empezar</td></tr>
+  <tr><td>Saque tras una ronda</td><td>Desde el centro, hacia el jugador que perdió el punto, 0,6 s después</td></tr>
+</table>
+<p class="note">El Turbo puede llevar la pelota por encima del tope de 700 px/s; en ese caso los golpes siguientes no la frenan.</p>
+
+<h2>7. Power-ups</h2>
+<p>Aparecen en una zona de 160 × 300 px en el centro de la cancha, cada 5 a 7,5 s. Los activa la primera pelota que los toca.</p>
+
+<h3>Sistema de colores</h3>
+<ul>
+  <li><span class="dot y"></span><b>Amarillo:</b> afecta a ambos jugadores por igual.</li>
+  <li><span class="dot g"></span><b>Verde:</b> efecto positivo para quien lo agarra (te beneficia a vos o perjudica al rival).</li>
+  <li><span class="dot r"></span><b>Rojo:</b> efecto negativo para quien lo agarra (te perjudica a vos o beneficia al rival).</li>
+</ul>
+<p>Cada power-up de pala o de puntaje tiene sus dos versiones (verde y roja), y cuál sale es aleatorio.</p>
+
+<h3>Power-ups de pala y puntaje (verde / rojo)</h3>
+<table>
+  <tr><th style="width:26%">Power-up</th><th><span class="dot g"></span>Verde</th><th><span class="dot r"></span>Rojo</th><th style="width:18%">Valor</th></tr>
+  <tr><td>Agrandar pala</td><td>Agranda tu pala</td><td>Agranda la pala del rival</td><td>× 1,6 de alto</td></tr>
+  <tr><td>Achicar pala</td><td>Achica la pala del rival</td><td>Achica tu propia pala</td><td>× 0,6 de alto</td></tr>
+  <tr><td>Acelerar pala</td><td>Acelera tu pala</td><td>Acelera la pala del rival</td><td>× 1,6 de velocidad</td></tr>
+  <tr><td>Ralentizar pala</td><td>Ralentiza la pala del rival</td><td>Ralentiza tu propia pala</td><td>× 0,6 de velocidad</td></tr>
+  <tr><td>Controles invertidos</td><td>Invierte los controles del rival</td><td>Invierte tus propios controles</td><td>—</td></tr>
+  <tr><td>Punto doble</td><td>Tu próximo punto vale x2</td><td>El próximo punto del rival vale x2</td><td>Indicador “×2” bajo el marcador</td></tr>
+</table>
+
+<h3>Power-ups amarillos</h3>
+<table>
+  <tr><th style="width:26%">Power-up</th><th>Efecto</th><th style="width:22%">Valor</th></tr>
+  <tr><td>Bola extra</td><td>Suma otra pelota en juego, lanzada desde donde se agarró el power-up</td><td>—</td></tr>
+  <tr><td>Turbo</td><td>Acelera la pelota que lo agarró</td><td>× 1,5 de velocidad</td></tr>
+  <tr><td>Pelota errática</td><td>La trayectoria de la pelota se vuelve zigzagueante e impredecible</td><td>Desvío de hasta ±45° cada 0,22 s</td></tr>
+  <tr><td>Pelota invisible</td><td>La pelota parpadea y desaparece por instantes</td><td>Parpadeo cada 0,22 s</td></tr>
+  <tr><td>Lluvia de power-ups</td><td>Durante un tramo aparecen power-ups mucho más seguido</td><td>Spawn cada 1,5 a 3 s</td></tr>
+  <tr><td>Paleta central</td><td>Aparece una paleta chica en el medio de la cancha que se mueve de arriba hacia abajo y bloquea tiros de ambos jugadores</td><td>60 px de alto, 180 px/s</td></tr>
+</table>
+<p class="note">Total: 6 tipos de pala/puntaje con variante verde y roja + 6 amarillos = 18 power-ups.</p>
+
+<h3>Reglas de activación</h3>
+<ul>
+  <li><b>A quién afecta:</b> lo decide el último jugador que tocó la pelota antes de que esta toque el power-up (quien la mandó hacia ahí). Si la pelota todavía no tocó ninguna pala, los power-ups verdes y rojos no tienen efecto.</li>
+  <li><b>Duración:</b> 15 s para los efectos de pala, la pelota errática, la pelota invisible, la lluvia y la paleta central. La bola extra y el turbo duran lo que dure la ronda. El punto doble no tiene duración en segundos: dura hasta que se anota el próximo punto, de cualquiera de los dos.</li>
+  <li><b>Acumulación:</b> los efectos de distinto tipo se acumulan (por ejemplo, pala grande + pala rápida al mismo tiempo). Un efecto del mismo tipo sobre la misma pala (tamaño, velocidad o controles) reemplaza al anterior y reinicia los 15 s.</li>
+  <li><b>Power-ups en cancha:</b> pueden coexistir varios. El spawn evita que aparezcan superpuestos (distancia mínima de 54 px entre centros).</li>
+  <li><b>Reset:</b> los efectos activos se cancelan al terminar la ronda (cuando salieron todas las pelotas), no con cada pelota individual.</li>
+</ul>
+
+<h3>Feedback</h3>
+<ul>
+  <li>Onda expansiva del color del power-up en el punto donde se agarró.</li>
+  <li>Texto flotante con el nombre del power-up, en su color.</li>
+  <li>Destello del color del power-up en la pala afectada (solo en los de pala).</li>
+  <li>Sonido de power-up agarrado.</li>
+</ul>
+
+<h2>8. IA</h2>
+<p>La IA sigue la posición Y de la pelota cuando viene hacia su lado. Tarda un tiempo de reacción en fijar un objetivo, apunta con un margen de error aleatorio y no se mueve si ya está a menos de 10 px del objetivo. En difícil, a veces también se reposiciona cuando la pelota se aleja (anticipación).</p>
+<table>
+  <tr><th>Dificultad</th><th>Velocidad máxima</th><th>Tiempo de reacción</th><th>Margen de error</th><th>Anticipación</th></tr>
+  <tr><td>Fácil</td><td>180 px/s</td><td>350 ms</td><td>± 50 px</td><td>No</td></tr>
+  <tr><td>Normal</td><td>260 px/s</td><td>150 ms</td><td>± 20 px</td><td>No</td></tr>
+  <tr><td>Difícil</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 % de chance en cada ciclo de reacción</td></tr>
+</table>
+<p class="note">La IA solo sigue a la primera pelota en juego. Los power-ups de velocidad de pala se aplican sobre su velocidad base.</p>
+
+<h2>9. Pantallas y flujo</h2>
+<pre>Menú principal ──(1P)──► Dificultad ──► Tutorial ──► Partida ⇄ Pausa
+       │                                              │
+       └──(2P)──────────────────────► Tutorial        └──► Victoria ──► Menú principal</pre>
+<table>
+  <tr><th style="width:22%">Pantalla</th><th>Contenido</th></tr>
+  <tr><td>Menú principal</td><td>Título, elección de modo (1P / 2P), elección de puntaje, recordatorio de controles, “Empezar” y el ícono ⚙ que abre el panel de idioma.</td></tr>
+  <tr><td>Dificultad</td><td>Solo en 1P: fácil, normal o difícil (arranca en normal).</td></tr>
+  <tr><td>Tutorial</td><td>Se muestra antes de cada partida: controles, tecla de pausa, cómo se activan los power-ups y qué significa cada color.</td></tr>
+  <tr><td>Partida</td><td>Cancha con línea central punteada, marcador de cada jugador arriba y el indicador “×2” debajo del marcador de quien tenga punto doble.</td></tr>
+  <tr><td>Pausa</td><td>Se superpone a la partida congelada: Reanudar, Volver al menú y Opciones (panel de idioma).</td></tr>
+  <tr><td>Victoria</td><td>“¡Gana {jugador}!” (Jugador 1, Jugador 2 o CPU) y Enter o clic para volver al menú.</td></tr>
+</table>
+
+<h2>10. Idiomas</h2>
+<ul>
+  <li>Idiomas disponibles: español (por defecto) e inglés.</li>
+  <li>El español está escrito directamente en el código. Las demás traducciones se descargan de la API de Traducila y se guardan en <code>localStorage</code> bajo la clave <code>translations</code>.</li>
+  <li>Idioma inicial: el que indique la URL (<code>?lang=en</code>), si no el del navegador, y si no español. Después se puede cambiar desde el panel de idioma.</li>
+  <li>Cada texto nuevo de la interfaz se agrega como clave en <code>src/enums/keys.js</code> y hay que cargar su traducción en Traducila para que aparezca en inglés. Sin traducción, se muestra el texto en español.</li>
+</ul>
+<p class="note">En Vercel conviene usar la variante <code>?lang=en</code>: la variante por ruta (<code>/en</code>) daría 404 porque el sitio es estático y no tiene reescritura de rutas configurada.</p>
+
+<h2>11. Arte y audio</h2>
+<ul>
+  <li>Formas simples (rectángulos y círculos) con colores planos: fondo negro, palas y pelota blancas, línea central gris y los power-ups en amarillo, verde o rojo.</li>
+  <li>Los sonidos se generan por código con Web Audio, sin archivos: rebote en pala, punto anotado y power-up agarrado, cada uno distinto.</li>
+</ul>
+
+<h2>12. Modo Historia <span class="tag pend">pendiente</span></h2>
+<h3>Reglas confirmadas</h3>
+<ul>
+  <li>10 niveles, 1 jugador vs CPU. El jugador siempre controla la pala izquierda (W / S).</li>
+  <li>Cada nivel es un partido a 7 puntos.</li>
+  <li>La dificultad sube de nivel a nivel: IA mejorada, enemigos con habilidades particulares, jefes (boss fights) y cambios en la cancha, como un campo más grande en algunos niveles.</li>
+  <li>Al empezar solo está disponible el nivel 1. Ganar un nivel desbloquea el siguiente.</li>
+  <li>Solo se pueden elegir niveles desbloqueados. Los niveles ya superados se pueden repetir siempre.</li>
+  <li>Si perdés un nivel, solo tenés que reintentar ese nivel. No se pierde progreso.</li>
+  <li>El progreso se mantiene aunque se cierre la página.</li>
+</ul>
+
+<h3>Guardado del progreso</h3>
+<ul>
+  <li>Se guarda en <code>localStorage</code> con una clave propia, separada de la de traducciones (el sistema de idiomas vacía esa clave cada vez que cambia el idioma).</li>
+  <li>El progreso queda asociado al navegador y dispositivo: no se sincroniza entre dispositivos y se pierde si el usuario borra los datos del sitio o juega en ventana privada. Es aceptable porque el juego no tiene cuentas ni backend.</li>
+  <li>Si <code>localStorage</code> no está disponible o los datos guardados son inválidos, el juego arranca con solo el nivel 1 desbloqueado en vez de fallar.</li>
+</ul>
+
+<h3>Diseño de niveles</h3>
+<p><span class="tag pend">pendiente</span> Detalle nivel por nivel (rival, habilidades, reglas de cancha y power-ups): a definir en la próxima versión de este documento.</p>
+
+<h2>13. Arquitectura del código</h2>
+<pre>src/
+├── main.js        punto de entrada y configuración de Phaser
+├── config.js      constantes globales (cancha, velocidades, colores, teclas, power-ups, IA)
+├── scenes/        una escena por archivo (MenuScene, DifficultyScene, TutorialScene, GameScene, PauseScene)
+├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle)
+├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
+│                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
+│                  PlayerController, SoundEffects)
+├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel)
+├── services/      acceso a servicios externos y al navegador (translations: API de Traducila)
+└── enums/         constantes compartidas (claves de texto, idiomas, estados de carga)
+public/            assets estáticos servidos directo
+docs/
+├── GDD.html       fuente editable de este documento
+└── GDD.pdf        versión generada a partir del HTML</pre>
+<p><code>GameScene</code> coordina la partida, pero la lógica vive en los sistemas: cada uno es dueño de sus entidades y expone una API simple. El flujo entre pantallas usa las escenas de Phaser como máquina de estados.</p>
+
+</body>
+</html>

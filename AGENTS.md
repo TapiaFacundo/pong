@@ -1,7 +1,7 @@
 ## AGENTS.md
 
 ## Proyecto
-Pong con power-ups — Trabajo Práctico Módulo #7. Pong local (1 jugador vs CPU, o 2 jugadores en el mismo teclado) con power-ups que alteran tamaño/velocidad de pala y controles.
+Pong con power-ups — empezó como Trabajo Práctico Módulo #7 y se sigue ampliando. Pong local (1 jugador vs CPU, 2 jugadores en el mismo teclado, y Modo Historia de 10 niveles) con power-ups que alteran palas, pelota y puntaje.
 
 ## Stack
 - JavaScript
@@ -9,22 +9,26 @@ Pong con power-ups — Trabajo Práctico Módulo #7. Pong local (1 jugador vs CP
 - Vite
 - Phaser 3
 
+Se publica como sitio estático en Vercel: sin backend, la única persistencia es `localStorage` y las rutas distintas de `/` dan 404 (no hay rewrites configurados).
+
 ## Objetivo
-Desarrollar el juego aplicando buenas prácticas de organización de código y desarrollo asistido por agentes, siguiendo `docs/GDD.pdf` como referencia de diseño.
+Desarrollar el juego aplicando buenas prácticas de organización de código y desarrollo asistido por agentes, siguiendo el GDD como referencia de diseño. La fuente editable es `docs/GDD.html`; `docs/GDD.pdf` se regenera a partir de ella después de cada cambio.
 
 ## Arquitectura
 ```
 src/
 ├── main.js       # punto de entrada, config de Phaser
-├── config.js     # constantes globales (cancha, velocidades, colores, teclas)
+├── config.js     # constantes globales (cancha, velocidades, colores, teclas, power-ups, IA)
 ├── scenes/       # una escena por archivo (MenuScene.js, GameScene.js, etc.)
 ├── entities/     # clases jugables/objetos (Paddle.js, Ball.js, PowerUp.js)
 ├── systems/      # lógica que no es una entidad (PowerUpSpawner.js, ScoreManager.js, AI.js)
-├── patterns/     # implementaciones de patrones de diseño usados en el proyecto
-└── assets/       # assets importados desde código
+├── ui/           # componentes de interfaz reutilizables entre escenas (LanguagePanel.js)
+├── services/     # acceso a servicios externos y al navegador (translations.js)
+└── enums/        # constantes compartidas (claves de texto, idiomas, estados)
 public/           # assets estáticos servidos directo
 docs/
-└── GDD.pdf
+├── GDD.html      # fuente editable del GDD
+└── GDD.pdf       # generado desde GDD.html
 ```
 
 ## Convenciones de nombres
@@ -42,6 +46,7 @@ docs/
 - No agregar dependencias externas sin justificar su necesidad.
 - No hace falta explicar cómo crear scripts, escenas o carpetas.
 - Priorizar soluciones comprensibles y respetar la arquitectura existente.
+- Todo texto nuevo de la interfaz va como clave en `src/enums/keys.js` y se muestra con `getPhrase()`; su traducción al inglés se carga a mano en Traducila.
 
 ## Flujo de trabajo
 - Un sistema a la vez: analizar/planear antes de implementar, implementar, probar y validar antes de pasar al siguiente. Nada de pedir "hacé todo el juego" de una.
@@ -53,6 +58,7 @@ docs/
 - Instalar dependencias: `npm install`
 - Ejecutar: `npm run dev`
 - Build: `npm run build`
+- Regenerar el PDF del GDD (PowerShell, Chrome sin ventana; necesita rutas absolutas): `& "C:\Program Files\Google\Chrome\Application\chrome.exe" --headless=new --no-pdf-header-footer --print-to-pdf="$PWD\docs\GDD.pdf" "$PWD\docs\GDD.html"`
 
 ---
 *Este archivo se puede ampliar durante el desarrollo a medida que se tomen nuevas decisiones de arquitectura, convenciones o nombres.*
