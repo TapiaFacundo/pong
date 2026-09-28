@@ -35,6 +35,7 @@ export const SERVE_DELAY_AFTER_POINT = 1600;
 export const PADDLE_RECENTER_DURATION = 400;
 
 export const WIN_SCORE_SHORT = 5;
+export const WIN_SCORE_MEDIUM = 7;
 export const WIN_SCORE_LONG = 10;
 
 export const COLORS = {

@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { GAME_TITLE, GAME_WIDTH, COLORS, WIN_SCORE_SHORT, WIN_SCORE_LONG } from "../config.js";
+import { GAME_TITLE, GAME_WIDTH, COLORS, WIN_SCORE_SHORT, WIN_SCORE_MEDIUM, WIN_SCORE_LONG } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 import { getTranslations, getPhrase, getLanguageConfig } from "../services/translations.js";
 import LanguagePanel from "../ui/LanguagePanel.js";
@@ -37,12 +37,15 @@ export default class MenuScene extends Phaser.Scene {
     this.pointsOption5 = this.createOption(272, "5: ", KEYS.PARTIDA_A_5_PUNTOS, () =>
       this.setWinScore(WIN_SCORE_SHORT)
     );
-    this.pointsOption10 = this.createOption(304, "0: ", KEYS.PARTIDA_A_10_PUNTOS, () =>
+    this.pointsOption7 = this.createOption(304, "7: ", KEYS.PARTIDA_A_7_PUNTOS, () =>
+      this.setWinScore(WIN_SCORE_MEDIUM)
+    );
+    this.pointsOption10 = this.createOption(336, "0: ", KEYS.PARTIDA_A_10_PUNTOS, () =>
       this.setWinScore(WIN_SCORE_LONG)
     );
 
     this.controlsHintText = this.add
-      .text(GAME_WIDTH / 2, 360, getPhrase(KEYS.JUGADOR_1_W_S_JUGADOR_2_FLECHAS_ARRIBA_ABAJO), {
+      .text(GAME_WIDTH / 2, 390, getPhrase(KEYS.JUGADOR_1_W_S_JUGADOR_2_FLECHAS_ARRIBA_ABAJO), {
         fontSize: "16px",
         color: "#888888",
       })
@@ -61,6 +64,7 @@ export default class MenuScene extends Phaser.Scene {
     this.input.keyboard.on("keydown-ONE", () => this.setMode("1p"));
     this.input.keyboard.on("keydown-TWO", () => this.setMode("2p"));
     this.input.keyboard.on("keydown-FIVE", () => this.setWinScore(WIN_SCORE_SHORT));
+    this.input.keyboard.on("keydown-SEVEN", () => this.setWinScore(WIN_SCORE_MEDIUM));
     this.input.keyboard.on("keydown-ZERO", () => this.setWinScore(WIN_SCORE_LONG));
     this.input.keyboard.on("keydown-ENTER", () => this.startGame());
   }
@@ -120,6 +124,7 @@ export default class MenuScene extends Phaser.Scene {
     this.styleOption(this.modeOption1p, this.mode === "1p");
     this.styleOption(this.modeOption2p, this.mode === "2p");
     this.styleOption(this.pointsOption5, this.winScore === WIN_SCORE_SHORT);
+    this.styleOption(this.pointsOption7, this.winScore === WIN_SCORE_MEDIUM);
     this.styleOption(this.pointsOption10, this.winScore === WIN_SCORE_LONG);
   }
 

@@ -31,6 +31,7 @@ export const KEYS = {
   PALETA_CENTRAL: "Paleta central",
   PARTIDA_A_10_PUNTOS: "Partida a 10 puntos",
   PARTIDA_A_5_PUNTOS: "Partida a 5 puntos",
+  PARTIDA_A_7_PUNTOS: "Partida a 7 puntos",
   PAUSA: "PAUSA",
   PELOTA_CURVA: "Pelota curva",
   PELOTA_ZIGZAGUEANTE: "Pelota zigzagueante",
