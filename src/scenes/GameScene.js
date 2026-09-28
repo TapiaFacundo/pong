@@ -7,6 +7,7 @@ import {
   KEYS,
   WIN_SCORE_SHORT,
   STORY_WIN_SCORE,
+  STORY_RESULT_DELAY,
   PADDLE_POWERUP_KINDS,
   POWERUP_TEXT_COLORS,
   POWERUP_EFFECT_DURATION,
@@ -222,6 +223,27 @@ export default class GameScene extends Phaser.Scene {
     this.centerPaddleEffect.clear();
     this.ballManager.clearAll();
 
+    if (this.level) {
+      this.finishStoryLevel(winner);
+    } else {
+      this.showCasualWinner(winner);
+    }
+  }
+
+  // En el Modo Historia, el resultado (y el guardado del progreso) lo maneja
+  // LevelResultScene; acá solo se deja ver el marcador final un momento.
+  finishStoryLevel(winner) {
+    this.time.delayedCall(STORY_RESULT_DELAY, () => {
+      this.scene.start("LevelResultScene", {
+        levelId: this.level.id,
+        won: winner === "p1",
+        scoreP1: this.scoreManager.scoreP1,
+        scoreP2: this.scoreManager.scoreP2,
+      });
+    });
+  }
+
+  showCasualWinner(winner) {
     const label =
       winner === "p1"
         ? getPhrase(TRANSLATION_KEYS.JUGADOR_1)

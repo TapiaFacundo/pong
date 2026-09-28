@@ -61,7 +61,9 @@ export default class LevelIntroScene extends Phaser.Scene {
     this.input.keyboard.on("keydown-ESC", () => this.scene.start("LevelSelectScene"));
   }
 
+  // Antes del nivel 1 se muestra el tutorial, que después arranca la partida.
   startLevel() {
-    this.scene.start("GameScene", { mode: "story", levelId: this.level.id });
+    const gameData = { mode: "story", levelId: this.level.id };
+    this.scene.start(this.level.id === 1 ? "TutorialScene" : "GameScene", gameData);
   }
 }

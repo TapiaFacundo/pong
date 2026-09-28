@@ -12,6 +12,11 @@ export default class PauseScene extends Phaser.Scene {
   }
 
   create() {
+    // En el Modo Historia, salir de la pausa lleva a la selección de nivel.
+    this.isStory = this.scene.get("GameScene").mode === "story";
+    this.exitLabelKey = this.isStory ? KEYS.SELECCION_DE_NIVEL : KEYS.VOLVER_AL_MENU;
+    this.hintKey = this.isStory ? KEYS.ENTER_ESC_REANUDAR_M_SELECCION_DE_NIVEL : KEYS.ENTER_ESC_REANUDAR_M_VOLVER_AL_MENU;
+
     this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6);
 
     this.titleText = this.add
@@ -25,7 +30,7 @@ export default class PauseScene extends Phaser.Scene {
       .on("pointerdown", () => this.resumeGame());
 
     this.exitText = this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 55, getPhrase(KEYS.VOLVER_AL_MENU), { fontSize: "26px", color: COLORS.TEXT })
+      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 55, getPhrase(this.exitLabelKey), { fontSize: "26px", color: COLORS.TEXT })
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true })
       .on("pointerdown", () => this.exitToMenu());
@@ -37,7 +42,7 @@ export default class PauseScene extends Phaser.Scene {
       .on("pointerdown", () => this.languagePanel.toggle());
 
     this.hintText = this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 150, getPhrase(KEYS.ENTER_ESC_REANUDAR_M_VOLVER_AL_MENU), {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 150, getPhrase(this.hintKey), {
         fontSize: "14px",
         color: "#888888",
       })
@@ -57,9 +62,9 @@ export default class PauseScene extends Phaser.Scene {
   refreshTexts() {
     this.titleText.setText(getPhrase(KEYS.PAUSA));
     this.resumeText.setText(getPhrase(KEYS.REANUDAR));
-    this.exitText.setText(getPhrase(KEYS.VOLVER_AL_MENU));
+    this.exitText.setText(getPhrase(this.exitLabelKey));
     this.optionsText.setText(getPhrase(OPTIONS_LABEL_KEY));
-    this.hintText.setText(getPhrase(KEYS.ENTER_ESC_REANUDAR_M_VOLVER_AL_MENU));
+    this.hintText.setText(getPhrase(this.hintKey));
   }
 
   handleEscape() {
@@ -80,6 +85,6 @@ export default class PauseScene extends Phaser.Scene {
 
   exitToMenu() {
     this.scene.stop("GameScene");
-    this.scene.start("MenuScene");
+    this.scene.start(this.isStory ? "LevelSelectScene" : "MenuScene");
   }
 }

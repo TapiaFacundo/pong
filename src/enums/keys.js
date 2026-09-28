@@ -51,6 +51,16 @@ export const KEYS = {
   GANA_EL_NIVEL_N_PARA_DESBLOQUEARLO: "Ganá el nivel {n} para desbloquearlo",
   FLECHAS_ELEGIR_ENTER_JUGAR_ESC_VOLVER: "Flechas: elegir   ENTER: jugar   ESC: volver",
   ESC_VOLVER: "ESC: volver",
+  GANASTE: "¡Ganaste!",
+  PERDISTE: "Perdiste",
+  LE_GANASTE_A_RIVAL: "Le ganaste a {rival}",
+  RIVAL_TE_GANO: "{rival} te ganó",
+  NIVEL_N_DESBLOQUEADO: "¡Nivel {n} desbloqueado!",
+  SIGUIENTE_NIVEL: "Siguiente nivel",
+  REINTENTAR: "Reintentar",
+  SELECCION_DE_NIVEL: "Selección de nivel",
+  FLECHAS_ELEGIR_ENTER_CONFIRMAR: "Flechas: elegir   ENTER: confirmar",
+  ENTER_ESC_REANUDAR_M_SELECCION_DE_NIVEL: "ENTER / ESC: Reanudar M: Selección de nivel",
 
   // Modo Historia: nombre, habilidad y frase de cada rival (src/data/levels.js).
   NOVATO: "Novato",

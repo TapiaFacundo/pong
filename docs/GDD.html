@@ -50,7 +50,7 @@
   <tr><th style="width:24%">Modo</th><th>Descripción</th></tr>
   <tr><td>1 Jugador vs CPU (casual)</td><td>La IA controla la pala derecha. Antes de la partida se elige la dificultad: fácil, normal, difícil o imposible (sección 8).</td></tr>
   <tr><td>2 Jugadores (casual)</td><td>Mismo teclado, cada jugador con su pala.</td></tr>
-  <tr><td>Modo Historia <span class="tag pend">pendiente</span></td><td>1 jugador vs CPU a lo largo de 10 niveles con dificultad y mecánicas crecientes, jefes y enemigos con habilidades. El progreso se guarda (sección 12).</td></tr>
+  <tr><td>Modo Historia</td><td>1 jugador vs CPU a lo largo de 10 niveles con dificultad y mecánicas crecientes, jefes y enemigos con habilidades. El progreso se guarda (sección 12). Ya se juega de punta a punta con la IA de cada nivel; las mecánicas especiales de los rivales están pendientes.</td></tr>
 </table>
 
 <h2>4. Controles</h2>
@@ -187,7 +187,7 @@
   <li>Los sonidos se generan por código con Web Audio, sin archivos: rebote en pala, punto anotado y power-up agarrado, cada uno distinto.</li>
 </ul>
 
-<h2>12. Modo Historia <span class="tag pend">pendiente</span></h2>
+<h2>12. Modo Historia</h2>
 <h3>Reglas confirmadas</h3>
 <ul>
   <li>10 niveles, 1 jugador vs CPU. El jugador siempre controla la pala izquierda (W / S).</li>
@@ -290,23 +290,24 @@
   <tr><th style="width:22%">Pantalla</th><th>Contenido</th></tr>
   <tr><td>Menú principal</td><td>Se suma “Modo Historia” como tercera opción de modo (tecla 3). Al elegirlo no se usa la elección de puntaje: siempre se juega a 7.</td></tr>
   <tr><td>Selección de nivel</td><td>Los 10 niveles en una grilla de 5 × 2. Los superados llevan una marca, el siguiente disponible se resalta y los bloqueados se ven en gris con un candado. Se elige con flechas + Enter o con clic; Esc vuelve al menú. El cursor arranca en el nivel desbloqueado más alto y también puede pasar por los bloqueados, que muestran qué nivel hay que ganar para desbloquearlos. Debajo de la grilla se ven el nombre y la habilidad del rival elegido.</td></tr>
-  <tr><td>Presentación del rival</td><td>Número de nivel, nombre del rival, su habilidad en una línea y su frase. Los jefes llevan la marca “Jefe” o “Jefe final”. Enter o clic empieza; Esc vuelve a la selección de nivel. Antes del nivel 1 se muestra además el tutorial <span class="tag pend">pendiente</span>.</td></tr>
-  <tr><td>Partida y pausa <span class="tag pend">pendiente</span></td><td>Igual que en casual. En la pausa, “Volver al menú” lleva a la selección de nivel.</td></tr>
-  <tr><td>Resultado <span class="tag pend">pendiente</span></td><td>Si ganaste: “Siguiente nivel” o “Selección de nivel”. Si perdiste: “Reintentar” o “Selección de nivel”.</td></tr>
+  <tr><td>Presentación del rival</td><td>Número de nivel, nombre del rival, su habilidad en una línea y su frase. Los jefes llevan la marca “Jefe” o “Jefe final”. Enter o clic empieza; Esc vuelve a la selección de nivel. Antes del nivel 1 se muestra además el tutorial.</td></tr>
+  <tr><td>Partida y pausa</td><td>Igual que en casual, a 7 puntos y con la IA del nivel. En la pausa, la opción de salir dice “Selección de nivel” (tecla M) y lleva ahí.</td></tr>
+  <tr><td>Resultado</td><td>Aparece 1 s después del último punto, con el marcador final a la vista. Muestra “¡Ganaste!” o “Perdiste”, contra quién y el marcador. Si ganaste se guarda el nivel como superado; si eso desbloqueó el siguiente, lo avisa (“¡Nivel N desbloqueado!”). Opciones: si ganaste, “Siguiente nivel” (va a la presentación del próximo rival) o “Selección de nivel”; si perdiste, “Reintentar” (vuelve directo a la partida, sin la presentación) o “Selección de nivel”. Al ganar el nivel 10 solo queda “Selección de nivel” hasta que exista la pantalla final. Flechas + Enter o clic; Esc va a la selección de nivel.</td></tr>
   <tr><td>Final <span class="tag pend">pendiente</span></td><td>Ver “Rivales: frases y final”.</td></tr>
 </table>
 
 <h3>Mecánicas nuevas que requiere</h3>
+<p>Hechas: configuración por nivel, progreso guardado y pantallas (salvo la final). El resto está pendiente.</p>
 <ul>
   <li><b>Configuración por nivel:</b> cada nivel se describe como datos (IA, cancha, reglas de pelota, power-ups, habilidades) y la partida se arma a partir de eso.</li>
-  <li><b>Cancha de tamaño variable:</b> 1000 × 750 y 1200 × 900, con la cámara alejada para que entre en la pantalla, y palas más rápidas en proporción.</li>
-  <li><b>Pala adelantada:</b> segunda pala de la IA a mitad de su lado (niveles 5 y 10).</li>
-  <li><b>Predicción de trayectoria de la IA</b> (niveles 7, 9 y 10).</li>
-  <li><b>IA con varias pelotas:</b> sigue a la que va a llegar antes (niveles 9 y 10).</li>
-  <li><b>Habilidades de rival:</b> tiro con efecto de Trivela (niveles 6 y 10) y sabotaje con efectos rojos (nivel 8).</li>
-  <li><b>Reglas de partida por nivel:</b> pala más alta (3), velocidad y aceleración de la pelota (4), pelotas por ronda (9 y 10), lluvia permanente (9) y probabilidad de cada color de power-up (8).</li>
-  <li><b>Fases de jefe</b> que cambian la IA y las habilidades según el marcador (10).</li>
-  <li><b>Progreso guardado</b> y las pantallas del modo.</li>
+  <li><b>Cancha de tamaño variable:</b> <span class="tag pend">pendiente</span> 1000 × 750 y 1200 × 900, con la cámara alejada para que entre en la pantalla, y palas más rápidas en proporción.</li>
+  <li><b>Pala adelantada:</b> <span class="tag pend">pendiente</span> segunda pala de la IA a mitad de su lado (niveles 5 y 10).</li>
+  <li><b>Predicción de trayectoria de la IA</b> <span class="tag pend">pendiente</span> (niveles 7, 9 y 10).</li>
+  <li><b>IA con varias pelotas:</b> <span class="tag pend">pendiente</span> sigue a la que va a llegar antes (niveles 9 y 10).</li>
+  <li><b>Habilidades de rival:</b> <span class="tag pend">pendiente</span> tiro con efecto de Trivela (niveles 6 y 10) y sabotaje con efectos rojos (nivel 8).</li>
+  <li><b>Reglas de partida por nivel:</b> <span class="tag pend">pendiente</span> pala más alta (3), velocidad y aceleración de la pelota (4), pelotas por ronda (9 y 10), lluvia permanente (9) y probabilidad de cada color de power-up (8).</li>
+  <li><b>Fases de jefe</b> <span class="tag pend">pendiente</span> que cambian la IA y las habilidades según el marcador (10).</li>
+  <li><b>Progreso guardado</b> y las pantallas del modo (la pantalla final, <span class="tag pend">pendiente</span>).</li>
 </ul>
 
 <h2>13. Arquitectura del código</h2>
@@ -314,7 +315,8 @@
 ├── main.js        punto de entrada y configuración de Phaser
 ├── config.js      constantes globales (cancha, velocidades, colores, teclas, power-ups, IA)
 ├── scenes/        una escena por archivo (MenuScene, DifficultyScene, TutorialScene,
-│                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene)
+│                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene,
+│                  LevelResultScene)
 ├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle)
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
