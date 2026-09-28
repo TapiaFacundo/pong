@@ -262,19 +262,19 @@
 </table>
 
 <h3>Rivales: frases y final <span class="tag pend">borrador</span></h3>
-<p>Antes de cada nivel, una tarjeta presenta al rival con su nombre, su habilidad y una frase suya.</p>
+<p>Antes de cada nivel, una tarjeta presenta al rival con su nombre, su habilidad en una línea y una frase suya.</p>
 <table>
-  <tr><th style="width:18%">Rival</th><th>Frase</th></tr>
-  <tr><td>Novato</td><td>“Tranqui, yo también estoy aprendiendo.”</td></tr>
-  <tr><td>Aprendiz</td><td>“Ya practiqué. Esta vez no te la hago fácil.”</td></tr>
-  <tr><td>El Muro</td><td>“Por acá no pasa nada.”</td></tr>
-  <tr><td>Velocista</td><td>“Pestañeá y te la perdiste.”</td></tr>
-  <tr><td>Los Gemelos</td><td>“Dos contra uno no es trampa si somos gemelos.”</td></tr>
-  <tr><td>Trivela</td><td>“Le pego de afuera del pie. Suerte adivinando.”</td></tr>
-  <tr><td>Estadio</td><td>“Bienvenido a la cancha grande.”</td></tr>
-  <tr><td>Saboteador</td><td>“¿Tus controles andan raro? Qué casualidad.”</td></tr>
-  <tr><td>Tormenta</td><td>“Espero que te guste el caos.”</td></tr>
-  <tr><td>El Campeón</td><td>“Llegaste lejos. Acá se termina.”</td></tr>
+  <tr><th style="width:16%">Rival</th><th style="width:44%">Habilidad (en la tarjeta)</th><th>Frase</th></tr>
+  <tr><td>Novato</td><td>Sin trucos: ideal para aprender.</td><td>“Tranqui, yo también estoy aprendiendo.”</td></tr>
+  <tr><td>Aprendiz</td><td>Un rival parejo, sin trucos.</td><td>“Ya practiqué. Esta vez no te la hago fácil.”</td></tr>
+  <tr><td>El Muro</td><td>Su pala es enorme, pero lenta.</td><td>“Por acá no pasa nada.”</td></tr>
+  <tr><td>Velocista</td><td>La pelota sale más rápido y acelera más.</td><td>“Pestañeá y te la perdiste.”</td></tr>
+  <tr><td>Los Gemelos</td><td>Dos palas: una en el arco y otra adelantada.</td><td>“Dos contra uno no es trampa si somos gemelos.”</td></tr>
+  <tr><td>Trivela</td><td>Sus tiros con efecto se curvan.</td><td>“Le pego de afuera del pie. Suerte adivinando.”</td></tr>
+  <tr><td>Estadio</td><td>Cancha grande, y calcula dónde va a llegar la pelota.</td><td>“Bienvenido a la cancha grande.”</td></tr>
+  <tr><td>Saboteador</td><td>Cada tanto te invierte los controles o te frena la pala.</td><td>“¿Tus controles andan raro? Qué casualidad.”</td></tr>
+  <tr><td>Tormenta</td><td>Dos pelotas por ronda y lluvia de power-ups.</td><td>“Espero que te guste el caos.”</td></tr>
+  <tr><td>El Campeón</td><td>Suma trucos a medida que te acercás a ganarle.</td><td>“Llegaste lejos. Acá se termina.”</td></tr>
 </table>
 <p><b>Final:</b> al ganarle al Campeón aparece una pantalla con “¡Sos el nuevo campeón de Ponger-up!”, los 10 rivales derrotados y los créditos (Facundo Tapia y Valentino Batiston). Enter o clic vuelve a la selección de nivel.</p>
 
@@ -316,6 +316,7 @@
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
 │                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion)
+├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia)
 ├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila)
 └── enums/         constantes compartidas (claves de texto, idiomas, estados de carga)

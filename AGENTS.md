@@ -22,6 +22,7 @@ src/
 ├── scenes/       # una escena por archivo (MenuScene.js, GameScene.js, etc.)
 ├── entities/     # clases jugables/objetos (Paddle.js, Ball.js, PowerUp.js)
 ├── systems/      # lógica que no es una entidad (PowerUpSpawner.js, ScoreManager.js, AI.js)
+├── data/         # contenido del juego descrito como datos (levels.js: niveles del Modo Historia)
 ├── ui/           # componentes de interfaz reutilizables entre escenas (LanguagePanel.js)
 ├── services/     # acceso a servicios externos y al navegador (translations.js)
 └── enums/        # constantes compartidas (claves de texto, idiomas, estados)
