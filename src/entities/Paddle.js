@@ -1,7 +1,9 @@
-import { PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_SPEED, COLORS } from "../config.js";
+import { PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_SPEED, GAME_HEIGHT, COLORS } from "../config.js";
 
 export default class Paddle {
   constructor(scene, x, y) {
+    this.scene = scene;
+    this.isLocked = false;
     this.baseSpeed = PADDLE_SPEED;
     this.speed = PADDLE_SPEED;
     this.baseHeight = PADDLE_HEIGHT;
@@ -22,11 +24,30 @@ export default class Paddle {
   }
 
   moveUp() {
+    if (this.isLocked) return;
     this.rect.body.setVelocityY(-this.speed);
   }
 
   moveDown() {
+    if (this.isLocked) return;
     this.rect.body.setVelocityY(this.speed);
+  }
+
+  // Lleva la pala al centro de su lado con una animación. Mientras dura no
+  // responde a los controles (ni del jugador ni de la IA).
+  recenter(duration) {
+    this.isLocked = true;
+    this.stop();
+
+    this.scene.tweens.add({
+      targets: this.rect,
+      y: GAME_HEIGHT / 2,
+      duration,
+      ease: "Sine.easeInOut",
+      onComplete: () => {
+        this.isLocked = false;
+      },
+    });
   }
 
   stop() {

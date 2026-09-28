@@ -42,7 +42,7 @@ Ganar el punto llevando la pelota más allá de la pala rival. Gana la partida q
 
 ### Mecánicas principales
 
-- Pong de 1 jugador (vs CPU, con 3 niveles de dificultad) o 2 jugadores en el mismo teclado.
+- Pong de 1 jugador (vs CPU, con 4 niveles de dificultad) o 2 jugadores en el mismo teclado.
 - 18 power-ups (amarillo/verde/rojo) que aparecen en el centro de la cancha y se activan al tocarlos con la pelota: agrandar/achicar pala, acelerarla/frenarla, invertir controles, punto doble, pelota extra, turbo, pelota errática o invisible, paleta central, entre otros.
 - IA con velocidad, tiempo de reacción, margen de error y anticipación configurables por dificultad.
 - Pantalla de tutorial antes de cada partida, pausa en cualquier momento y pantalla de victoria al terminar.
@@ -55,7 +55,7 @@ Ganar el punto llevando la pelota más allá de la pala rival. Gana la partida q
 | Mover pala Jugador 2 | ↑ / ↓ |
 | Elegir modo de juego (menú) | 1 (1 jugador) / 2 (2 jugadores) |
 | Elegir puntaje de partida (menú) | 5 / 0 |
-| Elegir dificultad de la CPU | 1 (Fácil) / 2 (Normal) / 3 (Difícil) |
+| Elegir dificultad de la CPU | 1 (Fácil) / 2 (Normal) / 3 (Difícil) / 4 (Imposible) |
 | Confirmar / avanzar de pantalla | Enter (o clic) |
 | Pausar / reanudar | Esc / Enter |
 | Volver al menú desde pausa | M |

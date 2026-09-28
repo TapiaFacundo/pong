@@ -48,7 +48,7 @@
 <h2>3. Modos de juego</h2>
 <table>
   <tr><th style="width:24%">Modo</th><th>Descripción</th></tr>
-  <tr><td>1 Jugador vs CPU (casual)</td><td>La IA controla la pala derecha. Antes de la partida se elige la dificultad: fácil, normal o difícil (sección 8).</td></tr>
+  <tr><td>1 Jugador vs CPU (casual)</td><td>La IA controla la pala derecha. Antes de la partida se elige la dificultad: fácil, normal, difícil o imposible (sección 8).</td></tr>
   <tr><td>2 Jugadores (casual)</td><td>Mismo teclado, cada jugador con su pala.</td></tr>
   <tr><td>Modo Historia <span class="tag pend">pendiente</span></td><td>1 jugador vs CPU a lo largo de 10 niveles con dificultad y mecánicas crecientes, jefes y enemigos con habilidades. El progreso se guarda (sección 12).</td></tr>
 </table>
@@ -60,7 +60,7 @@
   <tr><td>Mover pala Jugador 2 (derecha)</td><td>Flecha arriba / Flecha abajo</td></tr>
   <tr><td>Menú: elegir modo</td><td>1 (1 jugador) / 2 (2 jugadores), o clic</td></tr>
   <tr><td>Menú: elegir puntaje</td><td>5 / 7 <span class="tag pend">pendiente</span> / 0 (10 puntos), o clic</td></tr>
-  <tr><td>Elegir dificultad de la CPU</td><td>1 (Fácil) / 2 (Normal) / 3 (Difícil), o clic</td></tr>
+  <tr><td>Elegir dificultad de la CPU</td><td>1 (Fácil) / 2 (Normal) / 3 (Difícil) / 4 (Imposible), o clic</td></tr>
   <tr><td>Confirmar / avanzar de pantalla</td><td>Enter o clic</td></tr>
   <tr><td>Pausar la partida</td><td>Esc</td></tr>
   <tr><td>En pausa: reanudar / volver al menú</td><td>Enter o Esc / M</td></tr>
@@ -88,7 +88,7 @@
   <tr><td>Aceleración por golpe de pala</td><td>+2,5 % por golpe, con tope de 700 px/s</td></tr>
   <tr><td>Ángulo de rebote en la pala</td><td>Según dónde pega: centro = recto, puntas = hasta 60°</td></tr>
   <tr><td>Saque inicial</td><td>Hacia un lado al azar, con ángulo aleatorio de hasta ±30°, 0,6 s después de empezar</td></tr>
-  <tr><td>Saque tras una ronda</td><td>Desde el centro, hacia el jugador que perdió el punto, 0,6 s después</td></tr>
+  <tr><td>Saque tras una ronda</td><td>Las dos palas vuelven al centro de su lado en 0,4 s (mientras tanto no responden a los controles). La pelota sale desde el centro hacia el jugador que perdió el punto, 1,6 s después del punto</td></tr>
 </table>
 <p class="note">El Turbo puede llevar la pelota por encima del tope de 700 px/s; en ese caso los golpes siguientes no la frenan.</p>
 
@@ -144,12 +144,13 @@
 </ul>
 
 <h2>8. IA</h2>
-<p>La IA sigue la posición Y de la pelota cuando viene hacia su lado. Tarda un tiempo de reacción en fijar un objetivo, apunta con un margen de error aleatorio y no se mueve si ya está a menos de 10 px del objetivo. En difícil, a veces también se reposiciona cuando la pelota se aleja (anticipación).</p>
+<p>La IA sigue la posición Y de la pelota cuando viene hacia su lado. Tarda un tiempo de reacción en fijar un objetivo, apunta con un margen de error aleatorio y no se mueve si ya está a menos de 10 px del objetivo. En difícil e imposible, a veces también se reposiciona cuando la pelota se aleja (anticipación).</p>
 <table>
   <tr><th>Dificultad</th><th>Velocidad máxima</th><th>Tiempo de reacción</th><th>Margen de error</th><th>Anticipación</th></tr>
-  <tr><td>Fácil</td><td>180 px/s</td><td>350 ms</td><td>± 50 px</td><td>No</td></tr>
-  <tr><td>Normal</td><td>260 px/s</td><td>150 ms</td><td>± 20 px</td><td>No</td></tr>
+  <tr><td>Fácil</td><td>200 px/s</td><td>300 ms</td><td>± 50 px</td><td>No</td></tr>
+  <tr><td>Normal</td><td>280 px/s</td><td>100 ms</td><td>± 20 px</td><td>No</td></tr>
   <tr><td>Difícil</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 % de chance en cada ciclo de reacción</td></tr>
+  <tr><td>Imposible</td><td>450 px/s (50 más que el jugador)</td><td>10 ms</td><td>± 2 px</td><td>50 % de chance en cada ciclo de reacción</td></tr>
 </table>
 <p class="note">La IA solo sigue a la primera pelota en juego. Los power-ups de velocidad de pala se aplican sobre su velocidad base.</p>
 
@@ -160,7 +161,7 @@
 <table>
   <tr><th style="width:22%">Pantalla</th><th>Contenido</th></tr>
   <tr><td>Menú principal</td><td>Título, elección de modo (1P / 2P), elección de puntaje, recordatorio de controles, “Empezar” y el ícono ⚙ que abre el panel de idioma.</td></tr>
-  <tr><td>Dificultad</td><td>Solo en 1P: fácil, normal o difícil (arranca en normal).</td></tr>
+  <tr><td>Dificultad</td><td>Solo en 1P: fácil, normal, difícil o imposible (arranca en normal).</td></tr>
   <tr><td>Tutorial</td><td>Se muestra antes de cada partida: controles, tecla de pausa, cómo se activan los power-ups y qué significa cada color.</td></tr>
   <tr><td>Partida</td><td>Cancha con línea central punteada, marcador de cada jugador arriba y el indicador “×2” debajo del marcador de quien tenga punto doble.</td></tr>
   <tr><td>Pausa</td><td>Se superpone a la partida congelada: Reanudar, Volver al menú y Opciones (panel de idioma).</td></tr>

@@ -14,9 +14,10 @@ export const AI_DEAD_ZONE = 10;
 // la pelota, y probabilidad de reaccionar igual aunque la pelota no venga
 // hacia su lado (anticipación, solo relevante en difícil).
 export const AI_DIFFICULTIES = {
-  easy: { speed: 180, reactionDelay: 350, errorMargin: 50, anticipationChance: 0 },
-  normal: { speed: 260, reactionDelay: 150, errorMargin: 20, anticipationChance: 0 },
+  easy: { speed: 200, reactionDelay: 300, errorMargin: 50, anticipationChance: 0 },
+  normal: { speed: 280, reactionDelay: 100, errorMargin: 20, anticipationChance: 0 },
   hard: { speed: 340, reactionDelay: 40, errorMargin: 4, anticipationChance: 0.35 },
+  impossible: { speed: PADDLE_SPEED + 50, reactionDelay: 10, errorMargin: 2, anticipationChance: 0.5 },
 };
 
 export const BALL_SIZE = 14;
@@ -25,6 +26,13 @@ export const BALL_MAX_BOUNCE_ANGLE = Math.PI / 3;
 export const BALL_SPEED_INCREMENT = 1.025;
 export const BALL_MAX_SPEED = 700;
 export const BALL_TURBO_MULTIPLIER = 1.5;
+
+// Espera antes del saque: al empezar la partida, y después de cada ronda
+// (más larga, para que ambos lados lleguen a reacomodarse con las palas
+// centradas). Las palas vuelven al centro en PADDLE_RECENTER_DURATION.
+export const SERVE_DELAY_START = 600;
+export const SERVE_DELAY_AFTER_POINT = 1600;
+export const PADDLE_RECENTER_DURATION = 400;
 
 export const WIN_SCORE_SHORT = 5;
 export const WIN_SCORE_LONG = 10;

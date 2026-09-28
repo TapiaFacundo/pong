@@ -10,6 +10,7 @@ const DIFFICULTIES = [
   { key: "easy", prefix: "1: ", labelKey: KEYS.FACIL },
   { key: "normal", prefix: "2: ", labelKey: KEYS.NORMAL },
   { key: "hard", prefix: "3: ", labelKey: KEYS.DIFICIL },
+  { key: "impossible", prefix: "4: ", labelKey: KEYS.IMPOSIBLE },
 ];
 
 export default class DifficultyScene extends Phaser.Scene {
@@ -29,11 +30,11 @@ export default class DifficultyScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.options = DIFFICULTIES.map((difficulty, index) =>
-      this.createOption(220 + index * 44, difficulty)
+      this.createOption(200 + index * 44, difficulty)
     );
 
     this.add
-      .text(GAME_WIDTH / 2, 420, getPhrase(KEYS.ENTER_EMPEZAR), { fontSize: "22px", color: COLORS.TEXT })
+      .text(GAME_WIDTH / 2, 440, getPhrase(KEYS.ENTER_EMPEZAR), { fontSize: "22px", color: COLORS.TEXT })
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true })
       .on("pointerdown", () => this.startGame());
@@ -43,6 +44,7 @@ export default class DifficultyScene extends Phaser.Scene {
     this.input.keyboard.on("keydown-ONE", () => this.setDifficulty("easy"));
     this.input.keyboard.on("keydown-TWO", () => this.setDifficulty("normal"));
     this.input.keyboard.on("keydown-THREE", () => this.setDifficulty("hard"));
+    this.input.keyboard.on("keydown-FOUR", () => this.setDifficulty("impossible"));
     this.input.keyboard.on("keydown-ENTER", () => this.startGame());
   }
 

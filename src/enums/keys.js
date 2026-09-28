@@ -17,6 +17,7 @@ export const KEYS = {
   ENTER_VOLVER_AL_MENU: "ENTER: Volver al menú",
   ESC_PAUSAR_LA_PARTIDA_EN_CUALQUIER_MOMENTO: "ESC: pausar la partida en cualquier momento",
   FACIL: "Fácil",
+  IMPOSIBLE: "Imposible",
   JUGADOR_1: "Jugador 1",
   JUGADOR_1_W_S_JUGADOR_2_FLECHAS_ARRIBA_ABAJO: "Jugador 1: W / S Jugador 2: Flechas arriba/abajo",
   JUGADOR_2: "Jugador 2",

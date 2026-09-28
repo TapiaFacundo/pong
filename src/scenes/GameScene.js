@@ -9,6 +9,9 @@ import {
   PADDLE_POWERUP_KINDS,
   POWERUP_TEXT_COLORS,
   POWERUP_EFFECT_DURATION,
+  SERVE_DELAY_START,
+  SERVE_DELAY_AFTER_POINT,
+  PADDLE_RECENTER_DURATION,
 } from "../config.js";
 import Paddle from "../entities/Paddle.js";
 import PlayerController from "../systems/PlayerController.js";
@@ -82,7 +85,7 @@ export default class GameScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setVisible(false);
 
-    this.time.delayedCall(600, () => this.ballManager.primary.launch());
+    this.time.delayedCall(SERVE_DELAY_START, () => this.ballManager.primary.launch());
 
     this.input.keyboard.on("keydown-ESC", () => this.pauseGame());
   }
@@ -143,9 +146,12 @@ export default class GameScene extends Phaser.Scene {
     this.ballEffects.clearAll();
     this.centerPaddleEffect.clear();
 
+    this.paddleLeft.recenter(PADDLE_RECENTER_DURATION);
+    this.paddleRight.recenter(PADDLE_RECENTER_DURATION);
+
     const directionTowardsLoser = scoringSide === "p1" ? 1 : -1;
     const ball = this.ballManager.addBall(GAME_WIDTH / 2, GAME_HEIGHT / 2);
-    this.time.delayedCall(600, () => ball.launch(directionTowardsLoser));
+    this.time.delayedCall(SERVE_DELAY_AFTER_POINT, () => ball.launch(directionTowardsLoser));
   }
 
   updateDoublePointIndicator() {
