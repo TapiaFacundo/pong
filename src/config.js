@@ -37,6 +37,7 @@ export const PADDLE_RECENTER_DURATION = 400;
 export const WIN_SCORE_SHORT = 5;
 export const WIN_SCORE_MEDIUM = 7;
 export const WIN_SCORE_LONG = 10;
+export const STORY_WIN_SCORE = WIN_SCORE_MEDIUM;
 
 export const COLORS = {
   BACKGROUND: 0x000000,

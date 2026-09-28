@@ -16,8 +16,11 @@ export default class AI {
     this.setDifficulty(difficulty);
   }
 
+  // difficulty: el nombre de una dificultad ("easy", "hard", ...) o una
+  // configuración completa con la misma forma (la IA de un nivel del Modo Historia).
   setDifficulty(difficulty) {
-    const settings = AI_DIFFICULTIES[difficulty] ?? AI_DIFFICULTIES.normal;
+    const settings =
+      typeof difficulty === "string" ? AI_DIFFICULTIES[difficulty] ?? AI_DIFFICULTIES.normal : difficulty;
     this.reactionDelay = settings.reactionDelay;
     this.errorMargin = settings.errorMargin;
     this.anticipationChance = settings.anticipationChance ?? 0;

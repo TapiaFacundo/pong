@@ -42,6 +42,16 @@ export const KEYS = {
   VERDE_TE_BENEFICIA_A_VOS_O_PERJUDICA_AL_RIVAL: "Verde: te beneficia a vos (o perjudica al rival)",
   VOLVER_AL_MENU: "Volver al menú",
 
+  // Modo Historia: pantallas.
+  MODO_HISTORIA: "Modo Historia",
+  NIVEL_N: "Nivel {n}",
+  JEFE: "Jefe",
+  JEFE_FINAL: "Jefe final",
+  BLOQUEADO: "Bloqueado",
+  GANA_EL_NIVEL_N_PARA_DESBLOQUEARLO: "Ganá el nivel {n} para desbloquearlo",
+  FLECHAS_ELEGIR_ENTER_JUGAR_ESC_VOLVER: "Flechas: elegir   ENTER: jugar   ESC: volver",
+  ESC_VOLVER: "ESC: volver",
+
   // Modo Historia: nombre, habilidad y frase de cada rival (src/data/levels.js).
   NOVATO: "Novato",
   SIN_TRUCOS_IDEAL_PARA_APRENDER: "Sin trucos: ideal para aprender.",

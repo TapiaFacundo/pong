@@ -6,6 +6,7 @@ import {
   COLORS,
   KEYS,
   WIN_SCORE_SHORT,
+  STORY_WIN_SCORE,
   PADDLE_POWERUP_KINDS,
   POWERUP_TEXT_COLORS,
   POWERUP_EFFECT_DURATION,
@@ -26,6 +27,7 @@ import BallEffects from "../systems/BallEffects.js";
 import CenterPaddleEffect from "../systems/CenterPaddleEffect.js";
 import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
+import { getLevel } from "../data/levels.js";
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -33,9 +35,12 @@ export default class GameScene extends Phaser.Scene {
   }
 
   init(data) {
-    this.mode = data.mode ?? "1p";
-    this.winScore = data.winScore ?? WIN_SCORE_SHORT;
-    this.difficulty = data.difficulty ?? "normal";
+    // En el Modo Historia la partida sale del nivel: siempre a 7 puntos y
+    // con la IA del rival de ese nivel.
+    this.level = data.levelId ? getLevel(data.levelId) : null;
+    this.mode = this.level ? "story" : data.mode ?? "1p";
+    this.winScore = this.level ? STORY_WIN_SCORE : data.winScore ?? WIN_SCORE_SHORT;
+    this.difficulty = this.level ? this.level.ai : data.difficulty ?? "normal";
     this.matchOver = false;
     this.isPaused = false;
   }

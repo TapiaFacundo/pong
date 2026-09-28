@@ -53,7 +53,7 @@ Ganar el punto llevando la pelota más allá de la pala rival. Gana la partida q
 |---|---|
 | Mover pala Jugador 1 | W / S |
 | Mover pala Jugador 2 | ↑ / ↓ |
-| Elegir modo de juego (menú) | 1 (1 jugador) / 2 (2 jugadores) |
+| Elegir modo de juego (menú) | 1 (1 jugador) / 2 (2 jugadores) / 3 (Modo Historia) |
 | Elegir puntaje de partida (menú) | 5 / 7 / 0 (10 puntos) |
 | Elegir dificultad de la CPU | 1 (Fácil) / 2 (Normal) / 3 (Difícil) / 4 (Imposible) |
 | Confirmar / avanzar de pantalla | Enter (o clic) |

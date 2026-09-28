@@ -58,9 +58,10 @@
   <tr><th style="width:45%">Acción</th><th>Control</th></tr>
   <tr><td>Mover pala Jugador 1 (izquierda)</td><td>W / S</td></tr>
   <tr><td>Mover pala Jugador 2 (derecha)</td><td>Flecha arriba / Flecha abajo</td></tr>
-  <tr><td>Menú: elegir modo</td><td>1 (1 jugador) / 2 (2 jugadores), o clic</td></tr>
+  <tr><td>Menú: elegir modo</td><td>1 (1 jugador) / 2 (2 jugadores) / 3 (Modo Historia), o clic</td></tr>
   <tr><td>Menú: elegir puntaje</td><td>5 / 7 / 0 (10 puntos), o clic</td></tr>
   <tr><td>Elegir dificultad de la CPU</td><td>1 (Fácil) / 2 (Normal) / 3 (Difícil) / 4 (Imposible), o clic</td></tr>
+  <tr><td>Selección de nivel (Modo Historia)</td><td>Flechas para moverse, Enter o clic para jugar, Esc para volver al menú</td></tr>
   <tr><td>Confirmar / avanzar de pantalla</td><td>Enter o clic</td></tr>
   <tr><td>Pausar la partida</td><td>Esc</td></tr>
   <tr><td>En pausa: reanudar / volver al menú</td><td>Enter o Esc / M</td></tr>
@@ -279,7 +280,7 @@
 </table>
 <p><b>Final:</b> al ganarle al Campeón aparece una pantalla con “¡Sos el nuevo campeón de Ponger-up!”, los 10 rivales derrotados y los créditos (Facundo Tapia y Valentino Batiston). Enter o clic vuelve a la selección de nivel.</p>
 
-<h3>Pantallas del modo <span class="tag pend">pendiente</span></h3>
+<h3>Pantallas del modo</h3>
 <pre>Menú principal ──(Modo Historia)──► Selección de nivel ──► Presentación del rival ──► Partida ⇄ Pausa
                                           ▲                                           │
                                           └──────────── Resultado ◄──────────────────┘
@@ -288,11 +289,11 @@
 <table>
   <tr><th style="width:22%">Pantalla</th><th>Contenido</th></tr>
   <tr><td>Menú principal</td><td>Se suma “Modo Historia” como tercera opción de modo (tecla 3). Al elegirlo no se usa la elección de puntaje: siempre se juega a 7.</td></tr>
-  <tr><td>Selección de nivel</td><td>Los 10 niveles en una grilla de 5 × 2. Los superados llevan una marca, el siguiente disponible se resalta y los bloqueados se ven en gris con un candado. Se elige con flechas + Enter o con clic; Esc vuelve al menú.</td></tr>
-  <tr><td>Presentación del rival</td><td>Número de nivel, nombre del rival, su habilidad en una línea y su frase. Enter o clic empieza. Antes del nivel 1 se muestra además el tutorial.</td></tr>
-  <tr><td>Partida y pausa</td><td>Igual que en casual. En la pausa, “Volver al menú” lleva a la selección de nivel.</td></tr>
-  <tr><td>Resultado</td><td>Si ganaste: “Siguiente nivel” o “Selección de nivel”. Si perdiste: “Reintentar” o “Selección de nivel”.</td></tr>
-  <tr><td>Final</td><td>Ver “Rivales: frases y final”.</td></tr>
+  <tr><td>Selección de nivel</td><td>Los 10 niveles en una grilla de 5 × 2. Los superados llevan una marca, el siguiente disponible se resalta y los bloqueados se ven en gris con un candado. Se elige con flechas + Enter o con clic; Esc vuelve al menú. El cursor arranca en el nivel desbloqueado más alto y también puede pasar por los bloqueados, que muestran qué nivel hay que ganar para desbloquearlos. Debajo de la grilla se ven el nombre y la habilidad del rival elegido.</td></tr>
+  <tr><td>Presentación del rival</td><td>Número de nivel, nombre del rival, su habilidad en una línea y su frase. Los jefes llevan la marca “Jefe” o “Jefe final”. Enter o clic empieza; Esc vuelve a la selección de nivel. Antes del nivel 1 se muestra además el tutorial <span class="tag pend">pendiente</span>.</td></tr>
+  <tr><td>Partida y pausa <span class="tag pend">pendiente</span></td><td>Igual que en casual. En la pausa, “Volver al menú” lleva a la selección de nivel.</td></tr>
+  <tr><td>Resultado <span class="tag pend">pendiente</span></td><td>Si ganaste: “Siguiente nivel” o “Selección de nivel”. Si perdiste: “Reintentar” o “Selección de nivel”.</td></tr>
+  <tr><td>Final <span class="tag pend">pendiente</span></td><td>Ver “Rivales: frases y final”.</td></tr>
 </table>
 
 <h3>Mecánicas nuevas que requiere</h3>
@@ -312,13 +313,14 @@
 <pre>src/
 ├── main.js        punto de entrada y configuración de Phaser
 ├── config.js      constantes globales (cancha, velocidades, colores, teclas, power-ups, IA)
-├── scenes/        una escena por archivo (MenuScene, DifficultyScene, TutorialScene, GameScene, PauseScene)
+├── scenes/        una escena por archivo (MenuScene, DifficultyScene, TutorialScene,
+│                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene)
 ├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle)
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
 │                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia)
-├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel)
+├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;
 │                  ProgressStorage: progreso del Modo Historia en localStorage)
 └── enums/         constantes compartidas (claves de texto, idiomas, estados de carga)
