@@ -1,3 +1,5 @@
+export const GAME_TITLE = "Ponger-up";
+
 export const GAME_WIDTH = 800;
 export const GAME_HEIGHT = 600;
 

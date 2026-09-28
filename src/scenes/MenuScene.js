@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { GAME_WIDTH, COLORS, WIN_SCORE_SHORT, WIN_SCORE_LONG } from "../config.js";
+import { GAME_TITLE, GAME_WIDTH, COLORS, WIN_SCORE_SHORT, WIN_SCORE_LONG } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 import { getTranslations, getPhrase, getLanguageConfig } from "../services/translations.js";
 import LanguagePanel from "../ui/LanguagePanel.js";
@@ -20,8 +20,8 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   buildScene() {
-    this.titleText = this.add
-      .text(GAME_WIDTH / 2, 70, getPhrase(KEYS.PONG_CON_POWER_UPS), { fontSize: "40px", color: COLORS.TEXT })
+    this.add
+      .text(GAME_WIDTH / 2, 70, GAME_TITLE, { fontSize: "40px", color: COLORS.TEXT })
       .setOrigin(0.5);
 
     this.subtitleText = this.add
@@ -80,7 +80,6 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   refreshTexts() {
-    this.titleText.setText(getPhrase(KEYS.PONG_CON_POWER_UPS));
     this.subtitleText.setText(getPhrase(KEYS.ELEGI_UNA_OPCION_DE_CADA_GRUPO_Y_CONFIRMA_CON_ENTER));
     this.controlsHintText.setText(getPhrase(KEYS.JUGADOR_1_W_S_JUGADOR_2_FLECHAS_ARRIBA_ABAJO));
     this.startText.setText(getPhrase(KEYS.ENTER_EMPEZAR));

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
-<title>GDD — Pong con Power-ups</title>
+<title>GDD — Ponger-up</title>
 <style>
   @page { size: A4; margin: 18mm 16mm; }
   body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10.5pt; line-height: 1.45; color: #1a1a1a; margin: 0; }
@@ -28,12 +28,12 @@
 </head>
 <body>
 
-<h1>GDD — Pong con Power-ups</h1>
+<h1>GDD — Ponger-up</h1>
 <div class="meta">Versión 2 · 28/09/2026 · Facundo Tapia, Valentino Batiston</div>
 <div class="legend"><span class="tag pend">pendiente</span> = decidido en diseño pero todavía no implementado en el juego.</div>
 
 <h2>1. Concepto</h2>
-<p>Pong clásico con power-ups que aparecen en el centro de la cancha y le meten caos a las rondas. Se juega en el navegador, de forma local: 1 jugador contra la CPU, 2 jugadores en el mismo teclado, o un Modo Historia de 10 niveles contra rivales cada vez más difíciles.</p>
+<p><b>Ponger-up</b> es un Pong clásico con power-ups que aparecen en el centro de la cancha y le meten caos a las rondas. Se juega en el navegador, de forma local: 1 jugador contra la CPU, 2 jugadores en el mismo teclado, o un Modo Historia de 10 niveles contra rivales cada vez más difíciles.</p>
 
 <h2>2. Plataforma, stack y publicación</h2>
 <ul>
@@ -172,7 +172,8 @@
   <li>Idiomas disponibles: español (por defecto) e inglés.</li>
   <li>El español está escrito directamente en el código. Las demás traducciones se descargan de la API de Traducila y se guardan en <code>localStorage</code> bajo la clave <code>translations</code>.</li>
   <li>Idioma inicial: el que indique la URL (<code>?lang=en</code>), si no el del navegador, y si no español. Después se puede cambiar desde el panel de idioma.</li>
-  <li>Cada texto nuevo de la interfaz se agrega como clave en <code>src/enums/keys.js</code> y hay que cargar su traducción en Traducila para que aparezca en inglés. Sin traducción, se muestra el texto en español.</li>
+  <li>Cada texto nuevo de la interfaz se agrega como clave en <code>src/enums/keys.js</code> y se muestra con <code>getPhrase()</code>. Las traducciones no se cargan en el momento: las claves nuevas se juntan y se cargan todas juntas en Traducila al final. Mientras tanto, esos textos se muestran en español.</li>
+  <li>El nombre del juego, <b>Ponger-up</b>, no se traduce.</li>
 </ul>
 <p class="note">En Vercel conviene usar la variante <code>?lang=en</code>: la variante por ruta (<code>/en</code>) daría 404 porque el sitio es estático y no tiene reescritura de rutas configurada.</p>
 
@@ -186,6 +187,7 @@
 <h3>Reglas confirmadas</h3>
 <ul>
   <li>10 niveles, 1 jugador vs CPU. El jugador siempre controla la pala izquierda (W / S).</li>
+  <li>Hay power-ups en todos los niveles.</li>
   <li>Cada nivel es un partido a 7 puntos.</li>
   <li>La dificultad sube de nivel a nivel: IA mejorada, enemigos con habilidades particulares, jefes (boss fights) y cambios en la cancha, como un campo más grande en algunos niveles.</li>
   <li>Al empezar solo está disponible el nivel 1. Ganar un nivel desbloquea el siguiente.</li>

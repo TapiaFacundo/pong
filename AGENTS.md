@@ -1,7 +1,7 @@
 ## AGENTS.md
 
 ## Proyecto
-Pong con power-ups — empezó como Trabajo Práctico Módulo #7 y se sigue ampliando. Pong local (1 jugador vs CPU, 2 jugadores en el mismo teclado, y Modo Historia de 10 niveles) con power-ups que alteran palas, pelota y puntaje.
+Ponger-up — empezó como Trabajo Práctico Módulo #7 y se sigue ampliando. Pong local (1 jugador vs CPU, 2 jugadores en el mismo teclado, y Modo Historia de 10 niveles) con power-ups que alteran palas, pelota y puntaje.
 
 ## Stack
 - JavaScript
@@ -46,7 +46,7 @@ docs/
 - No agregar dependencias externas sin justificar su necesidad.
 - No hace falta explicar cómo crear scripts, escenas o carpetas.
 - Priorizar soluciones comprensibles y respetar la arquitectura existente.
-- Todo texto nuevo de la interfaz va como clave en `src/enums/keys.js` y se muestra con `getPhrase()`; su traducción al inglés se carga a mano en Traducila.
+- Todo texto nuevo de la interfaz va como clave en `src/enums/keys.js` y se muestra con `getPhrase()`; las traducciones al inglés no se cargan en el momento: se juntan todas las claves nuevas y se cargan juntas en Traducila al final. El nombre del juego ("Ponger-up", `GAME_TITLE` en `config.js`) no se traduce y no lleva clave.
 
 ## Flujo de trabajo
 - Un sistema a la vez: analizar/planear antes de implementar, implementar, probar y validar antes de pasar al siguiente. Nada de pedir "hacé todo el juego" de una.

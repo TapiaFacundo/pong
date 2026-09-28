@@ -33,7 +33,6 @@ export const KEYS = {
   PAUSA: "PAUSA",
   PELOTA_ERRATICA: "Pelota errática",
   PELOTA_INVISIBLE: "Pelota invisible",
-  PONG_CON_POWER_UPS: "PONG con Power-ups",
   PUNTO_DOBLE: "Punto doble",
   REANUDAR: "Reanudar",
   ROJO_TE_PERJUDICA_A_VOS_O_BENEFICIA_AL_RIVAL: "Rojo: te perjudica a vos (o beneficia al rival)",

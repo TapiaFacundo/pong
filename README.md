@@ -1,4 +1,4 @@
-### Pong con Power-ups
+### Ponger-up
 
 Pong clásico (1 jugador vs CPU o 2 jugadores en el mismo teclado) con 18 power-ups que agrandan/achican palas, invierten controles, duplican puntos, multiplican pelotas y más, según lo definido en `docs/GDD.pdf`.
 
