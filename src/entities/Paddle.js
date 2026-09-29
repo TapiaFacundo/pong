@@ -1,11 +1,14 @@
-import { PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_SPEED, GAME_HEIGHT, COLORS } from "../config.js";
+import { PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_SPEED, COLORS } from "../config.js";
 
 export default class Paddle {
-  constructor(scene, x, y) {
+  // speedScale: multiplica cualquier velocidad que se le asigne a la pala (en
+  // una cancha más alta, las palas se mueven más rápido en proporción).
+  constructor(scene, x, y, { speedScale = 1 } = {}) {
     this.scene = scene;
     this.isLocked = false;
-    this.baseSpeed = PADDLE_SPEED;
-    this.speed = PADDLE_SPEED;
+    this.speedScale = speedScale;
+    this.baseSpeed = PADDLE_SPEED * speedScale;
+    this.speed = this.baseSpeed;
     this.baseHeight = PADDLE_HEIGHT;
     this.invertControls = false;
 
@@ -41,7 +44,7 @@ export default class Paddle {
 
     this.scene.tweens.add({
       targets: this.rect,
-      y: GAME_HEIGHT / 2,
+      y: this.scene.physics.world.bounds.centerY,
       duration,
       ease: "Sine.easeInOut",
       onComplete: () => {
@@ -55,8 +58,8 @@ export default class Paddle {
   }
 
   setBaseSpeed(value) {
-    this.baseSpeed = value;
-    this.speed = value;
+    this.baseSpeed = value * this.speedScale;
+    this.speed = this.baseSpeed;
   }
 
   setSpeedScale(scale) {

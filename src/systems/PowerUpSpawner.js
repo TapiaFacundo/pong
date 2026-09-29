@@ -94,12 +94,15 @@ export default class PowerUpSpawner {
   }
 
   findFreePosition() {
-    const centerX = GAME_WIDTH / 2;
-    const centerY = GAME_HEIGHT / 2;
+    // La zona de aparición está en el centro de la cancha y crece en proporción
+    // si la cancha es más grande que la normal.
+    const field = this.scene.physics.world.bounds;
+    const areaWidth = POWERUP_SPAWN_AREA.width * (field.width / GAME_WIDTH);
+    const areaHeight = POWERUP_SPAWN_AREA.height * (field.height / GAME_HEIGHT);
 
     for (let attempt = 0; attempt < MAX_POSITION_ATTEMPTS; attempt++) {
-      const x = centerX + Phaser.Math.Between(-POWERUP_SPAWN_AREA.width / 2, POWERUP_SPAWN_AREA.width / 2);
-      const y = centerY + Phaser.Math.Between(-POWERUP_SPAWN_AREA.height / 2, POWERUP_SPAWN_AREA.height / 2);
+      const x = field.centerX + Phaser.Math.Between(-areaWidth / 2, areaWidth / 2);
+      const y = field.centerY + Phaser.Math.Between(-areaHeight / 2, areaHeight / 2);
 
       const overlaps = this.activePowerUps.some(
         (powerUp) => Phaser.Math.Distance.Between(powerUp.x, powerUp.y, x, y) < POWERUP_MIN_DISTANCE

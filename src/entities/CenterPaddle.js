@@ -1,8 +1,9 @@
-import { PADDLE_WIDTH, CENTER_PADDLE_HEIGHT, CENTER_PADDLE_SPEED, GAME_WIDTH, GAME_HEIGHT, COLORS } from "../config.js";
+import { PADDLE_WIDTH, CENTER_PADDLE_HEIGHT, CENTER_PADDLE_SPEED, COLORS } from "../config.js";
 
 export default class CenterPaddle {
   constructor(scene) {
-    this.rect = scene.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, PADDLE_WIDTH, CENTER_PADDLE_HEIGHT, COLORS.PADDLE);
+    const field = scene.physics.world.bounds;
+    this.rect = scene.add.rectangle(field.centerX, field.centerY, PADDLE_WIDTH, CENTER_PADDLE_HEIGHT, COLORS.PADDLE);
     scene.physics.add.existing(this.rect);
     this.rect.body.setCollideWorldBounds(true);
     this.rect.body.setBounce(0, 1);

@@ -299,10 +299,10 @@
 </table>
 
 <h3>Mecánicas nuevas que requiere</h3>
-<p>Hechas: configuración por nivel, progreso guardado, pantallas (salvo la final), la pala alta del nivel 3, la pelota rápida del nivel 4, el tiro con efecto de Trivela (nivel 6) la pala adelantada de Los Gemelos (nivel 5, todavía en la cancha normal) y la predicción de trayectoria de la IA. El resto está pendiente.</p>
+<p>Hechas: configuración por nivel, progreso guardado, pantallas (salvo la final), la pala alta del nivel 3, la pelota rápida del nivel 4, el tiro con efecto de Trivela (nivel 6), la pala adelantada de Los Gemelos (nivel 5), la predicción de trayectoria de la IA y la cancha de tamaño variable (niveles 5, 7 y 10). El resto está pendiente.</p>
 <ul>
   <li><b>Configuración por nivel:</b> cada nivel se describe como datos (IA, cancha, reglas de pelota, power-ups, habilidades) y la partida se arma a partir de eso.</li>
-  <li><b>Cancha de tamaño variable:</b> <span class="tag pend">pendiente</span> 1000 × 750 y 1200 × 900, con la cámara alejada para que entre en la pantalla, y palas más rápidas en proporción.</li>
+  <li><b>Cancha de tamaño variable:</b> 1000 × 750 y 1200 × 900, con la cámara alejada para que entre en la pantalla (zoom 0,8 y 0,67), y palas más rápidas en proporción al alto, hecha. El marcador queda en el mismo lugar y tamaño de pantalla; la pelota, las palas y los power-ups se ven más chicos. La zona de aparición de power-ups crece en proporción a la cancha.</li>
   <li><b>Pala adelantada:</b> segunda pala de la IA a mitad de su lado (niveles 5 y 10), hecha.</li>
   <li><b>Predicción de trayectoria de la IA</b> (niveles 7, 9 y 10), hecha.</li>
   <li><b>IA con varias pelotas:</b> <span class="tag pend">pendiente</span> sigue a la que va a llegar antes (niveles 9 y 10).</li>
@@ -322,7 +322,8 @@
 ├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle)
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
-│                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrivelaShot)
+│                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrivelaShot,
+│                  Field)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia)
 ├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;

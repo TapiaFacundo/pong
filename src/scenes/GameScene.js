@@ -29,6 +29,7 @@ import BallManager from "../systems/BallManager.js";
 import BallEffects from "../systems/BallEffects.js";
 import CenterPaddleEffect from "../systems/CenterPaddleEffect.js";
 import TrivelaShot from "../systems/TrivelaShot.js";
+import Field from "../systems/Field.js";
 import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import { getLevel } from "../data/levels.js";
@@ -55,7 +56,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.physics.world.setBoundsCollision(false, false, true, true);
+    // La cancha del nivel (en casual, la normal de 800 × 600).
+    this.field = new Field(this, this.level?.field);
+    const field = this.field;
 
     this.drawMidLine();
     this.scoreManager = new ScoreManager(this.winScore);
@@ -63,8 +66,9 @@ export default class GameScene extends Phaser.Scene {
     // Reglas especiales del nivel del Modo Historia (vacías en casual).
     const rules = this.level?.rules ?? {};
 
-    this.paddleLeft = new Paddle(this, PADDLE_OFFSET_X, GAME_HEIGHT / 2);
-    this.paddleRight = new Paddle(this, GAME_WIDTH - PADDLE_OFFSET_X, GAME_HEIGHT / 2);
+    const paddleOptions = { speedScale: field.paddleSpeedScale };
+    this.paddleLeft = new Paddle(this, PADDLE_OFFSET_X, field.centerY, paddleOptions);
+    this.paddleRight = new Paddle(this, field.width - PADDLE_OFFSET_X, field.centerY, paddleOptions);
     if (rules.rivalPaddleHeightScale) {
       this.paddleRight.setBaseHeight(PADDLE_HEIGHT * rules.rivalPaddleHeightScale);
     }
@@ -77,7 +81,7 @@ export default class GameScene extends Phaser.Scene {
       (side) => this.onBallOut(side),
       ballSettings
     );
-    this.ballManager.addBall(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+    this.ballManager.addBall(field.centerX, field.centerY);
 
     if (rules.trivela) {
       this.trivelaShot = new TrivelaShot(this, this.paddleRight, "p2", rules.trivela);
@@ -94,12 +98,17 @@ export default class GameScene extends Phaser.Scene {
         ? new PlayerController(this, this.paddleRight, { up: KEYS.P2_UP, down: KEYS.P2_DOWN })
         : new AI(this.paddleRight, this.ballManager, "right", this.difficulty);
 
-    this.scoreTextLeft = this.add
-      .text(GAME_WIDTH / 2 - 60, 30, "0", { fontSize: "48px", color: COLORS.TEXT })
-      .setOrigin(0.5);
-    this.scoreTextRight = this.add
-      .text(GAME_WIDTH / 2 + 60, 30, "0", { fontSize: "48px", color: COLORS.TEXT })
-      .setOrigin(0.5);
+    // El marcador va en coordenadas de pantalla: no se achica con la cámara alejada.
+    this.scoreTextLeft = field.placeOnScreen(
+      this.add.text(0, 0, "0", { fontSize: "48px", color: COLORS.TEXT }).setOrigin(0.5),
+      GAME_WIDTH / 2 - 60,
+      30
+    );
+    this.scoreTextRight = field.placeOnScreen(
+      this.add.text(0, 0, "0", { fontSize: "48px", color: COLORS.TEXT }).setOrigin(0.5),
+      GAME_WIDTH / 2 + 60,
+      30
+    );
 
     this.powerUpEffects = new PowerUpEffects(this, { p1: this.paddleLeft, p2: this.paddleRight });
     this.powerUpFeedback = new PowerUpFeedback(this);
@@ -133,7 +142,9 @@ export default class GameScene extends Phaser.Scene {
   // Segunda pala del rival, a mitad de su lado (Los Gemelos), con su propio
   // alto e IA ({ heightScale, ai }). Los power-ups de pala del rival la afectan también.
   addForwardPaddle({ heightScale, ai }) {
-    this.paddleForward = new Paddle(this, GAME_WIDTH * FORWARD_PADDLE_POSITION, GAME_HEIGHT / 2);
+    this.paddleForward = new Paddle(this, this.field.width * FORWARD_PADDLE_POSITION, this.field.centerY, {
+      speedScale: this.field.paddleSpeedScale,
+    });
     this.paddleForward.setBaseHeight(PADDLE_HEIGHT * heightScale);
     this.ballManager.addPaddle(this.paddleForward, "p2", -1);
     this.powerUpEffects.addPaddle("p2", this.paddleForward);
@@ -156,8 +167,8 @@ export default class GameScene extends Phaser.Scene {
 
     const dashHeight = 16;
     const gap = 12;
-    for (let y = 0; y < GAME_HEIGHT; y += dashHeight + gap) {
-      graphics.lineBetween(GAME_WIDTH / 2, y, GAME_WIDTH / 2, y + dashHeight);
+    for (let y = 0; y < this.field.height; y += dashHeight + gap) {
+      graphics.lineBetween(this.field.centerX, y, this.field.centerX, y + dashHeight);
     }
   }
 
@@ -195,7 +206,7 @@ export default class GameScene extends Phaser.Scene {
     this.paddleForward?.recenter(PADDLE_RECENTER_DURATION);
 
     const directionTowardsLoser = scoringSide === "p1" ? 1 : -1;
-    const ball = this.ballManager.addBall(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+    const ball = this.ballManager.addBall(this.field.centerX, this.field.centerY);
     this.serveAfter(SERVE_DELAY_AFTER_POINT, ball, directionTowardsLoser);
   }
 
@@ -211,9 +222,9 @@ export default class GameScene extends Phaser.Scene {
     const side = this.scoreManager.doublePointSide;
 
     if (side === "p1") {
-      this.doublePointIndicator.setPosition(GAME_WIDTH / 2 - 60, 65).setVisible(true);
+      this.field.placeOnScreen(this.doublePointIndicator, GAME_WIDTH / 2 - 60, 65).setVisible(true);
     } else if (side === "p2") {
-      this.doublePointIndicator.setPosition(GAME_WIDTH / 2 + 60, 65).setVisible(true);
+      this.field.placeOnScreen(this.doublePointIndicator, GAME_WIDTH / 2 + 60, 65).setVisible(true);
     } else {
       this.doublePointIndicator.setVisible(false);
     }

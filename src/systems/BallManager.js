@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { GAME_WIDTH, BALL_SIZE } from "../config.js";
+import { BALL_SIZE } from "../config.js";
 import Ball from "../entities/Ball.js";
 import { playPaddleHit } from "./SoundEffects.js";
 
@@ -89,7 +89,7 @@ export default class BallManager {
       if (ball.x < -radius) {
         this.removeBall(ball);
         this.onBallOut("left");
-      } else if (ball.x > GAME_WIDTH + radius) {
+      } else if (ball.x > this.scene.physics.world.bounds.right + radius) {
         this.removeBall(ball);
         this.onBallOut("right");
       }
