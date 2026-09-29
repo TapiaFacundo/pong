@@ -250,7 +250,7 @@
   <tr><td>3 · El Muro</td><td>Su pala es un 60 % más alta durante todo el partido (como una pala grande permanente); los power-ups de tamaño que le toquen se aplican sobre esa altura. Es lento, así que hay que buscar los ángulos y las puntas de la pala.</td></tr>
   <tr><td>4 · Velocista</td><td>La pelota sale a 440 px/s (en vez de 380) y acelera un 4 % por golpe (en vez de 2,5 %). Pone a prueba los reflejos.</td></tr>
   <tr><td>5 · Los Gemelos<br><span class="note">jefe</span></td><td>Cancha de 1000 × 750. Controla dos palas: una en su arco y otra adelantada, a mitad de su lado de la cancha. La adelantada rebota la pelota como una pala normal; si la pelota la pasa, todavía queda la del arco. Las dos usan la misma IA, y los power-ups de pala que le toquen al jefe afectan a las dos.</td></tr>
-  <tr><td>6 · Trivela</td><td>Le pega de tres dedos. Cada vez que te devuelve la pelota, hay 50 % de chance de que el tiro salga con efecto: se curva como la pelota curva con la fuerza de un golpe en la punta, aunque le pegue con el centro de la pala. El resto de los tiros salen rectos, sin patrón fijo. Antes de un tiro con efecto, su pala destella en amarillo como aviso.</td></tr>
+  <tr><td>6 · Trivela</td><td>Le pega de tres dedos. Cada vez que la pelota va hacia él, hay 50 % de chance de que su próximo tiro salga con efecto: sale como un golpe en la punta de la pala (abierto, hacia el lado donde pegó la pelota) y se curva de vuelta con la fuerza máxima de la pelota curva, aunque le pegue con el centro. El efecto dura solo ese tiro: el próximo golpe de cualquiera lo corta. El resto de los tiros salen normales, sin patrón fijo. Aviso: mientras la pelota va hacia él con un tiro con efecto preparado, su pala parpadea en amarillo. Si la pelota ya tiene el power-up de pelota curva, no se suma un segundo efecto.</td></tr>
   <tr><td>7 · Estadio</td><td>Cancha de 1200 × 900 con la cámara alejada: todo se ve a 2/3 de su tamaño. Estreno de la predicción de trayectoria. Los power-ups aparecen en una zona central proporcionalmente más grande.</td></tr>
   <tr><td>8 · Saboteador</td><td>Cada 12 s te aplica un efecto rojo al azar durante 4 s: controles invertidos o pala lenta. Los power-ups rojos salen con el doble de probabilidad que en los otros niveles.</td></tr>
   <tr><td>9 · Tormenta</td><td>Cada ronda empieza con 2 pelotas. Lluvia de power-ups permanente: aparece uno cada 1,5 s durante todo el partido. La IA sigue a la pelota que va a llegar antes a su lado (hoy solo sigue a la primera).</td></tr>
@@ -297,14 +297,14 @@
 </table>
 
 <h3>Mecánicas nuevas que requiere</h3>
-<p>Hechas: configuración por nivel, progreso guardado, pantallas (salvo la final), la pala alta del nivel 3 y la pelota rápida del nivel 4. El resto está pendiente.</p>
+<p>Hechas: configuración por nivel, progreso guardado, pantallas (salvo la final), la pala alta del nivel 3, la pelota rápida del nivel 4 y el tiro con efecto de Trivela (nivel 6). El resto está pendiente.</p>
 <ul>
   <li><b>Configuración por nivel:</b> cada nivel se describe como datos (IA, cancha, reglas de pelota, power-ups, habilidades) y la partida se arma a partir de eso.</li>
   <li><b>Cancha de tamaño variable:</b> <span class="tag pend">pendiente</span> 1000 × 750 y 1200 × 900, con la cámara alejada para que entre en la pantalla, y palas más rápidas en proporción.</li>
   <li><b>Pala adelantada:</b> <span class="tag pend">pendiente</span> segunda pala de la IA a mitad de su lado (niveles 5 y 10).</li>
   <li><b>Predicción de trayectoria de la IA</b> <span class="tag pend">pendiente</span> (niveles 7, 9 y 10).</li>
   <li><b>IA con varias pelotas:</b> <span class="tag pend">pendiente</span> sigue a la que va a llegar antes (niveles 9 y 10).</li>
-  <li><b>Habilidades de rival:</b> <span class="tag pend">pendiente</span> tiro con efecto de Trivela (niveles 6 y 10) y sabotaje con efectos rojos (nivel 8).</li>
+  <li><b>Habilidades de rival:</b> tiro con efecto de Trivela (niveles 6 y 10), hecho; sabotaje con efectos rojos (nivel 8), <span class="tag pend">pendiente</span>.</li>
   <li><b>Reglas de partida por nivel:</b> pala más alta (3) y velocidad y aceleración de la pelota (4), hechas; pelotas por ronda (9 y 10), lluvia permanente (9) y probabilidad de cada color de power-up (8), <span class="tag pend">pendiente</span>.</li>
   <li><b>Fases de jefe</b> <span class="tag pend">pendiente</span> que cambian la IA y las habilidades según el marcador (10).</li>
   <li><b>Progreso guardado</b> y las pantallas del modo (la pantalla final, <span class="tag pend">pendiente</span>).</li>
@@ -320,7 +320,7 @@
 ├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle)
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
-│                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion)
+│                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrivelaShot)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia)
 ├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;

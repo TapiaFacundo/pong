@@ -27,6 +27,7 @@ import { playPowerUpPickup, playScore } from "../systems/SoundEffects.js";
 import BallManager from "../systems/BallManager.js";
 import BallEffects from "../systems/BallEffects.js";
 import CenterPaddleEffect from "../systems/CenterPaddleEffect.js";
+import TrivelaShot from "../systems/TrivelaShot.js";
 import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import { getLevel } from "../data/levels.js";
@@ -45,6 +46,9 @@ export default class GameScene extends Phaser.Scene {
     this.difficulty = this.level ? this.level.ai : data.difficulty ?? "normal";
     this.matchOver = false;
     this.isPaused = false;
+    // Phaser reutiliza la misma instancia de escena entre partidas: los
+    // sistemas opcionales de un nivel no pueden quedar de la partida anterior.
+    this.trivelaShot = null;
   }
 
   create() {
@@ -71,6 +75,11 @@ export default class GameScene extends Phaser.Scene {
       ballSettings
     );
     this.ballManager.addBall(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+
+    if (rules.trivela) {
+      this.trivelaShot = new TrivelaShot(this, this.paddleRight, "p2", rules.trivela);
+      this.ballManager.setShotModifier(this.trivelaShot);
+    }
 
     this.controllerLeft = new PlayerController(this, this.paddleLeft, {
       up: KEYS.P1_UP,
@@ -122,6 +131,7 @@ export default class GameScene extends Phaser.Scene {
     this.controllerLeft.update(delta);
     this.controllerRight.update(delta);
     this.ballManager.update(delta);
+    this.trivelaShot?.update(this.ballManager.balls);
   }
 
   drawMidLine() {
@@ -234,6 +244,7 @@ export default class GameScene extends Phaser.Scene {
     this.ballEffects.clearAll();
     this.centerPaddleEffect.clear();
     this.ballManager.clearAll();
+    this.trivelaShot?.clear();
 
     if (this.level) {
       this.finishStoryLevel(winner);

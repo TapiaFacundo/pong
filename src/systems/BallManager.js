@@ -8,6 +8,7 @@ export default class BallManager {
   constructor(scene, paddleLeft, paddleRight, onBallOut, ballSettings = {}) {
     this.scene = scene;
     this.ballSettings = ballSettings;
+    this.shotModifier = null;
     this.paddleLeft = paddleLeft;
     this.paddleRight = paddleRight;
     this.onBallOut = onBallOut;
@@ -36,12 +37,22 @@ export default class BallManager {
     return ball;
   }
 
+  // Un sistema que puede cambiar cómo sale un golpe de pala (por ejemplo, el
+  // tiro con efecto de Trivela): beforeBounce(ball, playerId, offset) devuelve
+  // el offset a usar y afterBounce(ball, playerId, offset) corre después del rebote.
+  setShotModifier(modifier) {
+    this.shotModifier = modifier;
+  }
+
   handlePaddleHit(ball, paddle, playerId) {
     ball.lastTouchedBy = playerId;
 
-    const offset = Phaser.Math.Clamp((ball.y - paddle.y) / (paddle.rect.height / 2), -1, 1);
+    let offset = Phaser.Math.Clamp((ball.y - paddle.y) / (paddle.rect.height / 2), -1, 1);
+    if (this.shotModifier) offset = this.shotModifier.beforeBounce(ball, playerId, offset);
+
     const directionX = paddle === this.paddleLeft ? 1 : -1;
     ball.bounceOffPaddle(offset, directionX);
+    this.shotModifier?.afterBounce(ball, playerId, offset);
     playPaddleHit();
   }
 

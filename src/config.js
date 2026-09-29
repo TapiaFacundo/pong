@@ -111,6 +111,9 @@ export const BALL_CURVE_MIN_OFFSET = 0.3;
 export const BALL_CURVE_MAX_TURN_RATE = (100 * Math.PI) / 180;
 export const BALL_CURVE_DELAY = 150;
 export const BALL_CURVE_DURATION = 900;
+
+// Aviso del tiro con efecto de Trivela: su pala parpadea en amarillo con este intervalo.
+export const TRIVELA_TELL_BLINK_INTERVAL = 120;
 export const BALL_INVISIBLE_BLINK_INTERVAL = 220;
 
 export const CENTER_PADDLE_HEIGHT = 60;
