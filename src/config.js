@@ -7,6 +7,8 @@ export const PADDLE_WIDTH = 16;
 export const PADDLE_HEIGHT = 100;
 export const PADDLE_OFFSET_X = 40;
 export const PADDLE_SPEED = 400;
+// Pala adelantada de Los Gemelos: en el centro del lado del rival (fracción del ancho de la cancha).
+export const FORWARD_PADDLE_POSITION = 0.75;
 
 export const AI_DEAD_ZONE = 10;
 

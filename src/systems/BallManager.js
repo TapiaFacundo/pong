@@ -13,6 +13,31 @@ export default class BallManager {
     this.paddleRight = paddleRight;
     this.onBallOut = onBallOut;
     this.balls = [];
+    this.paddles = [];
+
+    this.addPaddle(paddleLeft, "p1", 1);
+    this.addPaddle(paddleRight, "p2", -1);
+  }
+
+  // Suma una pala que rebota pelotas. directionX: hacia dónde sale la pelota
+  // al rebotar en ella (1 = derecha). Sirve también para palas extra, como la
+  // pala adelantada de Los Gemelos.
+  addPaddle(paddle, playerId, directionX) {
+    const entry = { paddle, playerId, directionX };
+    this.paddles.push(entry);
+    this.balls.forEach((ball) => this.watchPaddle(ball, entry));
+  }
+
+  // Una pala solo choca las pelotas que vienen de frente (hacia su arco): así
+  // una pelota que ya rebotó y se aleja la atraviesa por detrás en vez de
+  // volver a rebotar hacia el arco de esa pala.
+  watchPaddle(ball, { paddle, playerId, directionX }) {
+    this.scene.physics.add.collider(
+      ball.circle,
+      paddle.rect,
+      () => this.handlePaddleHit(ball, paddle, playerId, directionX),
+      () => Math.sign(ball.velocityX) === -directionX
+    );
   }
 
   get count() {
@@ -26,12 +51,7 @@ export default class BallManager {
   addBall(x, y) {
     const ball = new Ball(this.scene, x, y, this.ballSettings);
 
-    this.scene.physics.add.collider(ball.circle, this.paddleLeft.rect, () =>
-      this.handlePaddleHit(ball, this.paddleLeft, "p1")
-    );
-    this.scene.physics.add.collider(ball.circle, this.paddleRight.rect, () =>
-      this.handlePaddleHit(ball, this.paddleRight, "p2")
-    );
+    this.paddles.forEach((entry) => this.watchPaddle(ball, entry));
 
     this.balls.push(ball);
     return ball;
@@ -44,13 +64,12 @@ export default class BallManager {
     this.shotModifier = modifier;
   }
 
-  handlePaddleHit(ball, paddle, playerId) {
+  handlePaddleHit(ball, paddle, playerId, directionX) {
     ball.lastTouchedBy = playerId;
 
     let offset = Phaser.Math.Clamp((ball.y - paddle.y) / (paddle.rect.height / 2), -1, 1);
     if (this.shotModifier) offset = this.shotModifier.beforeBounce(ball, playerId, offset);
 
-    const directionX = paddle === this.paddleLeft ? 1 : -1;
     ball.bounceOffPaddle(offset, directionX);
     this.shotModifier?.afterBounce(ball, playerId, offset);
     playPaddleHit();

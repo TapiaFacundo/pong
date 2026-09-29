@@ -11,10 +11,17 @@ const HEIGHT_KINDS = ["grow", "shrink"];
 const SPEED_KINDS = ["speedUp", "slowDown"];
 
 export default class PowerUpEffects {
+  // paddlesBySide: { p1: pala, p2: pala }. Un lado puede sumar más palas con
+  // addPaddle (la pala adelantada de Los Gemelos): los efectos de pala de ese
+  // lado se aplican a todas.
   constructor(scene, paddlesBySide) {
     this.scene = scene;
-    this.paddlesBySide = paddlesBySide;
+    this.paddlesBySide = { p1: [paddlesBySide.p1], p2: [paddlesBySide.p2] };
     this.timers = { p1: {}, p2: {} };
+  }
+
+  addPaddle(side, paddle) {
+    this.paddlesBySide[side].push(paddle);
   }
 
   // A quién afecta un power-up de color: verde/rojo siguen siempre el mismo
@@ -33,17 +40,18 @@ export default class PowerUpEffects {
     if (!targetSide) return null;
 
     const slot = this.slotForKind(kind);
-    const paddle = this.paddlesBySide[targetSide];
+    const paddles = this.paddlesBySide[targetSide];
 
     this.clearSlot(targetSide, slot);
-    this.applyKind(paddle, kind);
+    paddles.forEach((paddle) => this.applyKind(paddle, kind));
 
     this.timers[targetSide][slot] = this.scene.time.delayedCall(POWERUP_EFFECT_DURATION, () => {
-      this.revertSlot(paddle, slot);
+      paddles.forEach((paddle) => this.revertSlot(paddle, slot));
       delete this.timers[targetSide][slot];
     });
 
-    return paddle;
+    // La pala principal del lado afectado, para el destello de feedback.
+    return paddles[0];
   }
 
   slotForKind(kind) {
@@ -84,7 +92,7 @@ export default class PowerUpEffects {
       timer.remove();
       delete this.timers[side][slot];
     }
-    this.revertSlot(this.paddlesBySide[side], slot);
+    this.paddlesBySide[side].forEach((paddle) => this.revertSlot(paddle, slot));
   }
 
   clearAll() {

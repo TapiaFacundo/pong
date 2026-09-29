@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { AI_DEAD_ZONE, AI_DIFFICULTIES } from "../config.js";
+import { AI_DEAD_ZONE, AI_DIFFICULTIES, BALL_SIZE } from "../config.js";
 
 export default class AI {
   constructor(paddle, ballManager, side = "right", difficulty = "normal") {
@@ -24,7 +24,36 @@ export default class AI {
     this.reactionDelay = settings.reactionDelay;
     this.errorMargin = settings.errorMargin;
     this.anticipationChance = settings.anticipationChance ?? 0;
+    // Predicción de trayectoria: 0 = sigue la altura actual de la pelota,
+    // 1 = apunta a donde va a llegar; valores intermedios, a mitad de camino.
+    this.prediction = settings.prediction === true ? 1 : Number(settings.prediction) || 0;
     this.paddle.setBaseSpeed(settings.speed);
+  }
+
+  // Altura a la que apunta la IA cuando la pelota viene hacia su lado.
+  aimY(ball) {
+    if (this.prediction <= 0) return ball.y;
+    return ball.y + (this.predictArrivalY(ball) - ball.y) * this.prediction;
+  }
+
+  // Dónde va a cruzar la pelota la x de esta pala, contando los rebotes en el
+  // techo y el piso (en línea recta: no adivina curvas ni zigzags).
+  predictArrivalY(ball) {
+    const velocity = ball.circle.body.velocity;
+    if (velocity.x === 0) return ball.y;
+
+    const secondsToArrive = (this.paddle.x - ball.x) / velocity.x;
+    if (secondsToArrive <= 0) return ball.y;
+
+    const bounds = this.paddle.scene.physics.world.bounds;
+    const radius = BALL_SIZE / 2;
+    const top = bounds.top + radius;
+    const span = bounds.bottom - radius - top;
+
+    // Desplegar los rebotes: la posición "sin paredes" se pliega dentro de la cancha.
+    let offset = (ball.y + velocity.y * secondsToArrive - top) % (2 * span);
+    if (offset < 0) offset += 2 * span;
+    return top + (offset > span ? 2 * span - offset : offset);
   }
 
   update(delta) {
@@ -57,7 +86,7 @@ export default class AI {
 
     if (this.reactionTimer >= this.reactionDelay) {
       this.reactionTimer -= this.reactionDelay;
-      this.targetY = ball.y + Phaser.Math.FloatBetween(-this.errorMargin, this.errorMargin);
+      this.targetY = this.aimY(ball) + Phaser.Math.FloatBetween(-this.errorMargin, this.errorMargin);
     }
 
     this.moveTowardTarget();

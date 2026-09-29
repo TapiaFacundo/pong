@@ -4,6 +4,7 @@ import {
   GAME_HEIGHT,
   PADDLE_OFFSET_X,
   PADDLE_HEIGHT,
+  FORWARD_PADDLE_POSITION,
   COLORS,
   KEYS,
   WIN_SCORE_SHORT,
@@ -49,6 +50,8 @@ export default class GameScene extends Phaser.Scene {
     // Phaser reutiliza la misma instancia de escena entre partidas: los
     // sistemas opcionales de un nivel no pueden quedar de la partida anterior.
     this.trivelaShot = null;
+    this.paddleForward = null;
+    this.controllerForward = null;
   }
 
   create() {
@@ -103,6 +106,8 @@ export default class GameScene extends Phaser.Scene {
     this.ballEffects = new BallEffects(this);
     this.centerPaddleEffect = new CenterPaddleEffect(this, this.ballManager);
 
+    if (rules.forwardPaddle) this.addForwardPaddle(rules.forwardPaddle);
+
     this.powerUpSpawner = new PowerUpSpawner(this, this.ballManager, (definition, ball) =>
       this.onPowerUpActivated(definition, ball)
     );
@@ -125,11 +130,22 @@ export default class GameScene extends Phaser.Scene {
     this.scene.pause();
   }
 
+  // Segunda pala del rival, a mitad de su lado (Los Gemelos), con su propio
+  // alto e IA ({ heightScale, ai }). Los power-ups de pala del rival la afectan también.
+  addForwardPaddle({ heightScale, ai }) {
+    this.paddleForward = new Paddle(this, GAME_WIDTH * FORWARD_PADDLE_POSITION, GAME_HEIGHT / 2);
+    this.paddleForward.setBaseHeight(PADDLE_HEIGHT * heightScale);
+    this.ballManager.addPaddle(this.paddleForward, "p2", -1);
+    this.powerUpEffects.addPaddle("p2", this.paddleForward);
+    this.controllerForward = new AI(this.paddleForward, this.ballManager, "right", ai);
+  }
+
   update(time, delta) {
     if (this.matchOver) return;
 
     this.controllerLeft.update(delta);
     this.controllerRight.update(delta);
+    this.controllerForward?.update(delta);
     this.ballManager.update(delta);
     this.trivelaShot?.update(this.ballManager.balls);
   }
@@ -176,6 +192,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.paddleLeft.recenter(PADDLE_RECENTER_DURATION);
     this.paddleRight.recenter(PADDLE_RECENTER_DURATION);
+    this.paddleForward?.recenter(PADDLE_RECENTER_DURATION);
 
     const directionTowardsLoser = scoringSide === "p1" ? 1 : -1;
     const ball = this.ballManager.addBall(GAME_WIDTH / 2, GAME_HEIGHT / 2);

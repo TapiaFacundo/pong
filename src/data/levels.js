@@ -11,7 +11,9 @@ import { KEYS } from "../enums/keys.js";
 //   tarjeta de presentación (nombre, habilidad en una línea y su frase).
 // - boss: null, "boss" o "final".
 // - ai: configuración de la IA del rival, con la misma forma que
-//   AI_DIFFICULTIES, más `prediction` (predicción de trayectoria) y
+//   AI_DIFFICULTIES, más `prediction` (predicción de trayectoria: false/0 =
+//   sigue la altura de la pelota, true/1 = apunta a donde va a llegar,
+//   intermedio = a mitad de camino) y
 //   `trackFirstArrival` (con varias pelotas, sigue a la que llega antes;
 //   si no, sigue siempre a la primera).
 // - field: tamaño de la cancha; si es más grande que la normal, la cámara se
@@ -19,7 +21,8 @@ import { KEYS } from "../enums/keys.js";
 // - rules (opcional): reglas especiales del nivel.
 //     rivalPaddleHeightScale: alto de la pala del rival (× normal).
 //     ballSpeed / ballSpeedIncrement: velocidad inicial y aceleración por golpe.
-//     forwardPaddle: el rival tiene una segunda pala a mitad de su lado.
+//     forwardPaddle: el rival tiene una segunda pala a mitad de su lado, con
+//       su propio alto (`heightScale`, × normal) y su propia IA (`ai`).
 //     ballsPerRound: pelotas con las que arranca cada ronda.
 //     powerUpSpawnDelay: { min, max } del spawn para todo el partido (ms).
 //     powerUpColorWeights: probabilidad relativa de cada color de power-up.
@@ -36,6 +39,13 @@ const MEDIUM_FIELD = { width: 1000, height: 750 };
 const LARGE_FIELD = { width: 1200, height: 900 };
 
 const TRIVELA_SHOT = { chance: 0.5 };
+
+// Pala adelantada de Los Gemelos: más chica, con la IA Difícil de siempre.
+// Se distingue de la del arco, que es más rápida pero erra más.
+const TWINS_FORWARD_PADDLE = {
+  heightScale: 0.6,
+  ai: { ...AI_DIFFICULTIES.hard, prediction: false, trackFirstArrival: false },
+};
 
 export const LEVELS = [
   {
@@ -82,9 +92,10 @@ export const LEVELS = [
     abilityKey: KEYS.DOS_PALAS_UNA_EN_EL_ARCO_Y_OTRA_ADELANTADA,
     quoteKey: KEYS.DOS_CONTRA_UNO_NO_ES_TRAMPA_SI_SOMOS_GEMELOS,
     boss: "boss",
-    ai: { ...AI_DIFFICULTIES.hard, prediction: false, trackFirstArrival: false },
+    // Pala del arco: más rápida (400 px/s) pero con más error (± 30 px).
+    ai: { ...AI_DIFFICULTIES.hard, speed: 400, errorMargin: 30, prediction: false, trackFirstArrival: false },
     field: MEDIUM_FIELD,
-    rules: { forwardPaddle: true },
+    rules: { forwardPaddle: TWINS_FORWARD_PADDLE },
   },
   {
     id: 6,
@@ -142,7 +153,7 @@ export const LEVELS = [
       {
         fromPlayerScore: 5,
         ai: { ...AI_DIFFICULTIES.impossible, prediction: true, trackFirstArrival: true },
-        rules: { trivela: TRIVELA_SHOT, forwardPaddle: true },
+        rules: { trivela: TRIVELA_SHOT, forwardPaddle: TWINS_FORWARD_PADDLE },
       },
     ],
   },
