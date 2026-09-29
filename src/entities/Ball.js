@@ -11,14 +11,19 @@ import {
 } from "../config.js";
 
 export default class Ball {
-  constructor(scene, x, y) {
+  // baseSpeed / speedIncrement: velocidad de saque y aceleración por golpe de
+  // pala (un nivel del Modo Historia puede cambiarlas; si no, las normales).
+  constructor(scene, x, y, { baseSpeed = BALL_SPEED, speedIncrement = BALL_SPEED_INCREMENT } = {}) {
+    this.baseSpeed = baseSpeed;
+    this.speedIncrement = speedIncrement;
+
     this.circle = scene.add.circle(x, y, BALL_SIZE / 2, COLORS.BALL);
     scene.physics.add.existing(this.circle);
     this.circle.body.setCircle(BALL_SIZE / 2);
     this.circle.body.setCollideWorldBounds(true);
     this.circle.body.setBounce(1, 1);
 
-    this.speed = BALL_SPEED;
+    this.speed = baseSpeed;
     this.lastTouchedBy = null;
 
     // Dirección "base" de la trayectoria (vector unitario). Mientras hay
@@ -41,7 +46,7 @@ export default class Ball {
   }
 
   launch(directionX = null) {
-    this.speed = BALL_SPEED;
+    this.speed = this.baseSpeed;
 
     const dir = directionX ?? (Math.random() < 0.5 ? -1 : 1);
     const angle = Phaser.Math.FloatBetween(-BALL_MAX_BOUNCE_ANGLE / 2, BALL_MAX_BOUNCE_ANGLE / 2);
@@ -52,7 +57,7 @@ export default class Ball {
   bounceOffPaddle(offsetRatio, directionX) {
     // Sube la velocidad con cada rebote, pero si ya está por encima del tope
     // (por un Turbo previo) no la baja: se queda congelada en ese nivel.
-    this.speed = Math.max(this.speed, Math.min(this.speed * BALL_SPEED_INCREMENT, BALL_MAX_SPEED));
+    this.speed = Math.max(this.speed, Math.min(this.speed * this.speedIncrement, BALL_MAX_SPEED));
 
     const angle = offsetRatio * BALL_MAX_BOUNCE_ANGLE;
     this.setDirection(Math.cos(angle) * directionX, Math.sin(angle));
@@ -129,7 +134,7 @@ export default class Ball {
 
   resetPosition(x, y) {
     this.circle.body.reset(x, y);
-    this.speed = BALL_SPEED;
+    this.speed = this.baseSpeed;
     this.lastTouchedBy = null;
   }
 

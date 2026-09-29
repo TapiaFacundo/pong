@@ -3,6 +3,7 @@ import {
   GAME_WIDTH,
   GAME_HEIGHT,
   PADDLE_OFFSET_X,
+  PADDLE_HEIGHT,
   COLORS,
   KEYS,
   WIN_SCORE_SHORT,
@@ -52,11 +53,22 @@ export default class GameScene extends Phaser.Scene {
     this.drawMidLine();
     this.scoreManager = new ScoreManager(this.winScore);
 
+    // Reglas especiales del nivel del Modo Historia (vacías en casual).
+    const rules = this.level?.rules ?? {};
+
     this.paddleLeft = new Paddle(this, PADDLE_OFFSET_X, GAME_HEIGHT / 2);
     this.paddleRight = new Paddle(this, GAME_WIDTH - PADDLE_OFFSET_X, GAME_HEIGHT / 2);
+    if (rules.rivalPaddleHeightScale) {
+      this.paddleRight.setBaseHeight(PADDLE_HEIGHT * rules.rivalPaddleHeightScale);
+    }
 
-    this.ballManager = new BallManager(this, this.paddleLeft, this.paddleRight, (side) =>
-      this.onBallOut(side)
+    const ballSettings = { baseSpeed: rules.ballSpeed, speedIncrement: rules.ballSpeedIncrement };
+    this.ballManager = new BallManager(
+      this,
+      this.paddleLeft,
+      this.paddleRight,
+      (side) => this.onBallOut(side),
+      ballSettings
     );
     this.ballManager.addBall(GAME_WIDTH / 2, GAME_HEIGHT / 2);
 

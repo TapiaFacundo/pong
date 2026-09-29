@@ -73,6 +73,13 @@ export default class Paddle {
     this.rect.body.setSize(PADDLE_WIDTH, height, true);
   }
 
+  // Cambia la altura "normal" de la pala: los power-ups de tamaño se aplican
+  // sobre ella y, al terminar, vuelven a ella.
+  setBaseHeight(height) {
+    this.baseHeight = height;
+    this.setHeightScale(1);
+  }
+
   resetHeightScale() {
     this.setHeightScale(1);
   }

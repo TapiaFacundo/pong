@@ -4,8 +4,10 @@ import Ball from "../entities/Ball.js";
 import { playPaddleHit } from "./SoundEffects.js";
 
 export default class BallManager {
-  constructor(scene, paddleLeft, paddleRight, onBallOut) {
+  // ballSettings: opciones para cada pelota nueva ({ baseSpeed, speedIncrement }).
+  constructor(scene, paddleLeft, paddleRight, onBallOut, ballSettings = {}) {
     this.scene = scene;
+    this.ballSettings = ballSettings;
     this.paddleLeft = paddleLeft;
     this.paddleRight = paddleRight;
     this.onBallOut = onBallOut;
@@ -21,7 +23,7 @@ export default class BallManager {
   }
 
   addBall(x, y) {
-    const ball = new Ball(this.scene, x, y);
+    const ball = new Ball(this.scene, x, y, this.ballSettings);
 
     this.scene.physics.add.collider(ball.circle, this.paddleLeft.rect, () =>
       this.handlePaddleHit(ball, this.paddleLeft, "p1")
