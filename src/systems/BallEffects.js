@@ -52,6 +52,8 @@ export default class BallEffects {
     const expireEvent = this.scene.time.delayedCall(POWERUP_EFFECT_DURATION, () => this.clearInvisible(ball));
 
     this.invisibleTimers.set(ball, { blinkEvent, expireEvent });
+    // La IA lo lee para errar más mientras dura el efecto.
+    ball.isInvisible = true;
   }
 
   clearInvisible(ball) {
@@ -61,6 +63,7 @@ export default class BallEffects {
     timers.blinkEvent.remove();
     timers.expireEvent.remove();
     this.invisibleTimers.delete(ball);
+    ball.isInvisible = false;
 
     if (ball.circle.body) ball.circle.setVisible(true);
   }

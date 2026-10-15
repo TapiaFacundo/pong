@@ -158,6 +158,13 @@
 </table>
 <p class="note">La IA solo sigue a la primera pelota en juego. Los power-ups de velocidad de pala se aplican sobre su velocidad base.</p>
 
+<h3>Power-ups que afectan a la IA</h3>
+<p>Algunos power-ups perjudican al jugador por cómo se ve o cómo se maneja la pala, algo que a la IA no le afectaría. Para que también le afecten:</p>
+<ul>
+  <li><b>Pelota invisible:</b> mientras dura, la IA arrastra un error de hasta ± 90 px al apuntar, sorteado una vez por jugada (no se compensa como el margen de error normal, que se vuelve a sortear en cada reacción). En tiros fáciles que la IA Difícil nunca erra, falla aproximadamente 4 de cada 10.</li>
+  <li><b>Controles invertidos</b> en su contra: reacciona 150 ms más lento (por ejemplo, Difícil pasa de 40 a 190 ms), como si le costara manejar la pala. Se nota en tiros rápidos y cruzados; con tiempo de sobra, igual llega.</li>
+</ul>
+
 <h2>9. Pantallas y flujo</h2>
 <pre>Menú principal ──(1P)──► Dificultad ──► Tutorial ──► Partida ⇄ Pausa
        │                                              │
@@ -242,7 +249,7 @@
   <tr><td>10 · Fases 1 y 2</td><td>340 px/s (× 1,5)</td><td>40 ms</td><td>± 4 px</td><td>35 %</td><td>Sí</td></tr>
   <tr><td>10 · Fase 3</td><td>450 px/s (× 1,5)</td><td>10 ms</td><td>± 2 px</td><td>50 %</td><td>Sí</td></tr>
 </table>
-<p class="note">“× 1,25” y “× 1,5”: en las canchas más altas, las palas de los dos jugadores se mueven más rápido en esa proporción, para que cruzar la cancha tarde lo mismo que en la normal. <b>Predicción de trayectoria</b>: la IA calcula dónde va a llegar la pelota contando los rebotes en las paredes, en vez de seguir su altura actual. “Sí” = apunta a ese punto; “50 %” = apunta a mitad de camino entre la altura actual de la pelota y ese punto. Calcula en línea recta, así que no adivina curvas ni zigzags.</p>
+<p class="note">“× 1,25” y “× 1,5”: en las canchas más altas, las palas de los dos jugadores se mueven más rápido en esa proporción, para que cruzar la cancha tarde lo mismo que en la normal. <b>Predicción de trayectoria</b>: la IA calcula dónde va a llegar la pelota contando los rebotes en las paredes, en vez de seguir su altura actual. “Sí” = apunta a ese punto; “50 %” = apunta a mitad de camino entre la altura actual de la pelota y ese punto. Calcula en línea recta, así que no adivina curvas ni zigzags. La predicción nunca es exacta: en cada jugada arrastra un desvío de hasta ± 75 px, así que llega desubicada en aproximadamente 1 de cada 4 tiros. Sin ese desvío, en la cancha grande la IA tiene tiempo de sobra para acomodarse y no falla nunca.</p>
 
 <h3>Detalle de cada nivel</h3>
 <table>

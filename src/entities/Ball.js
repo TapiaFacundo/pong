@@ -25,6 +25,8 @@ export default class Ball {
 
     this.speed = baseSpeed;
     this.lastTouchedBy = null;
+    // Con el power-up de pelota invisible activo (lo maneja BallEffects).
+    this.isInvisible = false;
 
     // Dirección "base" de la trayectoria (vector unitario). Mientras hay
     // efectos de movimiento activos (zigzag, curva), la velocidad real se
