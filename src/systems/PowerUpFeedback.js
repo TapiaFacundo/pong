@@ -2,9 +2,9 @@ import { POWERUP_COLORS, POWERUP_TEXT_COLORS, POWERUP_LABELS, COLORS } from "../
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 
-// Corrimiento del texto de sabotaje respecto de la pala afectada, para que no
-// quede cortado contra el borde de la pantalla.
-const SABOTAGE_LABEL_OFFSET_X = 130;
+// Corrimiento del texto del Saboteador respecto de la pala afectada, hacia el
+// centro, para que no quede cortado contra el borde de la pantalla.
+const RIVAL_ABILITY_LABEL_OFFSET_X = 130;
 
 export default class PowerUpFeedback {
   constructor(scene) {
@@ -22,15 +22,24 @@ export default class PowerUpFeedback {
     if (targetPaddle) this.flashPaddle(targetPaddle, color);
   }
 
-  // Sabotaje del Saboteador: destellan en rojo su pala y la afectada, y sobre
-  // la afectada aparece "¡Sabotaje!" con el nombre del efecto.
-  playSabotage(targetPaddle, sourcePaddle, kind) {
-    const label = `${getPhrase(KEYS.SABOTAJE)} ${getPhrase(POWERUP_LABELS[kind])}`;
-    const direction = targetPaddle.x < sourcePaddle.x ? 1 : -1;
+  // Habilidad del Saboteador. Si es un sabotaje, destellan en rojo su pala y
+  // la del jugador, y junto a la del jugador aparece "¡Sabotaje!" con el
+  // efecto. Si es un refuerzo para él, su pala destella en verde y junto a
+  // ella aparece "¡Refuerzo!" con el efecto.
+  playRivalAbility({ kind, isSabotage, targetPaddle, sourcePaddle }) {
+    const prefixKey = isSabotage ? KEYS.SABOTAJE : KEYS.REFUERZO;
+    const colorCategory = isSabotage ? "red" : "green";
+    const label = `${getPhrase(prefixKey)} ${getPhrase(POWERUP_LABELS[kind])}`;
+    const towardCenter = targetPaddle.x < this.scene.physics.world.bounds.centerX ? 1 : -1;
 
-    this.spawnLabel(targetPaddle.x + direction * SABOTAGE_LABEL_OFFSET_X, targetPaddle.y, label, POWERUP_TEXT_COLORS.red);
-    this.flashPaddle(targetPaddle, POWERUP_COLORS.red);
-    this.flashPaddle(sourcePaddle, POWERUP_COLORS.red);
+    this.spawnLabel(
+      targetPaddle.x + towardCenter * RIVAL_ABILITY_LABEL_OFFSET_X,
+      targetPaddle.y,
+      label,
+      POWERUP_TEXT_COLORS[colorCategory]
+    );
+    this.flashPaddle(targetPaddle, POWERUP_COLORS[colorCategory]);
+    if (sourcePaddle !== targetPaddle) this.flashPaddle(sourcePaddle, POWERUP_COLORS[colorCategory]);
   }
 
   spawnBurst(x, y, color) {

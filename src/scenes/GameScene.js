@@ -140,11 +140,12 @@ export default class GameScene extends Phaser.Scene {
     if (rules.sabotage) {
       this.sabotage = new Sabotage(this, rules.sabotage, {
         ballManager: this.ballManager,
-        powerUpEffects: this.powerUpEffects,
         feedback: this.powerUpFeedback,
-        targetSide: "p1",
-        targetPaddle: this.paddleLeft,
-        sourcePaddle: this.paddleRight,
+        applyEffect: (kind, side, duration) => this.applyEffectToSide(kind, side, duration),
+        playerSide: "p1",
+        rivalSide: "p2",
+        playerPaddle: this.paddleLeft,
+        rivalPaddle: this.paddleRight,
       });
     }
 
@@ -282,6 +283,20 @@ export default class GameScene extends Phaser.Scene {
       balls.forEach(({ ball, directionX }) => ball.launch(directionX));
       this.powerUpSpawner.startTimer();
     });
+  }
+
+  // Aplica un efecto directamente a un lado, sin pasar por un power-up (lo usa
+  // el Saboteador). Los de pala duran `duration`; el cañón y el punto doble,
+  // lo mismo que como power-up.
+  applyEffectToSide(kind, side, duration) {
+    if (kind === "cannon") {
+      this.cannonEffect.arm(side, POWERUP_EFFECT_DURATION);
+    } else if (kind === "doublePoint") {
+      this.scoreManager.setDoublePoint(side);
+      this.updateDoublePointIndicator();
+    } else {
+      this.powerUpEffects.applyToSide(side, kind, duration);
+    }
   }
 
   updateDoublePointIndicator() {

@@ -1,26 +1,30 @@
 import Phaser from "phaser";
 import { playPowerUpPickup } from "./SoundEffects.js";
 
-// Habilidad del rival Saboteador (nivel 8): cada `interval` ms de juego le
-// aplica al jugador uno de `effects` (efectos rojos de pala, como controles
-// invertidos o pala lenta) durante `duration` ms.
+// Habilidad del rival Saboteador (nivel 8): cada `interval` ms de juego elige
+// al azar una de `effects`. Cada opción es { kind, target }: target "player"
+// es un sabotaje contra el jugador y "self" un refuerzo para el rival.
+// Los efectos de pala duran `duration` ms; el cañón y el punto doble duran lo
+// mismo que como power-up (lo resuelve applyEffect).
 //
 // El reloj solo corre con la pelota en movimiento (no durante la espera del
 // saque) y no se reinicia entre rondas: si no, como muchas rondas duran menos
-// que el intervalo, casi nunca llegaría a sabotear.
+// que el intervalo, casi nunca llegaría a actuar.
 export default class Sabotage {
-  constructor(scene, { interval, duration, effects }, { ballManager, powerUpEffects, feedback, targetSide, targetPaddle, sourcePaddle }) {
+  // applyEffect(kind, side, duration): aplica un efecto a un lado (lo provee GameScene).
+  constructor(scene, { interval, duration, effects }, { ballManager, feedback, applyEffect, playerSide, rivalSide, playerPaddle, rivalPaddle }) {
     this.scene = scene;
     this.interval = interval;
     this.duration = duration;
     this.effects = effects;
 
     this.ballManager = ballManager;
-    this.powerUpEffects = powerUpEffects;
     this.feedback = feedback;
-    this.targetSide = targetSide;
-    this.targetPaddle = targetPaddle;
-    this.sourcePaddle = sourcePaddle;
+    this.applyEffect = applyEffect;
+    this.playerSide = playerSide;
+    this.rivalSide = rivalSide;
+    this.playerPaddle = playerPaddle;
+    this.rivalPaddle = rivalPaddle;
 
     this.elapsed = 0;
   }
@@ -33,14 +37,20 @@ export default class Sabotage {
     if (this.elapsed < this.interval) return;
 
     this.elapsed = 0;
-    this.sabotage();
+    this.act();
   }
 
-  sabotage() {
-    const kind = Phaser.Utils.Array.GetRandom(this.effects);
+  act() {
+    const { kind, target } = Phaser.Utils.Array.GetRandom(this.effects);
+    const isSabotage = target === "player";
 
-    this.powerUpEffects.applyToSide(this.targetSide, kind, this.duration);
-    this.feedback.playSabotage(this.targetPaddle, this.sourcePaddle, kind);
+    this.applyEffect(kind, isSabotage ? this.playerSide : this.rivalSide, this.duration);
+    this.feedback.playRivalAbility({
+      kind,
+      isSabotage,
+      targetPaddle: isSabotage ? this.playerPaddle : this.rivalPaddle,
+      sourcePaddle: this.rivalPaddle,
+    });
     playPowerUpPickup();
   }
 }

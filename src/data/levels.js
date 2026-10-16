@@ -25,7 +25,9 @@ import { KEYS } from "../enums/keys.js";
 //     powerUpSpawnDelay: { min, max } del spawn para todo el partido (ms).
 //     powerUpColorWeights: probabilidad relativa de cada color de power-up.
 //     trivela: { chance } de que un tiro del rival salga con efecto curvo.
-//     sabotage: cada `interval` ms te aplica uno de `effects` por `duration` ms.
+//     sabotage: cada `interval` ms elige al azar uno de `effects`
+//       ({ kind, target }: "player" lo sabotea, "self" refuerza al rival). Los
+//       efectos de pala duran `duration` ms.
 //     extraBallAfterTotalScore: con más de estos puntos sumados entre los dos,
 //       cada ronda arranca con 2 pelotas.
 // - phases (opcional, jefe final): cambios según los puntos del jugador.
@@ -119,13 +121,24 @@ export const LEVELS = [
   {
     id: 8,
     nameKey: KEYS.SABOTEADOR,
-    abilityKey: KEYS.CADA_TANTO_TE_INVIERTE_LOS_CONTROLES_O_TE_FRENA_LA_PALA,
+    abilityKey: KEYS.CADA_TANTO_TE_SABOTEA_O_SE_REFUERZA,
     quoteKey: KEYS.TUS_CONTROLES_ANDAN_RARO_QUE_CASUALIDAD,
     boss: null,
     ai: { ...AI_DIFFICULTIES.hard, trackFirstArrival: false },
     field: NORMAL_FIELD,
     rules: {
-      sabotage: { interval: 12000, duration: 4000, effects: ["invert", "slowDown"] },
+      sabotage: {
+        interval: 10000,
+        duration: 5000,
+        effects: [
+          { kind: "invert", target: "player" },
+          { kind: "slowDown", target: "player" },
+          { kind: "shrink", target: "player" },
+          { kind: "speedUp", target: "self" },
+          { kind: "cannon", target: "self" },
+          { kind: "doublePoint", target: "self" },
+        ],
+      },
       powerUpColorWeights: { yellow: 1, green: 1, red: 2 },
     },
   },
