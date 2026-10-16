@@ -4,11 +4,11 @@ import { getLevel, LEVEL_COUNT } from "../data/levels.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import ProgressStorage from "../services/ProgressStorage.js";
+import MenuList from "../ui/MenuList.js";
+import { addBackNavigation } from "../ui/IconButton.js";
 
 const WIN_COLOR = "#33dd55";
 const LOSE_COLOR = "#dd3333";
-const SELECTED_COLOR = "#66ff66";
-const UNSELECTED_COLOR = "#888888";
 const OPTIONS_TOP = 380;
 const OPTION_SPACING = 40;
 
@@ -56,17 +56,8 @@ export default class LevelResultScene extends Phaser.Scene {
         .setOrigin(0.5);
     }
 
-    this.options = this.buildOptions().map((option, index) => this.createOption(option, index));
-    this.select(0);
-
-    this.add
-      .text(GAME_WIDTH / 2, 540, getPhrase(KEYS.FLECHAS_ELEGIR_ENTER_CONFIRMAR), { fontSize: "15px", color: "#888888" })
-      .setOrigin(0.5);
-
-    this.input.keyboard.on("keydown-UP", () => this.select(Math.max(0, this.selectedIndex - 1)));
-    this.input.keyboard.on("keydown-DOWN", () => this.select(Math.min(this.options.length - 1, this.selectedIndex + 1)));
-    this.input.keyboard.on("keydown-ENTER", () => this.options[this.selectedIndex].action());
-    this.input.keyboard.on("keydown-ESC", () => this.goToLevelSelect());
+    new MenuList(this, { y: OPTIONS_TOP, spacing: OPTION_SPACING, fontSize: "24px", items: this.buildOptions() });
+    addBackNavigation(this, () => this.goToLevelSelect());
   }
 
   // Devuelve el id del nivel que se desbloqueó con esta victoria, o null si
@@ -92,26 +83,6 @@ export default class LevelResultScene extends Phaser.Scene {
     }
     // Ganarle al Campeón (último nivel) lleva a la pantalla final.
     return [{ labelKey: KEYS.CONTINUAR, action: () => this.scene.start("StoryEndScene") }, toLevelSelect];
-  }
-
-  createOption(option, index) {
-    const text = this.add
-      .text(GAME_WIDTH / 2, OPTIONS_TOP + index * OPTION_SPACING, "", { fontSize: "24px", color: UNSELECTED_COLOR })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true })
-      .on("pointerover", () => this.select(index))
-      .on("pointerdown", () => option.action());
-
-    return { ...option, text };
-  }
-
-  select(index) {
-    this.selectedIndex = index;
-    this.options.forEach((option, i) => {
-      const isSelected = i === index;
-      option.text.setText((isSelected ? "▶ " : "   ") + getPhrase(option.labelKey));
-      option.text.setColor(isSelected ? SELECTED_COLOR : UNSELECTED_COLOR);
-    });
   }
 
   retry() {

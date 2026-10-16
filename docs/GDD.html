@@ -58,16 +58,16 @@
   <tr><th style="width:45%">Acción</th><th>Control</th></tr>
   <tr><td>Mover pala Jugador 1 (izquierda)</td><td>W / S</td></tr>
   <tr><td>Mover pala Jugador 2 (derecha)</td><td>Flecha arriba / Flecha abajo</td></tr>
-  <tr><td>Menú: elegir modo</td><td>1 (1 jugador) / 2 (2 jugadores) / 3 (Modo Historia), o clic</td></tr>
-  <tr><td>Menú: elegir puntaje</td><td>5 / 7 / 0 (10 puntos), o clic</td></tr>
-  <tr><td>Elegir dificultad de la CPU</td><td>1 (Fácil) / 2 (Normal) / 3 (Difícil) / 4 (Imposible), o clic</td></tr>
-  <tr><td>Selección de nivel (Modo Historia)</td><td>Flechas para moverse, Enter o clic para jugar, Esc para volver al menú</td></tr>
-  <tr><td>Confirmar / avanzar de pantalla</td><td>Enter o clic</td></tr>
+  <tr><td>Menús: moverse entre opciones</td><td>W / S o flechas arriba / abajo (en la selección de nivel también A / D o flechas izquierda / derecha), o pasar el mouse por encima</td></tr>
+  <tr><td>Menús: confirmar la opción marcada</td><td>Enter o clic</td></tr>
+  <tr><td>Volver a la pantalla anterior</td><td>Esc o el ícono ← (arriba a la izquierda)</td></tr>
   <tr><td>Pausar la partida</td><td>Esc</td></tr>
-  <tr><td>En pausa: reanudar / volver al menú</td><td>Enter o Esc / M</td></tr>
-  <tr><td>Cambiar idioma</td><td>Ícono ⚙ del menú principal, u “Opciones” en la pausa</td></tr>
+  <tr><td>En pausa: reanudar</td><td>Esc, el ícono ← o la opción “Reanudar”</td></tr>
+  <tr><td>Cómo jugar</td><td>Ícono ? (en un círculo, arriba a la izquierda del menú principal)</td></tr>
+  <tr><td>Cambiar idioma</td><td>Ícono ⚙ del menú principal, u “Opciones” en la pausa. En el panel: W / S o flechas y Enter, o clic; Esc lo cierra</td></tr>
+  <tr><td>Íconos ? y ⚙ con el teclado</td><td>Desde la primera opción del menú, W / ↑ sube a los íconos; A / D o ← / → pasan de uno a otro, Enter lo abre y S / ↓ vuelve a la lista</td></tr>
 </table>
-<p class="note">No hay menú de reasignación de teclas.</p>
+<p class="note">Todo lo que se puede tocar con el mouse también se puede usar con el teclado. No hay atajos con números ni textos de ayuda con teclas en pantalla: todas las pantallas se manejan igual (moverse, Enter para confirmar, Esc para volver), y la opción marcada se ve en verde con “▶”. No hay menú de reasignación de teclas.</p>
 
 <h2>5. Reglas de partida</h2>
 <ul>
@@ -185,17 +185,20 @@
 </ul>
 
 <h2>9. Pantallas y flujo</h2>
-<pre>Menú principal ──(1P)──► Dificultad ──► Tutorial ──► Partida ⇄ Pausa
-       │                                              │
-       └──(2P)──────────────────────► Tutorial        └──► Victoria ──► Menú principal</pre>
+<pre>Menú principal ──(Batalla)──► 1 o 2 jugadores ──(1 Jugador)──► Dificultad ──► Puntos ──► Partida ⇄ Pausa
+      │                                  │                                     ▲             │
+      │                                  └──(2 Jugadores)──────────────────────┘             └──► Victoria ──► Menú principal
+      └──(?)──► Cómo jugar</pre>
 <table>
   <tr><th style="width:22%">Pantalla</th><th>Contenido</th></tr>
-  <tr><td>Menú principal</td><td>Título, elección de modo (1P / 2P), elección de puntaje, recordatorio de controles, “Empezar” y el ícono ⚙ que abre el panel de idioma.</td></tr>
-  <tr><td>Dificultad</td><td>Solo en 1P: fácil, normal, difícil o imposible (arranca en normal).</td></tr>
-  <tr><td>Tutorial</td><td>Se muestra antes de cada partida: controles, tecla de pausa, cómo se activan los power-ups y qué significa cada color.</td></tr>
+  <tr><td>Menú principal</td><td>Título y dos opciones: “Batalla” (partida casual) y “Modo Historia”. En las esquinas, el ícono ? (cómo jugar) y el ⚙ (panel de idioma).</td></tr>
+  <tr><td>Batalla</td><td>“1 Jugador” (contra la CPU) o “2 Jugadores”.</td></tr>
+  <tr><td>Dificultad</td><td>Solo con 1 jugador: fácil, normal, difícil o imposible (arranca en normal).</td></tr>
+  <tr><td>Puntos</td><td>5, 7 o 10 puntos. Al elegir, empieza la partida.</td></tr>
+  <tr><td>Cómo jugar</td><td>Se abre con el ícono ? del menú (y antes del nivel 1 del Modo Historia). Texto corto: controles de cada jugador, Esc para pausar, y que los power-ups se tocan con la pelota: verde a tu favor, rojo en tu contra, amarillo para los dos.</td></tr>
   <tr><td>Partida</td><td>Cancha con línea central punteada, marcador de cada jugador arriba y el indicador “×2” debajo del marcador de quien tenga punto doble.</td></tr>
-  <tr><td>Pausa</td><td>Se superpone a la partida congelada: Reanudar, Volver al menú y Opciones (panel de idioma).</td></tr>
-  <tr><td>Victoria</td><td>“¡Gana {jugador}!” (Jugador 1, Jugador 2 o CPU) y Enter o clic para volver al menú.</td></tr>
+  <tr><td>Pausa</td><td>Se superpone a la partida congelada: Reanudar, Volver al menú y Opciones (panel de idioma). Esc o ← reanudan (o cierran el panel de idioma si está abierto).</td></tr>
+  <tr><td>Victoria</td><td>“¡Gana {jugador}!” (Jugador 1, Jugador 2 o CPU) y la opción “Volver al menú” (también con Esc).</td></tr>
 </table>
 
 <h2>10. Idiomas</h2>
@@ -307,7 +310,7 @@
   <tr><td>Tormenta</td><td>Dos pelotas por ronda y lluvia de power-ups.</td><td>“Espero que te guste el caos.”</td></tr>
   <tr><td>El Campeón</td><td>Suma trucos a medida que te acercás a ganarle.</td><td>“Llegaste lejos. Acá se termina.”</td></tr>
 </table>
-<p><b>Final:</b> al ganarle al Campeón, “Continuar” lleva a una pantalla con “¡Sos el nuevo campeón de Ponger-up!”, los 10 rivales derrotados y los créditos (“Un juego de Facundo Tapia · Valentino Batiston”). Enter o clic vuelve a la selección de nivel.</p>
+<p><b>Final:</b> al ganarle al Campeón, “Continuar” lleva a una pantalla con “¡Sos el nuevo campeón de Ponger-up!”, los 10 rivales derrotados y los créditos (“Un juego de Facundo Tapia · Valentino Batiston”). La opción “Selección de nivel” (o Esc) vuelve a la selección de nivel.</p>
 
 <h3>Pantallas del modo</h3>
 <pre>Menú principal ──(Modo Historia)──► Selección de nivel ──► Presentación del rival ──► Partida ⇄ Pausa
@@ -317,12 +320,12 @@
                                                             └──► Final</pre>
 <table>
   <tr><th style="width:22%">Pantalla</th><th>Contenido</th></tr>
-  <tr><td>Menú principal</td><td>Se suma “Modo Historia” como tercera opción de modo (tecla 3). Al elegirlo no se usa la elección de puntaje: siempre se juega a 7.</td></tr>
-  <tr><td>Selección de nivel</td><td>Los 10 niveles en una grilla de 5 × 2. Los superados llevan una marca, el siguiente disponible se resalta y los bloqueados se ven en gris con un candado. Se elige con flechas + Enter o con clic; Esc vuelve al menú. El cursor arranca en el nivel desbloqueado más alto y también puede pasar por los bloqueados, que muestran qué nivel hay que ganar para desbloquearlos. Debajo de la grilla se ven el nombre y la habilidad del rival elegido.</td></tr>
-  <tr><td>Presentación del rival</td><td>Número de nivel, nombre del rival, su habilidad en una línea y su frase. Los jefes llevan la marca “Jefe” o “Jefe final”. Enter o clic empieza; Esc vuelve a la selección de nivel. Antes del nivel 1 se muestra además el tutorial.</td></tr>
-  <tr><td>Partida y pausa</td><td>Igual que en casual, a 7 puntos y con la IA del nivel. En la pausa, la opción de salir dice “Selección de nivel” (tecla M) y lleva ahí.</td></tr>
-  <tr><td>Resultado</td><td>Aparece 1 s después del último punto, con el marcador final a la vista. Muestra “¡Ganaste!” o “Perdiste”, contra quién y el marcador. Si ganaste se guarda el nivel como superado; si eso desbloqueó el siguiente, lo avisa (“¡Nivel N desbloqueado!”). Opciones: si ganaste, “Siguiente nivel” (va a la presentación del próximo rival) o “Selección de nivel”; si perdiste, “Reintentar” (vuelve directo a la partida, sin la presentación) o “Selección de nivel”. Al ganar el nivel 10, en lugar de “Siguiente nivel” aparece “Continuar”, que lleva a la pantalla final. Flechas + Enter o clic; Esc va a la selección de nivel.</td></tr>
-  <tr><td>Final</td><td>Título “¡Sos el nuevo campeón de Ponger-up!” en violeta, los 10 rivales derrotados en dos columnas (cada uno con un ✓ verde; los jefes en violeta), los créditos y papelitos de los colores de los power-ups cayendo detrás del texto, con una pequeña fanfarria. Enter o clic vuelve a la selección de nivel.</td></tr>
+  <tr><td>Menú principal</td><td>“Modo Historia” es la segunda opción del menú. No pasa por la elección de puntaje: siempre se juega a 7.</td></tr>
+  <tr><td>Selección de nivel</td><td>Los 10 niveles en una grilla de 5 × 2. Los superados llevan una marca, el siguiente disponible se resalta y los bloqueados se ven en gris con un candado. Se recorre con WASD o flechas y se elige con Enter o clic; Esc o ← vuelven al menú. El cursor arranca en el nivel desbloqueado más alto y también puede pasar por los bloqueados, que muestran qué nivel hay que ganar para desbloquearlos. Debajo de la grilla se ven el nombre y la habilidad del rival elegido.</td></tr>
+  <tr><td>Presentación del rival</td><td>Número de nivel, nombre del rival, su habilidad en una línea y su frase. Los jefes llevan la marca “Jefe” o “Jefe final”. La opción “Jugar” empieza; Esc o ← vuelven a la selección de nivel. Antes del nivel 1, “Jugar” pasa por “Cómo jugar”, que tiene su propio “Jugar” (y desde ahí, volver regresa a la presentación).</td></tr>
+  <tr><td>Partida y pausa</td><td>Igual que en casual, a 7 puntos y con la IA del nivel. En la pausa, la opción de salir dice “Selección de nivel” y lleva ahí.</td></tr>
+  <tr><td>Resultado</td><td>Aparece 1 s después del último punto, con el marcador final a la vista. Muestra “¡Ganaste!” o “Perdiste”, contra quién y el marcador. Si ganaste se guarda el nivel como superado; si eso desbloqueó el siguiente, lo avisa (“¡Nivel N desbloqueado!”). Opciones: si ganaste, “Siguiente nivel” (va a la presentación del próximo rival) o “Selección de nivel”; si perdiste, “Reintentar” (vuelve directo a la partida, sin la presentación) o “Selección de nivel”. Al ganar el nivel 10, en lugar de “Siguiente nivel” aparece “Continuar”, que lleva a la pantalla final. Esc o ← van a la selección de nivel.</td></tr>
+  <tr><td>Final</td><td>Título “¡Sos el nuevo campeón de Ponger-up!” en violeta, los 10 rivales derrotados en dos columnas (cada uno con un ✓ verde; los jefes en violeta), los créditos y papelitos de los colores de los power-ups cayendo detrás del texto, con una pequeña fanfarria. La opción “Selección de nivel” (o Esc / ←) vuelve ahí.</td></tr>
 </table>
 
 <h3>Mecánicas nuevas que requiere</h3>
@@ -342,7 +345,7 @@
 <pre>src/
 ├── main.js        punto de entrada y configuración de Phaser
 ├── config.js      constantes globales (cancha, velocidades, colores, teclas, power-ups, IA)
-├── scenes/        una escena por archivo (MenuScene, DifficultyScene, TutorialScene,
+├── scenes/        una escena por archivo (MenuScene, BattleScene, DifficultyScene, PointsScene, TutorialScene,
 │                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene,
 │                  LevelResultScene, StoryEndScene)
 ├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle, GoalBarrier)
@@ -353,7 +356,8 @@
 │                  BossPhases,
 │                  DebugKey: tecla de prueba, solo en desarrollo)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia)
-├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell)
+├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell,
+│                  MenuList: lista de opciones navegable; IconButton: íconos ← ? ⚙ y el “volver” con Esc)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;
 │                  ProgressStorage: progreso del Modo Historia en localStorage)
 └── enums/         constantes compartidas (claves de texto, idiomas, estados de carga)

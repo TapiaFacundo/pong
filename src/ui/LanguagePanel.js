@@ -7,6 +7,7 @@ const PANEL_WIDTH = 240;
 const PANEL_HEIGHT = 160;
 const SELECTED_COLOR = "#66ff66";
 const UNSELECTED_COLOR = "#ffffff";
+const LANGUAGES = [ES, EN];
 
 function detectCurrentLanguage() {
   try {
@@ -19,7 +20,9 @@ function detectCurrentLanguage() {
 }
 
 // Panel de selección de idioma (Español/English) reutilizado por MenuScene
-// (ícono de configuración) y PauseScene (texto "Opciones").
+// (ícono de configuración) y PauseScene (texto "Opciones"). El idioma actual
+// se ve en verde; con el teclado se marca uno con W / S o flechas ("▶") y se
+// elige con Enter. Esc lo cierra (lo maneja cada escena).
 export default class LanguagePanel {
   constructor(scene, onLanguageChanged) {
     this.scene = scene;
@@ -27,9 +30,16 @@ export default class LanguagePanel {
     this.language = detectCurrentLanguage();
     this.status = TODO;
     this.isOpen = false;
+    this.justOpened = false;
+    this.focusIndex = LANGUAGES.indexOf(this.language);
 
     this.build();
     this.close();
+
+    const keyboard = scene.input.keyboard;
+    ["W", "UP"].forEach((key) => keyboard.on(`keydown-${key}`, () => this.moveFocus(-1)));
+    ["S", "DOWN"].forEach((key) => keyboard.on(`keydown-${key}`, () => this.moveFocus(1)));
+    keyboard.on("keydown-ENTER", () => this.confirmFocus());
   }
 
   build() {
@@ -55,12 +65,14 @@ export default class LanguagePanel {
       .text(x, y - 12, "Español", { fontSize: "22px", color: UNSELECTED_COLOR })
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true })
+      .on("pointerover", () => this.setFocus(0))
       .on("pointerdown", () => this.selectLanguage(ES));
 
     this.optionEn = this.scene.add
       .text(x, y + 30, "English", { fontSize: "22px", color: UNSELECTED_COLOR })
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true })
+      .on("pointerover", () => this.setFocus(1))
       .on("pointerdown", () => this.selectLanguage(EN));
 
     this.elements = [this.backdrop, this.box, this.title, this.optionEs, this.optionEn];
@@ -69,6 +81,10 @@ export default class LanguagePanel {
 
   open() {
     this.isOpen = true;
+    // El mismo Enter que abrió el panel no tiene que elegir un idioma.
+    this.justOpened = true;
+    this.focusIndex = LANGUAGES.indexOf(this.language);
+    this.updateHighlight();
     this.elements.forEach((el) => el.setVisible(true));
   }
 
@@ -83,7 +99,11 @@ export default class LanguagePanel {
   }
 
   selectLanguage(language) {
-    if (this.language === language || this.status === FETCHING) return;
+    if (this.status === FETCHING) return;
+    if (this.language === language) {
+      this.close();
+      return;
+    }
 
     this.language = language;
     this.status = FETCHING;
@@ -94,12 +114,33 @@ export default class LanguagePanel {
     });
   }
 
+  setFocus(index) {
+    this.focusIndex = index;
+    this.updateHighlight();
+  }
+
+  moveFocus(step) {
+    if (!this.isOpen) return;
+    this.focusIndex = Math.min(LANGUAGES.length - 1, Math.max(0, this.focusIndex + step));
+    this.updateHighlight();
+  }
+
+  confirmFocus() {
+    if (!this.isOpen || this.justOpened) return;
+    this.selectLanguage(LANGUAGES[this.focusIndex]);
+  }
+
   updateHighlight() {
-    this.optionEs.setColor(this.language === ES ? SELECTED_COLOR : UNSELECTED_COLOR);
-    this.optionEn.setColor(this.language === EN ? SELECTED_COLOR : UNSELECTED_COLOR);
+    [this.optionEs, this.optionEn].forEach((option, index) => {
+      const language = LANGUAGES[index];
+      option.setText((index === this.focusIndex ? "▶ " : "   ") + (language === ES ? "Español" : "English"));
+      option.setColor(this.language === language ? SELECTED_COLOR : UNSELECTED_COLOR);
+    });
   }
 
   update() {
+    this.justOpened = false;
+
     if (this.status === FETCHED) {
       this.status = READY;
       this.close();

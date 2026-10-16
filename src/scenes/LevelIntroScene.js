@@ -3,6 +3,8 @@ import { GAME_WIDTH, COLORS } from "../config.js";
 import { getLevel } from "../data/levels.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
+import MenuList from "../ui/MenuList.js";
+import { addBackNavigation } from "../ui/IconButton.js";
 
 const BOSS_COLOR = "#b69cff";
 
@@ -47,23 +49,28 @@ export default class LevelIntroScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    this.add
-      .text(GAME_WIDTH / 2, 450, getPhrase(KEYS.ENTER_O_CLIC_EMPEZAR), { fontSize: "22px", color: COLORS.TEXT })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true })
-      .on("pointerdown", () => this.startLevel());
+    new MenuList(this, {
+      y: 450,
+      fontSize: "28px",
+      items: [{ labelKey: KEYS.JUGAR, action: () => this.startLevel() }],
+    });
 
-    this.add
-      .text(GAME_WIDTH / 2, 490, getPhrase(KEYS.ESC_VOLVER), { fontSize: "15px", color: "#888888" })
-      .setOrigin(0.5);
-
-    this.input.keyboard.on("keydown-ENTER", () => this.startLevel());
-    this.input.keyboard.on("keydown-ESC", () => this.scene.start("LevelSelectScene"));
+    addBackNavigation(this, () => this.scene.start("LevelSelectScene"));
   }
 
-  // Antes del nivel 1 se muestra el tutorial, que después arranca la partida.
+  // Antes del nivel 1 se muestra el tutorial, que después arranca la partida
+  // (y si se vuelve atrás desde ahí, regresa a esta presentación).
   startLevel() {
     const gameData = { mode: "story", levelId: this.level.id };
-    this.scene.start(this.level.id === 1 ? "TutorialScene" : "GameScene", gameData);
+
+    if (this.level.id === 1) {
+      this.scene.start("TutorialScene", {
+        next: gameData,
+        returnTo: "LevelIntroScene",
+        returnData: { levelId: this.level.id },
+      });
+    } else {
+      this.scene.start("GameScene", gameData);
+    }
   }
 }

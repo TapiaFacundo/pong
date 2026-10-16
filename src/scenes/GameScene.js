@@ -45,6 +45,7 @@ import Field from "../systems/Field.js";
 import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import { getLevel } from "../data/levels.js";
+import MenuList from "../ui/MenuList.js";
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -482,15 +483,11 @@ export default class GameScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 20, getPhrase(TRANSLATION_KEYS.ENTER_VOLVER_AL_MENU), {
-        fontSize: "20px",
-        color: COLORS.TEXT,
-      })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true })
-      .on("pointerdown", () => this.scene.start("MenuScene"));
-
-    this.input.keyboard.once("keydown-ENTER", () => this.scene.start("MenuScene"));
+    const backToMenu = () => this.scene.start("MenuScene");
+    new MenuList(this, {
+      y: GAME_HEIGHT / 2 + 40,
+      items: [{ labelKey: TRANSLATION_KEYS.VOLVER_AL_MENU, action: backToMenu }],
+    });
+    this.input.keyboard.on("keydown-ESC", backToMenu);
   }
 }

@@ -4,6 +4,8 @@ import { LEVELS } from "../data/levels.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import { playVictoryFanfare } from "../systems/SoundEffects.js";
+import MenuList from "../ui/MenuList.js";
+import { addBackNavigation } from "../ui/IconButton.js";
 
 const RIVALS_TOP = 205;
 const RIVAL_ROW_SPACING = 30;
@@ -43,13 +45,13 @@ export default class StoryEndScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    this.add
-      .text(GAME_WIDTH / 2, 480, getPhrase(KEYS.ENTER_O_CLIC_SELECCION_DE_NIVEL), { fontSize: "20px", color: COLORS.TEXT })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true })
-      .on("pointerdown", () => this.goToLevelSelect());
+    new MenuList(this, {
+      y: 490,
+      fontSize: "22px",
+      items: [{ labelKey: KEYS.SELECCION_DE_NIVEL, action: () => this.goToLevelSelect() }],
+    });
+    addBackNavigation(this, () => this.goToLevelSelect());
 
-    this.input.keyboard.on("keydown-ENTER", () => this.goToLevelSelect());
     playVictoryFanfare();
   }
 

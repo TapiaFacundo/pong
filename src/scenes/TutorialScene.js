@@ -2,78 +2,50 @@ import Phaser from "phaser";
 import { GAME_WIDTH, COLORS, POWERUP_TEXT_COLORS } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
+import MenuList from "../ui/MenuList.js";
+import { addBackNavigation } from "../ui/IconButton.js";
 
+const HINT_COLOR = "#888888";
+
+// Cómo jugar: controles y colores de los power-ups. Se abre con el "?" del
+// menú y antes del nivel 1 del Modo Historia (ahí con la opción "Jugar").
 export default class TutorialScene extends Phaser.Scene {
   constructor() {
     super("TutorialScene");
   }
 
+  // data: { returnTo, returnData, next } — escena a la que vuelve con Esc / "←"
+  // y, si hay `next`, los datos de la partida que arranca con "Jugar".
   init(data) {
-    this.gameData = data;
+    this.returnTo = data.returnTo ?? "MenuScene";
+    this.returnData = data.returnData;
+    this.next = data.next;
   }
 
   create() {
-    this.add
-      .text(GAME_WIDTH / 2, 60, getPhrase(KEYS.COMO_JUGAR), { fontSize: "34px", color: COLORS.TEXT })
-      .setOrigin(0.5);
+    this.add.text(GAME_WIDTH / 2, 80, getPhrase(KEYS.COMO_JUGAR), { fontSize: "34px", color: COLORS.TEXT }).setOrigin(0.5);
 
-    this.add
-      .text(GAME_WIDTH / 2, 115, getPhrase(KEYS.JUGADOR_1_W_S_JUGADOR_2_FLECHAS_ARRIBA_ABAJO), {
-        fontSize: "18px",
-        color: COLORS.TEXT,
-      })
-      .setOrigin(0.5);
+    this.addLine(150, KEYS.JUGADOR_1_W_S, COLORS.TEXT, "20px");
+    this.addLine(182, KEYS.JUGADOR_2_FLECHAS, COLORS.TEXT, "20px");
+    this.addLine(214, KEYS.ESC_PAUSA, HINT_COLOR, "16px");
 
-    this.add
-      .text(GAME_WIDTH / 2, 150, getPhrase(KEYS.ESC_PAUSAR_LA_PARTIDA_EN_CUALQUIER_MOMENTO), {
-        fontSize: "15px",
-        color: "#888888",
-      })
-      .setOrigin(0.5);
+    this.addLine(280, KEYS.TOCA_LOS_POWER_UPS_CON_LA_PELOTA, COLORS.TEXT, "20px");
+    this.addLine(318, KEYS.VERDE_A_TU_FAVOR, POWERUP_TEXT_COLORS.green);
+    this.addLine(350, KEYS.ROJO_EN_TU_CONTRA, POWERUP_TEXT_COLORS.red);
+    this.addLine(382, KEYS.AMARILLO_PARA_LOS_DOS, POWERUP_TEXT_COLORS.yellow);
 
-    this.add
-      .text(
-        GAME_WIDTH / 2,
-        205,
-        getPhrase(KEYS.LOS_POWER_UPS_APARECEN_EN_EL_CENTRO_DE_LA_CANCHA_NLOS_ACTIVA_EL_PRIMERO_QUE_LOS_TOCA_CON_LA_PELOTA).replace(
-          /\\n/g,
-          "\n"
-        ),
-        { fontSize: "15px", color: "#888888", align: "center" }
-      )
-      .setOrigin(0.5);
+    if (this.next) {
+      new MenuList(this, {
+        y: 470,
+        fontSize: "28px",
+        items: [{ labelKey: KEYS.JUGAR, action: () => this.scene.start("GameScene", this.next) }],
+      });
+    }
 
-    this.add
-      .text(GAME_WIDTH / 2, 270, getPhrase(KEYS.AMARILLO_AFECTA_A_AMBOS_JUGADORES_POR_IGUAL), {
-        fontSize: "19px",
-        color: POWERUP_TEXT_COLORS.yellow,
-      })
-      .setOrigin(0.5);
-
-    this.add
-      .text(GAME_WIDTH / 2, 305, getPhrase(KEYS.VERDE_TE_BENEFICIA_A_VOS_O_PERJUDICA_AL_RIVAL), {
-        fontSize: "19px",
-        color: POWERUP_TEXT_COLORS.green,
-      })
-      .setOrigin(0.5);
-
-    this.add
-      .text(GAME_WIDTH / 2, 340, getPhrase(KEYS.ROJO_TE_PERJUDICA_A_VOS_O_BENEFICIA_AL_RIVAL), {
-        fontSize: "19px",
-        color: POWERUP_TEXT_COLORS.red,
-      })
-      .setOrigin(0.5);
-
-    this.add
-      .text(GAME_WIDTH / 2, 420, getPhrase(KEYS.ENTER_O_CLIC_EMPEZAR), { fontSize: "22px", color: COLORS.TEXT })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true })
-      .on("pointerdown", () => this.startGame());
-
-    this.input.keyboard.on("keydown-ENTER", () => this.startGame());
+    addBackNavigation(this, () => this.scene.start(this.returnTo, this.returnData));
   }
 
-  startGame() {
-    this.scene.start("GameScene", this.gameData);
+  addLine(y, key, color, fontSize = "19px") {
+    this.add.text(GAME_WIDTH / 2, y, getPhrase(key), { fontSize, color }).setOrigin(0.5);
   }
 }

@@ -53,17 +53,16 @@ Ganar el punto llevando la pelota más allá de la pala rival. Gana la partida q
 |---|---|
 | Mover pala Jugador 1 | W / S |
 | Mover pala Jugador 2 | ↑ / ↓ |
-| Elegir modo de juego (menú) | 1 (1 jugador) / 2 (2 jugadores) / 3 (Modo Historia) |
-| Elegir puntaje de partida (menú) | 5 / 7 / 0 (10 puntos) |
-| Elegir dificultad de la CPU | 1 (Fácil) / 2 (Normal) / 3 (Difícil) / 4 (Imposible) |
-| Confirmar / avanzar de pantalla | Enter (o clic) |
-| Pausar / reanudar | Esc / Enter |
-| Volver al menú desde pausa | M |
+| Moverse entre opciones (menús) | W / S o ↑ / ↓ (en la selección de nivel también A / D o ← / →), o el mouse |
+| Confirmar la opción marcada | Enter (o clic) |
+| Volver a la pantalla anterior | Esc (o el ícono ←) |
+| Pausar / reanudar | Esc |
+| Cómo jugar / idioma | Íconos ? y ⚙ del menú principal (con el teclado: subir desde la primera opción, A / D para elegir, Enter) |
 
 ## Arquitectura
 
 ```
-MenuScene → DifficultyScene (solo 1 jugador) → TutorialScene → GameScene → PauseScene / pantalla de victoria → MenuScene
+MenuScene → BattleScene → DifficultyScene (solo 1 jugador) → PointsScene → GameScene → PauseScene / pantalla de victoria → MenuScene
 
 GameScene
  ├── BallManager
@@ -76,7 +75,7 @@ GameScene
 
 ### Patrón utilizado
 
-El proyecto no tiene una carpeta `patterns/` separada: usa un **patrón Manager/composición**. Cada sistema (`BallManager`, `PowerUpSpawner`, `PowerUpEffects`, `ScoreManager`, `AI`) es dueño de un conjunto de entidades y expone una API simple a `GameScene`, que no conoce los detalles internos de cada uno. El flujo entre pantallas (menú → dificultad → tutorial → partida → pausa/victoria) usa el sistema de Scenes de Phaser como una **máquina de estados** del juego.
+El proyecto no tiene una carpeta `patterns/` separada: usa un **patrón Manager/composición**. Cada sistema (`BallManager`, `PowerUpSpawner`, `PowerUpEffects`, `ScoreManager`, `AI`) es dueño de un conjunto de entidades y expone una API simple a `GameScene`, que no conoce los detalles internos de cada uno. El flujo entre pantallas (menú → batalla → dificultad → puntos → partida → pausa/victoria) usa el sistema de Scenes de Phaser como una **máquina de estados** del juego.
 
 ## Agentes de OpenCode utilizados
 

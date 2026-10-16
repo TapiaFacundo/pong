@@ -5,6 +5,7 @@ import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import ProgressStorage from "../services/ProgressStorage.js";
 import LevelCell, { LEVEL_CELL_WIDTH, LEVEL_CELL_HEIGHT } from "../ui/LevelCell.js";
+import { addBackNavigation } from "../ui/IconButton.js";
 
 const COLUMNS = 5;
 const CELL_GAP = 20;
@@ -30,18 +31,16 @@ export default class LevelSelectScene extends Phaser.Scene {
     this.infoTitle = this.add.text(GAME_WIDTH / 2, 460, "", { fontSize: "20px", color: COLORS.TEXT }).setOrigin(0.5);
     this.infoDetail = this.add.text(GAME_WIDTH / 2, 490, "", { fontSize: "15px", color: "#888888" }).setOrigin(0.5);
 
-    this.add
-      .text(GAME_WIDTH / 2, 555, getPhrase(KEYS.FLECHAS_ELEGIR_ENTER_JUGAR_ESC_VOLVER), { fontSize: "15px", color: "#888888" })
-      .setOrigin(0.5);
-
     this.select(this.progress.highestUnlocked - 1);
 
-    this.input.keyboard.on("keydown-LEFT", () => this.moveCursor(-1, 0));
-    this.input.keyboard.on("keydown-RIGHT", () => this.moveCursor(1, 0));
-    this.input.keyboard.on("keydown-UP", () => this.moveCursor(0, -1));
-    this.input.keyboard.on("keydown-DOWN", () => this.moveCursor(0, 1));
-    this.input.keyboard.on("keydown-ENTER", () => this.playSelected());
-    this.input.keyboard.on("keydown-ESC", () => this.scene.start("MenuScene"));
+    const keyboard = this.input.keyboard;
+    ["A", "LEFT"].forEach((key) => keyboard.on(`keydown-${key}`, () => this.moveCursor(-1, 0)));
+    ["D", "RIGHT"].forEach((key) => keyboard.on(`keydown-${key}`, () => this.moveCursor(1, 0)));
+    ["W", "UP"].forEach((key) => keyboard.on(`keydown-${key}`, () => this.moveCursor(0, -1)));
+    ["S", "DOWN"].forEach((key) => keyboard.on(`keydown-${key}`, () => this.moveCursor(0, 1)));
+    keyboard.on("keydown-ENTER", () => this.playSelected());
+
+    addBackNavigation(this, () => this.scene.start("MenuScene", { mode: "story" }));
   }
 
   createCell(level, index) {

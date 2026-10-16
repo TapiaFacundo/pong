@@ -1,7 +1,9 @@
 import Phaser from "phaser";
 import { GAME_WIDTH, GAME_HEIGHT, COLORS } from "./config.js";
 import MenuScene from "./scenes/MenuScene.js";
+import BattleScene from "./scenes/BattleScene.js";
 import DifficultyScene from "./scenes/DifficultyScene.js";
+import PointsScene from "./scenes/PointsScene.js";
 import TutorialScene from "./scenes/TutorialScene.js";
 import GameScene from "./scenes/GameScene.js";
 import PauseScene from "./scenes/PauseScene.js";
@@ -22,7 +24,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MenuScene, DifficultyScene, TutorialScene, LevelSelectScene, LevelIntroScene, GameScene, PauseScene, LevelResultScene, StoryEndScene],
+  scene: [MenuScene, BattleScene, DifficultyScene, PointsScene, TutorialScene, LevelSelectScene, LevelIntroScene, GameScene, PauseScene, LevelResultScene, StoryEndScene],
 };
 
 new Phaser.Game(config);
