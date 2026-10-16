@@ -267,8 +267,11 @@ export default class GameScene extends Phaser.Scene {
         this.updateDoublePointIndicator();
       }
     } else if (definition.kind === "extraBall") {
+      // La pelota nueva sale en sentido contrario a la que agarró el power-up
+      // (hacia quien la mandó): así cada jugador tiene una pelota para
+      // defender, en vez de que las dos vayan contra el mismo.
       const newBall = this.ballManager.addBall(ball.x, ball.y);
-      newBall.launch();
+      newBall.launch(-Math.sign(ball.velocityX) || null);
       this.powerUpSpawner.registerBall(newBall);
       this.centerPaddleEffect.registerBall(newBall);
     } else if (definition.kind === "turbo") {
