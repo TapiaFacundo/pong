@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Ponger-up</title>
     <style>
       html, body {
@@ -10,14 +10,87 @@
         padding: 0;
         height: 100%;
         background: #000;
+        overflow: hidden;
+        overscroll-behavior: none;
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* El juego ocupa toda la pantalla; Phaser escala la cancha para que entre en #game-area. */
+      #game {
+        position: relative;
         display: flex;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        background: #000;
+      }
+      #game-area {
+        width: 100%;
+        height: 100%;
+      }
+      /* En pantallas táctiles siempre quedan franjas a los costados para los botones. */
+      @media (pointer: coarse) {
+        #game-area { width: calc(100% - 2 * 96px); }
+      }
+
+      /* Botones táctiles (src/ui/TouchControls.js). */
+      .touch-button {
+        position: absolute;
+        display: none;
         align-items: center;
         justify-content: center;
+        box-sizing: border-box;
+        border: 2px solid rgba(255, 255, 255, 0.35);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.7);
+        touch-action: none;
+        z-index: 10;
+      }
+      .touch-button.pressed {
+        background: rgba(102, 255, 102, 0.25);
+        border-color: #66ff66;
+        color: #66ff66;
+      }
+
+      /* Aviso "Girá el celular" (src/ui/RotateNotice.js): solo en pantallas táctiles en vertical. */
+      #rotate-notice {
+        position: absolute;
+        inset: 0;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+        background: #000;
+        color: #fff;
+        font-family: monospace;
+        font-size: 20px;
+        text-align: center;
+        z-index: 20;
+      }
+      .rotate-phone {
+        width: 44px;
+        height: 76px;
+        border: 3px solid #fff;
+        border-radius: 8px;
+        animation: rotate-phone 2s ease-in-out infinite;
+      }
+      @keyframes rotate-phone {
+        0%, 25% { transform: rotate(0deg); }
+        60%, 100% { transform: rotate(-90deg); }
+      }
+      @media (orientation: portrait) and (pointer: coarse) {
+        #rotate-notice { display: flex; }
       }
     </style>
   </head>
   <body>
-    <div id="game"></div>
+    <div id="game"><div id="game-area"></div></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

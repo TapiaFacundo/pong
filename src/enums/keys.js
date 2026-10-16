@@ -47,6 +47,11 @@ export const KEYS = {
   ROJO_EN_TU_CONTRA: "Rojo: en tu contra",
   AMARILLO_PARA_LOS_DOS: "Amarillo: para los dos",
 
+  // Celulares y tablets.
+  GIRA_EL_CELULAR_PARA_JUGAR: "Girá el celular para jugar",
+  MANTENE_APRETADAS_LAS_FLECHAS_DE_TU_LADO: "Mantené apretadas las flechas de tu lado",
+  PAUSA_ARRIBA_AL_CENTRO: "Pausa: arriba al centro",
+
   // Modo Historia: pantallas.
   MODO_HISTORIA: "Modo Historia",
   NIVEL_N: "Nivel {n}",

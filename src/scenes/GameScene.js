@@ -46,6 +46,9 @@ import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import { getLevel } from "../data/levels.js";
 import MenuList from "../ui/MenuList.js";
+import IconButton from "../ui/IconButton.js";
+import { touchControls } from "../ui/TouchControls.js";
+import { ROTATE_NOTICE_QUERY } from "../ui/RotateNotice.js";
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -101,14 +104,11 @@ export default class GameScene extends Phaser.Scene {
 
     if (rules.trivela) this.enableTrivela(rules.trivela);
 
-    this.controllerLeft = new PlayerController(this, this.paddleLeft, {
-      up: KEYS.P1_UP,
-      down: KEYS.P1_DOWN,
-    });
+    this.controllerLeft = new PlayerController(this, this.paddleLeft, { up: KEYS.P1_UP, down: KEYS.P1_DOWN }, "p1");
 
     this.controllerRight =
       this.mode === "2p"
-        ? new PlayerController(this, this.paddleRight, { up: KEYS.P2_UP, down: KEYS.P2_DOWN })
+        ? new PlayerController(this, this.paddleRight, { up: KEYS.P2_UP, down: KEYS.P2_DOWN }, "p2")
         : new AI(this.paddleRight, this.ballManager, "right", this.difficulty);
 
     // El marcador va en coordenadas de pantalla: no se achica con la cámara alejada.
@@ -168,9 +168,37 @@ export default class GameScene extends Phaser.Scene {
     this.startRound(null, SERVE_DELAY_START);
 
     this.input.keyboard.on("keydown-ESC", () => this.pauseGame());
+    // Pausa con el mouse o un toque (en el celular no hay Esc): arriba al centro, entre los marcadores.
+    this.pauseButton = new IconButton(this, 0, 0, "pause", () => this.pauseGame()).placeOnScreen(field, GAME_WIDTH / 2, 30);
+    this.setUpTouchControls();
 
     // Tecla de prueba (solo con npm run dev).
     new DebugKey(this);
+  }
+
+  // Botones táctiles de los jugadores humanos: se ven durante la partida y se
+  // esconden en la pausa y al terminar. Si el celular se pone vertical, la
+  // partida se pausa sola (se tapa con el aviso de girarlo).
+  setUpTouchControls() {
+    const showControls = () => touchControls.show(this.mode === "2p" ? ["p1", "p2"] : ["p1"]);
+    const hideControls = () => touchControls.hide();
+    const portrait = window.matchMedia(ROTATE_NOTICE_QUERY);
+    const onOrientationChange = () => {
+      if (portrait.matches) this.pauseGame();
+    };
+
+    showControls();
+    this.events.on("pause", hideControls);
+    this.events.on("resume", showControls);
+    portrait.addEventListener("change", onOrientationChange);
+
+    // Los eventos de la escena y del escalado sobreviven a la escena: se sacan al salir.
+    this.events.once("shutdown", () => {
+      hideControls();
+      this.events.off("pause", hideControls);
+      this.events.off("resume", showControls);
+      portrait.removeEventListener("change", onOrientationChange);
+    });
   }
 
   pauseGame() {
@@ -449,6 +477,8 @@ export default class GameScene extends Phaser.Scene {
 
   showWinner(winner) {
     this.matchOver = true;
+    touchControls.hide();
+    this.pauseButton.setVisible(false);
     this.powerUpSpawner.stop();
     this.powerUpEffects.clearAll();
     this.ballEffects.clearAll();

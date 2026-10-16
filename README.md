@@ -42,7 +42,8 @@ Ganar el punto llevando la pelota más allá de la pala rival. Gana la partida q
 
 ### Mecánicas principales
 
-- Pong de 1 jugador (vs CPU, con 4 niveles de dificultad) o 2 jugadores en el mismo teclado.
+- Pong de 1 jugador (vs CPU, con 4 niveles de dificultad) o 2 jugadores en el mismo teclado o celular.
+- Jugable en PC y en celular (acostado), con botones táctiles a los costados de la cancha.
 - 27 power-ups (amarillo/verde/rojo) que aparecen en el centro de la cancha y se activan al tocarlos con la pelota: agrandar/achicar pala, acelerarla/frenarla, invertir controles, punto doble, escudo, arco chico, cañón, pelota extra, turbo, pelota zigzagueante, curva, gigante o invisible, cámara lenta, paleta central, entre otros.
 - IA con velocidad, tiempo de reacción, margen de error y anticipación configurables por dificultad.
 - Pantalla de tutorial antes de cada partida, pausa en cualquier momento y pantalla de victoria al terminar.
@@ -57,6 +58,9 @@ Ganar el punto llevando la pelota más allá de la pala rival. Gana la partida q
 | Confirmar la opción marcada | Enter (o clic) |
 | Volver a la pantalla anterior | Esc (o el ícono ←) |
 | Pausar / reanudar | Esc |
+| Celular: mover la pala | Mantener apretados ▲ / ▼ de tu lado |
+| Pausar con mouse o toque | Ícono de pausa, arriba al centro |
+| Pantalla completa | Ícono al lado del ⚙ en el menú principal |
 | Cómo jugar / idioma | Íconos ? y ⚙ del menú principal (con el teclado: subir desde la primera opción, A / D para elegir, Enter) |
 
 ## Arquitectura

@@ -33,7 +33,7 @@
 <div class="legend"><span class="tag pend">pendiente</span> = decidido en diseño pero todavía no implementado en el juego. <span class="tag pend">borrador</span> = propuesta a confirmar.</div>
 
 <h2>1. Concepto</h2>
-<p><b>Ponger-up</b> es un Pong clásico con power-ups que aparecen en el centro de la cancha y le meten caos a las rondas. Se juega en el navegador, de forma local: 1 jugador contra la CPU, 2 jugadores en el mismo teclado, o un Modo Historia de 10 niveles contra rivales cada vez más difíciles.</p>
+<p><b>Ponger-up</b> es un Pong clásico con power-ups que aparecen en el centro de la cancha y le meten caos a las rondas. Se juega en el navegador, en PC o en celular, de forma local: 1 jugador contra la CPU, 2 jugadores en el mismo teclado (o el mismo celular), o un Modo Historia de 10 niveles contra rivales cada vez más difíciles.</p>
 
 <h2>2. Plataforma, stack y publicación</h2>
 <ul>
@@ -43,6 +43,17 @@
   <li><b>Publicación:</b> sitio estático en Vercel (salida de <code>npm run build</code>). No hay backend propio ni juego online.</li>
   <li><b>Servicios externos:</b> las traducciones se descargan de la API de Traducila (ver sección 10). Es la única llamada de red del juego.</li>
   <li><b>Persistencia:</b> solo <code>localStorage</code> del navegador (idioma elegido y progreso del Modo Historia). No hay cuentas de usuario.</li>
+  <li><b>Pantalla:</b> la cancha (800 × 600) se agranda o achica para ocupar toda la ventana sin deformarse; lo que sobra queda como franjas negras.</li>
+</ul>
+
+<h3>Celulares y tablets</h3>
+<ul>
+  <li>Se juega con el celular acostado. En vertical aparece un aviso “Girá el celular para jugar” que tapa el juego, y si había una partida en curso se pausa sola.</li>
+  <li>Cada jugador humano tiene dos botones, ▲ y ▼, en la franja de su lado de la cancha: mantener apretado uno mueve la pala (o la flecha del cañón). Con 1 jugador solo aparecen los de la izquierda; con 2, los de los dos lados, y se pueden apretar a la vez. Se ven solo durante la partida (no en la pausa ni al terminar).</li>
+  <li>En pantallas táctiles siempre quedan franjas para los botones: si la pantalla no es lo bastante ancha (por ejemplo, una tablet 4:3), la cancha se achica un poco.</li>
+  <li>Todo lo demás se toca igual que con un clic. Los íconos responden en una zona más grande que su dibujo, para poder tocarlos con el dedo.</li>
+  <li>Los botones táctiles y el aviso solo aparecen en pantallas táctiles; en la PC no cambia nada.</li>
+  <li>“Cómo jugar” explica los botones táctiles en vez de las teclas.</li>
 </ul>
 
 <h2>3. Modos de juego</h2>
@@ -61,11 +72,13 @@
   <tr><td>Menús: moverse entre opciones</td><td>W / S o flechas arriba / abajo (en la selección de nivel también A / D o flechas izquierda / derecha), o pasar el mouse por encima</td></tr>
   <tr><td>Menús: confirmar la opción marcada</td><td>Enter o clic</td></tr>
   <tr><td>Volver a la pantalla anterior</td><td>Esc o el ícono ← (arriba a la izquierda)</td></tr>
-  <tr><td>Pausar la partida</td><td>Esc</td></tr>
+  <tr><td>Pausar la partida</td><td>Esc, o el ícono de pausa (arriba al centro, entre los marcadores)</td></tr>
+  <tr><td>Pantalla completa</td><td>Ícono de pantalla completa del menú principal, al lado del ⚙ (no aparece donde el navegador no lo permite, como en iPhone). En el celular, además, intenta dejar la pantalla acostada</td></tr>
+  <tr><td>Celular: mover la pala</td><td>Mantener apretados ▲ / ▼ en la franja de tu lado</td></tr>
   <tr><td>En pausa: reanudar</td><td>Esc, el ícono ← o la opción “Reanudar”</td></tr>
   <tr><td>Cómo jugar</td><td>Ícono ? (en un círculo, arriba a la izquierda del menú principal)</td></tr>
   <tr><td>Cambiar idioma</td><td>Ícono ⚙ del menú principal, u “Opciones” en la pausa. En el panel: W / S o flechas y Enter, o clic; Esc lo cierra</td></tr>
-  <tr><td>Íconos ? y ⚙ con el teclado</td><td>Desde la primera opción del menú, W / ↑ sube a los íconos; A / D o ← / → pasan de uno a otro, Enter lo abre y S / ↓ vuelve a la lista</td></tr>
+  <tr><td>Íconos del menú con el teclado</td><td>Desde la primera opción del menú, W / ↑ sube a los íconos; A / D o ← / → pasan de uno a otro, Enter lo abre y S / ↓ vuelve a la lista</td></tr>
 </table>
 <p class="note">Todo lo que se puede tocar con el mouse también se puede usar con el teclado. No hay atajos con números ni textos de ayuda con teclas en pantalla: todas las pantallas se manejan igual (moverse, Enter para confirmar, Esc para volver), y la opción marcada se ve en verde con “▶”. No hay menú de reasignación de teclas.</p>
 
@@ -388,8 +401,8 @@
 │                  BossPhases, EffectIndicators,
 │                  DebugKey: tecla de prueba, solo en desarrollo)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia)
-├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell, PowerUpIcon,
-│                  MenuList: lista de opciones navegable; IconButton: íconos ← ? ⚙ y el “volver” con Esc)
+├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell, PowerUpIcon, TouchControls, RotateNotice,
+│                  MenuList: lista de opciones navegable; IconButton: íconos ← ? ⚙, pausa y pantalla completa, y el “volver” con Esc)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;
 │                  ProgressStorage: progreso del Modo Historia en localStorage)
 └── enums/         constantes compartidas (claves de texto, idiomas, estados de carga)

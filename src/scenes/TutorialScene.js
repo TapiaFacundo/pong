@@ -4,6 +4,7 @@ import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import MenuList from "../ui/MenuList.js";
 import { addBackNavigation } from "../ui/IconButton.js";
+import { isTouchDevice } from "../ui/TouchControls.js";
 
 const HINT_COLOR = "#888888";
 
@@ -25,9 +26,15 @@ export default class TutorialScene extends Phaser.Scene {
   create() {
     this.add.text(GAME_WIDTH / 2, 80, getPhrase(KEYS.COMO_JUGAR), { fontSize: "34px", color: COLORS.TEXT }).setOrigin(0.5);
 
-    this.addLine(150, KEYS.JUGADOR_1_W_S, COLORS.TEXT, "20px");
-    this.addLine(182, KEYS.JUGADOR_2_FLECHAS, COLORS.TEXT, "20px");
-    this.addLine(214, KEYS.ESC_PAUSA, HINT_COLOR, "16px");
+    // Controles: teclas en la PC, botones de los costados en pantallas táctiles.
+    if (isTouchDevice()) {
+      this.addLine(166, KEYS.MANTENE_APRETADAS_LAS_FLECHAS_DE_TU_LADO, COLORS.TEXT, "20px");
+      this.addLine(206, KEYS.PAUSA_ARRIBA_AL_CENTRO, HINT_COLOR, "16px");
+    } else {
+      this.addLine(150, KEYS.JUGADOR_1_W_S, COLORS.TEXT, "20px");
+      this.addLine(182, KEYS.JUGADOR_2_FLECHAS, COLORS.TEXT, "20px");
+      this.addLine(214, KEYS.ESC_PAUSA, HINT_COLOR, "16px");
+    }
 
     this.addLine(280, KEYS.TOCA_LOS_POWER_UPS_CON_LA_PELOTA, COLORS.TEXT, "20px");
     this.addLine(318, KEYS.VERDE_A_TU_FAVOR, POWERUP_TEXT_COLORS.green);

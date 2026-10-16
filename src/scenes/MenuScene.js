@@ -30,6 +30,10 @@ export default class MenuScene extends Phaser.Scene {
     const settingsIcon = new IconButton(this, GAME_WIDTH - 30, 28, "⚙", () => this.languagePanel.toggle(), {
       fontSize: "26px",
     });
+    // Pantalla completa, solo donde el navegador lo permite (en iPhone no).
+    const fullscreenIcon = this.sys.game.device.fullscreen.available
+      ? new IconButton(this, GAME_WIDTH - 86, 28, "fullscreen", () => this.toggleFullscreen())
+      : null;
 
     // Con el teclado, subiendo desde "Batalla" se llega a los íconos de las esquinas.
     this.menu = new MenuList(this, {
@@ -37,7 +41,7 @@ export default class MenuScene extends Phaser.Scene {
       spacing: 52,
       fontSize: "28px",
       initialIndex: this.initialIndex,
-      topIcons: [helpIcon, settingsIcon],
+      topIcons: [helpIcon, fullscreenIcon, settingsIcon].filter(Boolean),
       items: [
         { labelKey: KEYS.BATALLA, action: () => this.scene.start("BattleScene") },
         { labelKey: KEYS.MODO_HISTORIA, action: () => this.scene.start("LevelSelectScene") },
@@ -47,6 +51,19 @@ export default class MenuScene extends Phaser.Scene {
     this.languagePanel = new LanguagePanel(this, () => this.menu.refreshTexts());
 
     this.input.keyboard.on("keydown-ESC", () => this.languagePanel.close());
+  }
+
+  // En el celular, además, intenta dejar la pantalla acostada.
+  toggleFullscreen() {
+    if (this.languagePanel.isOpen) return;
+
+    if (this.scale.isFullscreen) {
+      this.scale.stopFullscreen();
+      return;
+    }
+
+    this.scale.startFullscreen();
+    this.scale.once("enterfullscreen", () => window.screen.orientation?.lock?.("landscape").catch(() => {}));
   }
 
   openTutorial() {

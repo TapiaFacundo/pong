@@ -1,7 +1,7 @@
 ## AGENTS.md
 
 ## Proyecto
-Ponger-up — empezó como Trabajo Práctico Módulo #7 y se sigue ampliando. Pong local (1 jugador vs CPU, 2 jugadores en el mismo teclado, y Modo Historia de 10 niveles) con power-ups que alteran palas, pelota y puntaje.
+Ponger-up — empezó como Trabajo Práctico Módulo #7 y se sigue ampliando. Pong local, jugable en PC y celular (1 jugador vs CPU, 2 jugadores en el mismo teclado o celular, y Modo Historia de 10 niveles) con power-ups que alteran palas, pelota y puntaje.
 
 ## Stack
 - JavaScript
@@ -23,7 +23,7 @@ src/
 ├── entities/     # clases jugables/objetos (Paddle.js, Ball.js, PowerUp.js)
 ├── systems/      # lógica que no es una entidad (PowerUpSpawner.js, ScoreManager.js, AI.js)
 ├── data/         # contenido del juego descrito como datos (levels.js: niveles del Modo Historia)
-├── ui/           # componentes de interfaz reutilizables entre escenas (LanguagePanel.js; MenuList.js: lista de opciones navegable; IconButton.js: íconos y "volver" con Esc; PowerUpIcon.js: ícono dibujado de cada power-up)
+├── ui/           # componentes de interfaz reutilizables entre escenas (LanguagePanel.js; MenuList.js: lista de opciones navegable; IconButton.js: íconos y "volver" con Esc; PowerUpIcon.js: ícono dibujado de cada power-up; TouchControls.js y RotateNotice.js: botones táctiles y aviso de girar el celular, en HTML)
 ├── services/     # acceso a servicios externos y al navegador (translations.js, ProgressStorage.js)
 └── enums/        # constantes compartidas (claves de texto, idiomas, estados)
 public/           # assets estáticos servidos directo
