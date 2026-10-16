@@ -35,6 +35,7 @@ export const KEYS = {
   PAUSA: "PAUSA",
   PELOTA_CURVA: "Pelota curva",
   PELOTA_GIGANTE: "Pelota gigante",
+  CAMARA_LENTA: "Cámara lenta",
   PELOTA_ZIGZAGUEANTE: "Pelota zigzagueante",
   PELOTA_INVISIBLE: "Pelota invisible",
   PUNTO_DOBLE: "Punto doble",

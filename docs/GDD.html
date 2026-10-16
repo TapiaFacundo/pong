@@ -125,16 +125,17 @@
   <tr><td>Pelota zigzagueante</td><td>La pelota avanza haciendo un zigzag curvo y amplio alrededor de su trayectoria normal: en promedio va al mismo lugar, pero confunde dónde va a rebotar</td><td>Onda de ± 30 px, una ondulación cada 0,8 s</td></tr>
   <tr><td>Pelota curva</td><td>Tiro de trivela: cada golpe descentrado en la pala hace que la pelota salga con el ángulo normal y después se curve hacia el lado contrario. Cuanto más cerca de la punta, más curva; los golpes en el centro salen rectos. Afecta los golpes de los dos jugadores</td><td>Curva desde el 30 % central hacia afuera: gira hasta 100°/s durante 0,9 s, arrancando 0,15 s después del golpe</td></tr>
   <tr><td>Pelota gigante</td><td>La pelota que lo agarró se agranda (dibujo y choque): más fácil de pegar, y también agarra más power-ups. La bola extra que salga de ella es de tamaño normal</td><td>× 3 de tamaño (42 px de diámetro), durante 15 s</td></tr>
+  <tr><td>Cámara lenta</td><td>Todo lo que se mueve en la cancha (pelotas, palas, IA) va a la mitad de velocidad; la cancha se tiñe de azul mientras dura. Frena solo la física: los relojes de los power-ups, del sabotaje y de la IA siguen en tiempo real</td><td>× 0,5 durante 5 s (más corto que el resto porque frena todo)</td></tr>
   <tr><td>Pelota invisible</td><td>La pelota parpadea y desaparece por instantes</td><td>Parpadeo cada 0,22 s</td></tr>
   <tr><td>Lluvia de power-ups</td><td>Durante un tramo aparecen power-ups mucho más seguido</td><td>Un power-up cada 1,5 s exactos (10 durante los 15 s). El primero aparece 1,5 s después de agarrarla</td></tr>
   <tr><td>Paleta central</td><td>Aparece una paleta chica en el medio de la cancha que se mueve de arriba hacia abajo y bloquea tiros de ambos jugadores</td><td>60 px de alto, 180 px/s</td></tr>
 </table>
-<p class="note">Total: 6 tipos de pala/puntaje con variante verde y roja + 8 amarillos = 20 power-ups. La pelota zigzagueante y la curva reemplazan a la antigua pelota errática, que se quitó por ser demasiado impredecible. Ninguna de las dos puede hacer que la pelota vuelva hacia el arco del que viene: su ángulo nunca pasa de 70° respecto de la horizontal. Si rebotan en una pared, el zigzag y la curva se espejan con el rebote.</p>
+<p class="note">Total: 6 tipos de pala/puntaje con variante verde y roja + 9 amarillos = 21 power-ups. La pelota zigzagueante y la curva reemplazan a la antigua pelota errática, que se quitó por ser demasiado impredecible. Ninguna de las dos puede hacer que la pelota vuelva hacia el arco del que viene: su ángulo nunca pasa de 70° respecto de la horizontal. Si rebotan en una pared, el zigzag y la curva se espejan con el rebote.</p>
 
 <h3>Reglas de activación</h3>
 <ul>
   <li><b>A quién afecta:</b> lo decide el último jugador que tocó la pelota antes de que esta toque el power-up (quien la mandó hacia ahí). Si la pelota todavía no tocó ninguna pala, los power-ups verdes y rojos no tienen efecto.</li>
-  <li><b>Duración:</b> 15 s para los efectos de pala, la pelota zigzagueante, la pelota curva, la pelota gigante, la pelota invisible, la lluvia y la paleta central. La bola extra y el turbo duran lo que dure la ronda. El punto doble no tiene duración en segundos: dura hasta que se anota el próximo punto, de cualquiera de los dos.</li>
+  <li><b>Duración:</b> 15 s para los efectos de pala, la pelota zigzagueante, la pelota curva, la pelota gigante, la pelota invisible, la lluvia y la paleta central; 5 s para la cámara lenta. La bola extra y el turbo duran lo que dure la ronda. El punto doble no tiene duración en segundos: dura hasta que se anota el próximo punto, de cualquiera de los dos.</li>
   <li><b>Acumulación:</b> los efectos de distinto tipo se acumulan (por ejemplo, pala grande + pala rápida al mismo tiempo). Un efecto del mismo tipo sobre la misma pala (tamaño, velocidad o controles) reemplaza al anterior y reinicia los 15 s.</li>
   <li><b>Power-ups en cancha:</b> pueden coexistir varios. El spawn evita que aparezcan superpuestos (distancia mínima de 54 px entre centros).</li>
   <li><b>Reset:</b> los efectos activos se cancelan al terminar la ronda (cuando salieron todas las pelotas), no con cada pelota individual.</li>
@@ -149,18 +150,13 @@
 </ul>
 
 <h3>Power-ups nuevos <span class="tag pend">pendiente</span></h3>
-<p>Cuatro power-ups más, que llevan el total de 20 a 27. Siguen las mismas reglas que el resto: los verdes y rojos dependen de quién mandó la pelota, y se cancelan al terminar la ronda.</p>
+<p>Tres power-ups más (seis contando las versiones verde y roja), que llevan el total de 21 a 27. Siguen las mismas reglas que el resto: los verdes y rojos dependen de quién mandó la pelota, y se cancelan al terminar la ronda.</p>
 
 <table>
   <tr><th style="width:16%">Power-up</th><th><span class="dot g"></span>Verde</th><th><span class="dot r"></span>Rojo</th><th style="width:22%">Valor</th></tr>
   <tr><td>Escudo</td><td>Aparece una barrera detrás de tu pala que te salva de un gol</td><td>La barrera le aparece al rival</td><td>Un uso: desaparece al salvar un gol, o a los 15 s</td></tr>
   <tr><td>Cañón</td><td>Tu pala se convierte en cañón (ver abajo)</td><td>La pala del rival se convierte en cañón</td><td>Se usa en el próximo golpe de esa pala, o se pierde a los 15 s</td></tr>
   <tr><td>Arco chico</td><td>Tu arco se achica: aparecen paredes en las puntas de tu lado</td><td>Se achica el arco del rival</td><td>Las paredes tapan el 25 % de arriba y el 25 % de abajo del arco, durante 15 s</td></tr>
-</table>
-
-<table>
-  <tr><th style="width:16%">Power-up</th><th>Efecto (amarillo)</th><th style="width:22%">Valor</th></tr>
-  <tr><td>Cámara lenta</td><td>Todo lo que se mueve en la cancha (pelotas y palas) va a la mitad de velocidad. La cancha se tiñe de azul mientras dura</td><td>× 0,5 durante 5 s (más corto que el resto porque frena todo)</td></tr>
 </table>
 
 <h3>Detalle de los power-ups nuevos <span class="tag pend">pendiente</span></h3>
@@ -176,7 +172,6 @@
     </ul>
   </li>
   <li><b>Arco chico:</b> dos paredes cortas sobre la línea del arco, una en cada punta del lado afectado. La pelota que las toca rebota como en el techo o el piso. La pala se sigue moviendo por toda la altura.</li>
-  <li><b>Cámara lenta:</b> frena la física de la cancha (pelotas y palas), no los relojes de los power-ups ni del sabotaje. La IA también se mueve a la mitad de velocidad.</li>
 </ul>
 <p class="note">Con 27 power-ups cada uno aparece menos seguido. Más adelante conviene poder activar o desactivar power-ups por nivel del Modo Historia.</p>
 

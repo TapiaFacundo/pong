@@ -13,6 +13,7 @@ import {
   PADDLE_POWERUP_KINDS,
   POWERUP_TEXT_COLORS,
   POWERUP_EFFECT_DURATION,
+  SLOW_MOTION_DURATION,
   SERVE_DELAY_START,
   SERVE_DELAY_AFTER_POINT,
   ROUND_BALLS_SPACING,
@@ -32,6 +33,7 @@ import CenterPaddleEffect from "../systems/CenterPaddleEffect.js";
 import TrivelaShot from "../systems/TrivelaShot.js";
 import Sabotage from "../systems/Sabotage.js";
 import DebugKey from "../systems/DebugKey.js";
+import SlowMotionEffect from "../systems/SlowMotionEffect.js";
 import Field from "../systems/Field.js";
 import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
@@ -118,6 +120,7 @@ export default class GameScene extends Phaser.Scene {
     this.powerUpFeedback = new PowerUpFeedback(this);
     this.ballEffects = new BallEffects(this);
     this.centerPaddleEffect = new CenterPaddleEffect(this, this.ballManager);
+    this.slowMotion = new SlowMotionEffect(this, field);
 
     if (rules.forwardPaddle) this.addForwardPaddle(rules.forwardPaddle);
 
@@ -178,7 +181,9 @@ export default class GameScene extends Phaser.Scene {
     this.controllerLeft.update(delta);
     this.controllerRight.update(delta);
     this.controllerForward?.update(delta);
-    this.ballManager.update(delta);
+    // Los efectos de movimiento de las pelotas (zigzag, curva) van al ritmo de
+    // la física: en cámara lenta también se frenan.
+    this.ballManager.update(delta / this.physics.world.timeScale);
     this.trivelaShot?.update(this.ballManager.balls);
     this.sabotage?.update(delta);
   }
@@ -222,6 +227,7 @@ export default class GameScene extends Phaser.Scene {
     this.powerUpEffects.clearAll();
     this.ballEffects.clearAll();
     this.centerPaddleEffect.clear();
+    this.slowMotion.clear();
 
     this.paddleLeft.recenter(PADDLE_RECENTER_DURATION);
     this.paddleRight.recenter(PADDLE_RECENTER_DURATION);
@@ -296,6 +302,8 @@ export default class GameScene extends Phaser.Scene {
       ball.applyTurbo();
     } else if (definition.kind === "zigzag" || definition.kind === "curve") {
       this.ballEffects.applyMotion(ball, definition.kind);
+    } else if (definition.kind === "slowMotion") {
+      this.slowMotion.activate(SLOW_MOTION_DURATION);
     } else if (definition.kind === "giant") {
       this.ballEffects.applyGiant(ball);
     } else if (definition.kind === "invisible") {
@@ -316,6 +324,7 @@ export default class GameScene extends Phaser.Scene {
     this.powerUpEffects.clearAll();
     this.ballEffects.clearAll();
     this.centerPaddleEffect.clear();
+    this.slowMotion.clear();
     this.ballManager.clearAll();
     this.trivelaShot?.clear();
 
