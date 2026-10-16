@@ -51,6 +51,11 @@ export const WIN_SCORE_LONG = 10;
 export const STORY_WIN_SCORE = WIN_SCORE_MEDIUM;
 // Pausa con el marcador final a la vista antes de pasar al resultado del nivel.
 export const STORY_RESULT_DELAY = 1000;
+// Color de los jefes (etiquetas y anuncios de fase) y duración de los anuncios
+// grandes en el centro de la pantalla.
+export const BOSS_COLOR = 0xb69cff;
+export const BOSS_TEXT_COLOR = "#b69cff";
+export const ANNOUNCEMENT_DURATION = 1800;
 
 export const COLORS = {
   BACKGROUND: 0x000000,

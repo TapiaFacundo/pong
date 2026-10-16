@@ -58,6 +58,8 @@ export const KEYS = {
   ESC_VOLVER: "ESC: volver",
   SABOTAJE: "¡Sabotaje!",
   REFUERZO: "¡Refuerzo!",
+  FASE_N: "¡Fase {n}!",
+  PARTIDO_LARGO_DOS_PELOTAS_POR_RONDA: "¡Partido largo: dos pelotas por ronda!",
   GANASTE: "¡Ganaste!",
   PERDISTE: "Perdiste",
   LE_GANASTE_A_RIVAL: "Le ganaste a {rival}",

@@ -18,6 +18,9 @@ import {
   SERVE_DELAY_AFTER_POINT,
   ROUND_BALLS_SPACING,
   PADDLE_RECENTER_DURATION,
+  BOSS_COLOR,
+  BOSS_TEXT_COLOR,
+  ANNOUNCEMENT_DURATION,
 } from "../config.js";
 import Paddle from "../entities/Paddle.js";
 import PlayerController from "../systems/PlayerController.js";
@@ -37,6 +40,7 @@ import SlowMotionEffect from "../systems/SlowMotionEffect.js";
 import ShieldEffect from "../systems/ShieldEffect.js";
 import SmallGoalEffect from "../systems/SmallGoalEffect.js";
 import CannonEffect from "../systems/CannonEffect.js";
+import BossPhases from "../systems/BossPhases.js";
 import Field from "../systems/Field.js";
 import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
@@ -62,6 +66,7 @@ export default class GameScene extends Phaser.Scene {
     this.paddleForward = null;
     this.controllerForward = null;
     this.sabotage = null;
+    this.bossPhases = null;
   }
 
   create() {
@@ -74,6 +79,7 @@ export default class GameScene extends Phaser.Scene {
 
     // Reglas especiales del nivel del Modo Historia (vacías en casual).
     const rules = this.level?.rules ?? {};
+    this.levelRules = rules;
 
     const paddleOptions = { speedScale: field.paddleSpeedScale };
     this.paddleLeft = new Paddle(this, PADDLE_OFFSET_X, field.centerY, paddleOptions);
@@ -92,10 +98,7 @@ export default class GameScene extends Phaser.Scene {
     );
     this.ballsPerRound = rules.ballsPerRound ?? 1;
 
-    if (rules.trivela) {
-      this.trivelaShot = new TrivelaShot(this, this.paddleRight, "p2", rules.trivela);
-      this.ballManager.setShotModifier(this.trivelaShot);
-    }
+    if (rules.trivela) this.enableTrivela(rules.trivela);
 
     this.controllerLeft = new PlayerController(this, this.paddleLeft, {
       up: KEYS.P1_UP,
@@ -161,6 +164,10 @@ export default class GameScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setVisible(false);
 
+    if (this.level?.phases) {
+      this.bossPhases = new BossPhases(this.level.phases, (phase, number) => this.enterBossPhase(phase, number));
+    }
+
     this.startRound(null, SERVE_DELAY_START);
 
     this.input.keyboard.on("keydown-ESC", () => this.pauseGame());
@@ -175,6 +182,40 @@ export default class GameScene extends Phaser.Scene {
     this.isPaused = true;
     this.scene.launch("PauseScene");
     this.scene.pause();
+  }
+
+  // Tiro con efecto del rival (Trivela, y la fase 2 del jefe final).
+  enableTrivela(config) {
+    this.trivelaShot = new TrivelaShot(this, this.paddleRight, "p2", config);
+    this.ballManager.setShotModifier(this.trivelaShot);
+  }
+
+  // Fase nueva del jefe final: puede cambiar su IA y sumarle habilidades
+  // (tiro con efecto, pala adelantada). Se anuncia en el centro de la pantalla.
+  enterBossPhase(phase, number) {
+    if (phase.ai) this.controllerRight.setDifficulty(phase.ai);
+    if (phase.rules?.trivela && !this.trivelaShot) this.enableTrivela(phase.rules.trivela);
+    if (phase.rules?.forwardPaddle && !this.paddleForward) this.addForwardPaddle(phase.rules.forwardPaddle);
+
+    this.announce(getPhrase(TRANSLATION_KEYS.FASE_N).replace("{n}", number));
+    this.powerUpFeedback.flashPaddle(this.paddleRight, BOSS_COLOR);
+  }
+
+  // Texto grande en el centro de la pantalla que se desvanece.
+  announce(message) {
+    const text = this.field.placeOnScreen(
+      this.add.text(0, 0, message, { fontSize: "40px", color: BOSS_TEXT_COLOR }).setOrigin(0.5).setDepth(20),
+      GAME_WIDTH / 2,
+      GAME_HEIGHT / 2 - 60
+    );
+
+    this.tweens.add({
+      targets: text,
+      alpha: 0,
+      delay: ANNOUNCEMENT_DURATION / 2,
+      duration: ANNOUNCEMENT_DURATION / 2,
+      onComplete: () => text.destroy(),
+    });
   }
 
   // Segunda pala del rival, a mitad de su lado (Los Gemelos), con su propio
@@ -221,6 +262,15 @@ export default class GameScene extends Phaser.Scene {
     const scoringSide = exitSide === "left" ? "p2" : "p1";
     this.lastScoringSide = scoringSide;
 
+    const matchEnded = this.awardPoint(scoringSide);
+    if (matchEnded || this.ballManager.count > 0) return;
+
+    this.resetRound(this.lastScoringSide);
+  }
+
+  // Suma el punto, actualiza el marcador y las fases del jefe, y termina el
+  // partido si alguien llegó al puntaje. Devuelve true si el partido terminó.
+  awardPoint(scoringSide) {
     this.scoreManager.addPoint(scoringSide);
     this.scoreTextLeft.setText(String(this.scoreManager.scoreP1));
     this.scoreTextRight.setText(String(this.scoreManager.scoreP2));
@@ -232,12 +282,23 @@ export default class GameScene extends Phaser.Scene {
     const winner = this.scoreManager.checkWinner();
     if (winner) {
       this.showWinner(winner);
-      return;
+      return true;
     }
 
-    if (this.ballManager.count > 0) return;
+    this.bossPhases?.update(this.scoreManager.scoreP1);
+    return false;
+  }
 
-    this.resetRound(this.lastScoringSide);
+  // Bola extra por partido largo (jefe final): con más de cierta cantidad de
+  // puntos sumados entre los dos, cada ronda arranca con 2 pelotas.
+  checkLongMatch() {
+    const threshold = this.levelRules.extraBallAfterTotalScore;
+    if (threshold == null || this.ballsPerRound >= 2) return;
+
+    if (this.scoreManager.scoreP1 + this.scoreManager.scoreP2 > threshold) {
+      this.ballsPerRound = 2;
+      this.announce(getPhrase(TRANSLATION_KEYS.PARTIDO_LARGO_DOS_PELOTAS_POR_RONDA));
+    }
   }
 
   resetRound(scoringSide) {
@@ -253,6 +314,8 @@ export default class GameScene extends Phaser.Scene {
     this.paddleLeft.recenter(PADDLE_RECENTER_DURATION);
     this.paddleRight.recenter(PADDLE_RECENTER_DURATION);
     this.paddleForward?.recenter(PADDLE_RECENTER_DURATION);
+
+    this.checkLongMatch();
 
     const directionTowardsLoser = scoringSide === "p1" ? 1 : -1;
     this.startRound(directionTowardsLoser, SERVE_DELAY_AFTER_POINT);
