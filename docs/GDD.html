@@ -106,6 +106,27 @@
 </ul>
 <p>Cada power-up de pala o de puntaje tiene sus dos versiones (verde y roja), y cuál sale es aleatorio.</p>
 
+<h3>Íconos</h3>
+<p>Cada power-up se ve como un círculo de su color con un dibujo oscuro en el medio que indica de qué se trata, para reconocerlo sin leer. Hay 18 dibujos: el verde y el rojo de un mismo tipo comparten dibujo (el color dice a quién favorece). Se dibujan con formas simples desde el código (<code>ui/PowerUpIcon.js</code>), así que se ven nítidos a cualquier tamaño y se reutilizan fuera de la cancha.</p>
+<table>
+  <tr><th style="width:26%">Power-up</th><th>Dibujo</th></tr>
+  <tr><td>Pala grande / chica</td><td>Una pala con flechas hacia afuera (grande) o hacia adentro (chica)</td></tr>
+  <tr><td>Pala rápida / lenta</td><td>Una pala con doble chevrón (rápida) o con una pesa (lenta)</td></tr>
+  <tr><td>Controles invertidos</td><td>Una flecha hacia arriba y otra hacia abajo, una al lado de la otra</td></tr>
+  <tr><td>Punto doble</td><td>“×2”</td></tr>
+  <tr><td>Escudo</td><td>Un escudo</td></tr>
+  <tr><td>Arco chico</td><td>La línea del arco con paredes en las puntas y una pelota adelante</td></tr>
+  <tr><td>Cañón</td><td>Un cañón (caño inclinado sobre una rueda)</td></tr>
+  <tr><td>Bola extra</td><td>Una pelota y un “+”</td></tr>
+  <tr><td>Turbo</td><td>Una pelota con líneas de velocidad detrás</td></tr>
+  <tr><td>Pelota zigzagueante / curva</td><td>Una línea en zigzag o una curva que termina en una pelota</td></tr>
+  <tr><td>Pelota gigante</td><td>Una pelota grande al lado de una chica</td></tr>
+  <tr><td>Cámara lenta</td><td>Un reloj de arena</td></tr>
+  <tr><td>Pelota invisible</td><td>Un ojo tachado</td></tr>
+  <tr><td>Lluvia de power-ups</td><td>Tres pelotitas cayendo</td></tr>
+  <tr><td>Paleta central</td><td>Una pala sobre la línea central punteada</td></tr>
+</table>
+
 <h3>Power-ups de pala y puntaje (verde / rojo)</h3>
 <table>
   <tr><th style="width:26%">Power-up</th><th><span class="dot g"></span>Verde</th><th><span class="dot r"></span>Rojo</th><th style="width:18%">Valor</th></tr>
@@ -213,7 +234,7 @@
 
 <h2>11. Arte y audio</h2>
 <ul>
-  <li>Formas simples (rectángulos y círculos) con colores planos: fondo negro, palas y pelota blancas, línea central gris y los power-ups en amarillo, verde o rojo.</li>
+  <li>Formas simples (rectángulos y círculos) con colores planos: fondo negro, palas y pelota blancas, línea central gris y los power-ups en amarillo, verde o rojo, cada uno con su ícono.</li>
   <li>Los sonidos se generan por código con Web Audio, sin archivos: rebote en pala, punto anotado y power-up agarrado, cada uno distinto.</li>
 </ul>
 
@@ -356,7 +377,7 @@
 │                  BossPhases,
 │                  DebugKey: tecla de prueba, solo en desarrollo)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia)
-├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell,
+├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell, PowerUpIcon,
 │                  MenuList: lista de opciones navegable; IconButton: íconos ← ? ⚙ y el “volver” con Esc)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;
 │                  ProgressStorage: progreso del Modo Historia en localStorage)

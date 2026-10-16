@@ -23,7 +23,7 @@ src/
 ├── entities/     # clases jugables/objetos (Paddle.js, Ball.js, PowerUp.js)
 ├── systems/      # lógica que no es una entidad (PowerUpSpawner.js, ScoreManager.js, AI.js)
 ├── data/         # contenido del juego descrito como datos (levels.js: niveles del Modo Historia)
-├── ui/           # componentes de interfaz reutilizables entre escenas (LanguagePanel.js; MenuList.js: lista de opciones navegable; IconButton.js: íconos y "volver" con Esc)
+├── ui/           # componentes de interfaz reutilizables entre escenas (LanguagePanel.js; MenuList.js: lista de opciones navegable; IconButton.js: íconos y "volver" con Esc; PowerUpIcon.js: ícono dibujado de cada power-up)
 ├── services/     # acceso a servicios externos y al navegador (translations.js, ProgressStorage.js)
 └── enums/        # constantes compartidas (claves de texto, idiomas, estados)
 public/           # assets estáticos servidos directo

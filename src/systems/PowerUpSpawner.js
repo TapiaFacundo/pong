@@ -93,15 +93,16 @@ export default class PowerUpSpawner {
   spawn() {
     const position = this.findFreePosition();
 
-    if (position) {
-      const definition = this.pickDefinition();
-      const powerUp = new PowerUp(this.scene, position.x, position.y, definition);
-      this.activePowerUps.push(powerUp);
-
-      this.ballManager.balls.forEach((ball) => this.watchCollision(powerUp, ball));
-    }
+    if (position) this.spawnAt(this.pickDefinition(), position.x, position.y);
 
     this.scheduleNextSpawn();
+  }
+
+  spawnAt(definition, x, y) {
+    const powerUp = new PowerUp(this.scene, x, y, definition);
+    this.activePowerUps.push(powerUp);
+
+    this.ballManager.balls.forEach((ball) => this.watchCollision(powerUp, ball));
   }
 
   // Un power-up nuevo se registra contra las pelotas actuales; una pelota nueva
