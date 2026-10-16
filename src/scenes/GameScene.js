@@ -15,6 +15,7 @@ import {
   POWERUP_EFFECT_DURATION,
   SERVE_DELAY_START,
   SERVE_DELAY_AFTER_POINT,
+  ROUND_BALLS_SPACING,
   PADDLE_RECENTER_DURATION,
 } from "../config.js";
 import Paddle from "../entities/Paddle.js";
@@ -81,7 +82,7 @@ export default class GameScene extends Phaser.Scene {
       (side) => this.onBallOut(side),
       ballSettings
     );
-    this.ballManager.addBall(field.centerX, field.centerY);
+    this.ballsPerRound = rules.ballsPerRound ?? 1;
 
     if (rules.trivela) {
       this.trivelaShot = new TrivelaShot(this, this.paddleRight, "p2", rules.trivela);
@@ -117,8 +118,11 @@ export default class GameScene extends Phaser.Scene {
 
     if (rules.forwardPaddle) this.addForwardPaddle(rules.forwardPaddle);
 
-    this.powerUpSpawner = new PowerUpSpawner(this, this.ballManager, (definition, ball) =>
-      this.onPowerUpActivated(definition, ball)
+    this.powerUpSpawner = new PowerUpSpawner(
+      this,
+      this.ballManager,
+      (definition, ball) => this.onPowerUpActivated(definition, ball),
+      { spawnDelay: rules.powerUpSpawnDelay }
     );
 
     this.doublePointIndicator = this.add
@@ -126,7 +130,7 @@ export default class GameScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setVisible(false);
 
-    this.serveAfter(SERVE_DELAY_START, this.ballManager.primary);
+    this.startRound(null, SERVE_DELAY_START);
 
     this.input.keyboard.on("keydown-ESC", () => this.pauseGame());
   }
@@ -206,14 +210,32 @@ export default class GameScene extends Phaser.Scene {
     this.paddleForward?.recenter(PADDLE_RECENTER_DURATION);
 
     const directionTowardsLoser = scoringSide === "p1" ? 1 : -1;
-    const ball = this.ballManager.addBall(this.field.centerX, this.field.centerY);
-    this.serveAfter(SERVE_DELAY_AFTER_POINT, ball, directionTowardsLoser);
+    this.startRound(directionTowardsLoser, SERVE_DELAY_AFTER_POINT);
   }
 
-  // Saca la pelota después de "delay" y recién ahí arranca el spawn de power-ups.
-  serveAfter(delay, ball, directionX = null) {
+  // Pone las pelotas de la ronda en el centro y las saca después de "delay".
+  // Con una sola pelota sale hacia firstDirection (o a un lado al azar). Con
+  // varias (Tormenta), se reparten una hacia cada jugador, un poco separadas
+  // en altura: la primera hacia firstDirection.
+  startRound(firstDirection, delay) {
+    const direction = firstDirection ?? (Math.random() < 0.5 ? -1 : 1);
+    const balls = [];
+
+    for (let i = 0; i < this.ballsPerRound; i++) {
+      const offsetY = (i - (this.ballsPerRound - 1) / 2) * ROUND_BALLS_SPACING;
+      balls.push({
+        ball: this.ballManager.addBall(this.field.centerX, this.field.centerY + offsetY),
+        directionX: i % 2 === 0 ? direction : -direction,
+      });
+    }
+
+    this.serveAfter(delay, balls);
+  }
+
+  // Saca las pelotas después de "delay" y recién ahí arranca el spawn de power-ups.
+  serveAfter(delay, balls) {
     this.time.delayedCall(delay, () => {
-      ball.launch(directionX);
+      balls.forEach(({ ball, directionX }) => ball.launch(directionX));
       this.powerUpSpawner.startTimer();
     });
   }

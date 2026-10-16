@@ -45,6 +45,8 @@ export const BALL_TURBO_MULTIPLIER = 1.5;
 export const SERVE_DELAY_START = 600;
 export const SERVE_DELAY_AFTER_POINT = 1600;
 export const PADDLE_RECENTER_DURATION = 400;
+// Separación en altura entre las pelotas cuando una ronda arranca con varias (Tormenta).
+export const ROUND_BALLS_SPACING = 80;
 
 export const WIN_SCORE_SHORT = 5;
 export const WIN_SCORE_MEDIUM = 7;

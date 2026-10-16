@@ -19,6 +19,7 @@ export default class AI {
     this.isAnticipating = false;
     this.targetY = paddle.y;
     this.wasBallApproaching = false;
+    this.trackedBall = null;
     this.predictionMissFactor = 0;
     this.blindMissOffset = 0;
 
@@ -36,7 +37,33 @@ export default class AI {
     // Predicción de trayectoria: 0 = sigue la altura actual de la pelota,
     // 1 = apunta a donde va a llegar; valores intermedios, a mitad de camino.
     this.prediction = settings.prediction === true ? 1 : Number(settings.prediction) || 0;
+    // Con varias pelotas: seguir a la que va a llegar antes (si no, siempre a la primera).
+    this.trackFirstArrival = settings.trackFirstArrival ?? false;
     this.paddle.setBaseSpeed(settings.speed);
+  }
+
+  isApproaching(ball) {
+    return (this.side === "right" && ball.velocityX > 0) || (this.side === "left" && ball.velocityX < 0);
+  }
+
+  // La pelota que sigue la IA: la primera en juego o, con trackFirstArrival,
+  // la que viene hacia su lado y va a llegar antes.
+  selectBall() {
+    if (!this.trackFirstArrival) return this.ballManager.primary;
+
+    let firstBall = null;
+    let firstTime = Infinity;
+    for (const ball of this.ballManager.balls) {
+      if (!this.isApproaching(ball)) continue;
+
+      const secondsToArrive = (this.paddle.x - ball.x) / ball.velocityX;
+      if (secondsToArrive >= 0 && secondsToArrive < firstTime) {
+        firstBall = ball;
+        firstTime = secondsToArrive;
+      }
+    }
+
+    return firstBall ?? this.ballManager.primary;
   }
 
   // Con los controles invertidos (power-up en su contra) la IA tarda más en
@@ -95,29 +122,30 @@ export default class AI {
   }
 
   update(delta) {
-    const ball = this.ballManager.primary;
+    const ball = this.selectBall();
 
     if (!ball) {
       this.paddle.stop();
       this.wasBallApproaching = false;
+      this.trackedBall = null;
       return;
     }
 
-    const ballApproaching =
-      (this.side === "right" && ball.velocityX > 0) || (this.side === "left" && ball.velocityX < 0);
-
-    if (!ballApproaching) {
+    if (!this.isApproaching(ball)) {
       this.wasBallApproaching = false;
+      this.trackedBall = null;
       this.updateAnticipation(ball, delta);
       return;
     }
 
-    // Al empezar a acercarse la pelota, la IA tarda el tiempo de reacción en
-    // fijar un objetivo y después lo actualiza con ese mismo período, con un
-    // margen de error que baja según la dificultad.
-    if (!this.wasBallApproaching) {
+    // Al empezar a acercarse la pelota (o al cambiar a otra pelota que llega
+    // antes), la IA tarda el tiempo de reacción en fijar un objetivo y después
+    // lo actualiza con ese mismo período, con un margen de error que baja
+    // según la dificultad.
+    if (!this.wasBallApproaching || ball !== this.trackedBall) {
       this.startPlay();
       this.wasBallApproaching = true;
+      this.trackedBall = ball;
     }
 
     this.reactionTimer += delta;

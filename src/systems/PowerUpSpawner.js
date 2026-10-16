@@ -15,10 +15,13 @@ import PowerUp from "../entities/PowerUp.js";
 const MAX_POSITION_ATTEMPTS = 20;
 
 export default class PowerUpSpawner {
-  constructor(scene, ballManager, onActivate) {
+  // spawnDelay: { min, max } del intervalo normal entre power-ups (un nivel
+  // del Modo Historia puede cambiarlo; si no, 5 a 6,5 s).
+  constructor(scene, ballManager, onActivate, { spawnDelay } = {}) {
     this.scene = scene;
     this.ballManager = ballManager;
     this.onActivate = onActivate;
+    this.spawnDelay = spawnDelay ?? { min: POWERUP_SPAWN_MIN_DELAY, max: POWERUP_SPAWN_MAX_DELAY };
     this.activePowerUps = [];
     this.stopped = false;
     this.rainActive = false;
@@ -46,7 +49,7 @@ export default class PowerUpSpawner {
 
     const [min, max] = this.rainActive
       ? [POWERUP_RAIN_MIN_DELAY, POWERUP_RAIN_MAX_DELAY]
-      : [POWERUP_SPAWN_MIN_DELAY, POWERUP_SPAWN_MAX_DELAY];
+      : [this.spawnDelay.min, this.spawnDelay.max];
     const delay = Phaser.Math.Between(min, max);
     this.spawnTimer = this.scene.time.delayedCall(delay, () => this.spawn());
   }
