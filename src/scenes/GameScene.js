@@ -36,6 +36,7 @@ import DebugKey from "../systems/DebugKey.js";
 import SlowMotionEffect from "../systems/SlowMotionEffect.js";
 import ShieldEffect from "../systems/ShieldEffect.js";
 import SmallGoalEffect from "../systems/SmallGoalEffect.js";
+import CannonEffect from "../systems/CannonEffect.js";
 import Field from "../systems/Field.js";
 import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
@@ -125,6 +126,14 @@ export default class GameScene extends Phaser.Scene {
     this.slowMotion = new SlowMotionEffect(this, field);
     this.shieldEffect = new ShieldEffect(this, field, this.powerUpFeedback);
     this.smallGoalEffect = new SmallGoalEffect(this, field);
+    this.cannonEffect = new CannonEffect(
+      this,
+      field,
+      this.powerUpEffects.paddlesBySide,
+      { p1: this.paddleRight, p2: this.paddleLeft },
+      this.powerUpFeedback
+    );
+    this.ballManager.setBallCatcher(this.cannonEffect);
 
     if (rules.forwardPaddle) this.addForwardPaddle(rules.forwardPaddle);
 
@@ -191,6 +200,7 @@ export default class GameScene extends Phaser.Scene {
     this.trivelaShot?.update(this.ballManager.balls);
     this.sabotage?.update(delta);
     // Primero las paredes del arco chico: si la pelota pega en una, el escudo no se gasta.
+    this.cannonEffect.update(delta);
     this.smallGoalEffect.update(this.ballManager.balls);
     this.shieldEffect.update(this.ballManager.balls);
   }
@@ -237,6 +247,7 @@ export default class GameScene extends Phaser.Scene {
     this.slowMotion.clear();
     this.shieldEffect.clearAll();
     this.smallGoalEffect.clearAll();
+    this.cannonEffect.clearAll();
 
     this.paddleLeft.recenter(PADDLE_RECENTER_DURATION);
     this.paddleRight.recenter(PADDLE_RECENTER_DURATION);
@@ -293,6 +304,12 @@ export default class GameScene extends Phaser.Scene {
 
     if (PADDLE_POWERUP_KINDS.includes(definition.kind)) {
       targetPaddle = this.powerUpEffects.applyPaddleEffect(definition.kind, definition.colorCategory, attackerSide);
+    } else if (definition.kind === "cannon") {
+      const targetSide = this.powerUpEffects.resolveTarget(definition.kind, definition.colorCategory, attackerSide);
+      if (targetSide) {
+        this.cannonEffect.arm(targetSide, POWERUP_EFFECT_DURATION);
+        targetPaddle = targetSide === "p1" ? this.paddleLeft : this.paddleRight;
+      }
     } else if (definition.kind === "smallGoal") {
       const targetSide = this.powerUpEffects.resolveTarget(definition.kind, definition.colorCategory, attackerSide);
       if (targetSide) {
@@ -348,6 +365,7 @@ export default class GameScene extends Phaser.Scene {
     this.slowMotion.clear();
     this.shieldEffect.clearAll();
     this.smallGoalEffect.clearAll();
+    this.cannonEffect.clearAll();
     this.ballManager.clearAll();
     this.trivelaShot?.clear();
 

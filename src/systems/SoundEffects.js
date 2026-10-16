@@ -39,6 +39,11 @@ export function playPaddleHit() {
   playTone({ frequency: 220, duration: 0.07, type: "sine", volume: 0.25 });
 }
 
+export function playCannonShot() {
+  playTone({ frequency: 120, duration: 0.25, type: "sawtooth", volume: 0.3 });
+  playTone({ frequency: 70, duration: 0.35, type: "square", volume: 0.2, delay: 0.03 });
+}
+
 export function playScore() {
   playTone({ frequency: 440, duration: 0.15, type: "sawtooth", volume: 0.22 });
   playTone({ frequency: 220, duration: 0.25, type: "sawtooth", volume: 0.18, delay: 0.1 });

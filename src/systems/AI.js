@@ -87,6 +87,13 @@ export default class AI {
   }
 
   update(delta) {
+    // Con el cañón cargado, la IA apunta la flecha en vez de mover la pala.
+    if (this.paddle.aim) {
+      this.paddle.stop();
+      this.paddle.aim.autoSteer(delta);
+      return;
+    }
+
     const ball = this.selectBall();
 
     if (!ball) {

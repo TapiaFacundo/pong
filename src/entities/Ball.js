@@ -27,6 +27,8 @@ export default class Ball {
     this.lastTouchedBy = null;
     // Con el power-up de pelota invisible activo (lo maneja BallEffects).
     this.isInvisible = false;
+    // Retenida por una pala con el cañón: quieta hasta el disparo (lo maneja CannonEffect).
+    this.isHeld = false;
 
     // Dirección "base" de la trayectoria (vector unitario). Mientras hay
     // efectos de movimiento activos (zigzag, curva), la velocidad real se
@@ -117,7 +119,7 @@ export default class Ball {
   }
 
   update(delta) {
-    if (this.motions.size === 0 || !this.circle.body) return;
+    if (this.motions.size === 0 || this.isHeld || !this.circle.body) return;
 
     const body = this.circle.body;
 

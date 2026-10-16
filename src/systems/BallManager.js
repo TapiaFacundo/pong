@@ -8,6 +8,7 @@ export default class BallManager {
     this.scene = scene;
     this.ballSettings = ballSettings;
     this.shotModifier = null;
+    this.ballCatcher = null;
     this.paddleLeft = paddleLeft;
     this.paddleRight = paddleRight;
     this.onBallOut = onBallOut;
@@ -63,8 +64,15 @@ export default class BallManager {
     this.shotModifier = modifier;
   }
 
+  // Un sistema que puede quedarse con la pelota en vez de que rebote (el
+  // cañón): tryCatch(ball, paddle, playerId, directionX) devuelve true si la agarró.
+  setBallCatcher(catcher) {
+    this.ballCatcher = catcher;
+  }
+
   handlePaddleHit(ball, paddle, playerId, directionX) {
     ball.lastTouchedBy = playerId;
+    if (this.ballCatcher?.tryCatch(ball, paddle, playerId, directionX)) return;
 
     let offset = Phaser.Math.Clamp((ball.y - paddle.y) / (paddle.rect.height / 2), -1, 1);
     if (this.shotModifier) offset = this.shotModifier.beforeBounce(ball, playerId, offset);

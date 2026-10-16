@@ -92,6 +92,7 @@ export const POWERUP_LABELS = {
   doublePoint: "Punto doble",
   shield: "Escudo",
   smallGoal: "Arco chico",
+  cannon: "Cañón",
   extraBall: "¡Bola extra!",
   turbo: "¡Turbo!",
   zigzag: "Pelota zigzagueante",
@@ -122,6 +123,15 @@ export const SHIELD_COLOR = 0x66ccff;
 // Arco chico: paredes grises en las puntas del arco, que tapan este alto cada una.
 export const SMALL_GOAL_COLOR = 0xaaaaaa;
 export const SMALL_GOAL_COVERAGE = 0.25;
+// Cañón: la pala agarra la pelota, se apunta con una flecha (hasta 60° arriba o
+// abajo, a 90°/s) y a los 2 s sale disparada a 1,6 × su velocidad (mínimo 600).
+export const CANNON_COLOR = 0xff9933;
+export const CANNON_FUSE_DURATION = 2000;
+export const CANNON_MAX_ANGLE = (60 * Math.PI) / 180;
+export const CANNON_AIM_SPEED = (90 * Math.PI) / 180;
+export const CANNON_ARROW_LENGTH = 90;
+export const CANNON_SPEED_MULTIPLIER = 1.6;
+export const CANNON_MIN_SPEED = 600;
 export const PADDLE_GROW_SCALE = 1.6;
 export const PADDLE_SHRINK_SCALE = 0.6;
 export const PADDLE_SPEED_UP_SCALE = 1.6;
@@ -152,7 +162,7 @@ export const BALL_INVISIBLE_BLINK_INTERVAL = 220;
 export const CENTER_PADDLE_HEIGHT = 60;
 export const CENTER_PADDLE_SPEED = 180;
 
-// 8 tipos de pala/puntaje/arco (verde/roja) + 9 amarillos = 25 power-ups, según el GDD.
+// 9 tipos de pala/puntaje/arco (verde/roja) + 9 amarillos = 27 power-ups, según el GDD.
 export const POWERUP_DEFINITIONS = [
   { id: "grow-green", kind: "grow", colorCategory: "green" },
   { id: "grow-red", kind: "grow", colorCategory: "red" },
@@ -170,6 +180,8 @@ export const POWERUP_DEFINITIONS = [
   { id: "shield-red", kind: "shield", colorCategory: "red" },
   { id: "small-goal-green", kind: "smallGoal", colorCategory: "green" },
   { id: "small-goal-red", kind: "smallGoal", colorCategory: "red" },
+  { id: "cannon-green", kind: "cannon", colorCategory: "green" },
+  { id: "cannon-red", kind: "cannon", colorCategory: "red" },
   { id: "extra-ball", kind: "extraBall", colorCategory: "yellow" },
   { id: "turbo", kind: "turbo", colorCategory: "yellow" },
   { id: "zigzag-ball", kind: "zigzag", colorCategory: "yellow" },

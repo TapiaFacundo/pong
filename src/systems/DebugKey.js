@@ -9,9 +9,9 @@ import { POWERUP_DEFINITIONS } from "../config.js";
 const DEBUG_KEY = "G";
 
 // Qué se prueba ahora: activar este power-up sobre la pelota en juego, como si
-// la pelota lo hubiera agarrado. En los verdes y rojos cuenta como si la
-// hubiera mandado el jugador 1 (si nadie la tocó todavía).
-const DEBUG_POWERUP_ID = "small-goal-green";
+// la pelota lo hubiera agarrado. En los verdes y rojos cuenta siempre como si
+// la hubiera mandado el jugador 1 (el verde es para él; el rojo, para el rival).
+const DEBUG_POWERUP_ID = "cannon-green";
 
 export default class DebugKey {
   constructor(scene) {
@@ -26,7 +26,9 @@ export default class DebugKey {
     const definition = POWERUP_DEFINITIONS.find((item) => item.id === DEBUG_POWERUP_ID);
     if (!ball || !definition || this.scene.matchOver) return;
 
-    ball.lastTouchedBy ??= "p1";
+    const lastTouchedBy = ball.lastTouchedBy;
+    ball.lastTouchedBy = "p1";
     this.scene.onPowerUpActivated(definition, ball);
+    ball.lastTouchedBy = lastTouchedBy ?? "p1";
   }
 }

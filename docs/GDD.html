@@ -117,6 +117,7 @@
   <tr><td>Punto doble</td><td>Tu próximo punto vale x2</td><td>El próximo punto del rival vale x2</td><td>Indicador “×2” bajo el marcador</td></tr>
   <tr><td>Escudo</td><td>Aparece una barrera celeste detrás de tu pala, a lo alto de todo el arco, que te salva de un gol: la primera pelota que llega rebota hacia la cancha con su misma velocidad y el escudo se rompe</td><td>La barrera le aparece al rival</td><td>Un uso, o 15 s. Otro escudo para el mismo lado reinicia el tiempo sin sumar usos</td></tr>
   <tr><td>Arco chico</td><td>Tu arco se achica: aparecen dos paredes grises sobre la línea de tu arco, una en cada punta. La pelota que las toca rebota hacia la cancha; no se rompen</td><td>Se achica el arco del rival</td><td>Cada pared tapa el 25 % del alto, durante 15 s</td></tr>
+  <tr><td>Cañón</td><td>Tu pala se convierte en cañón: la próxima vez que toca la pelota, la agarra y la disparás (ver abajo)</td><td>La pala del rival se convierte en cañón</td><td>Se usa en el próximo golpe de esa pala, o se pierde a los 15 s</td></tr>
 </table>
 
 <h3>Power-ups amarillos</h3>
@@ -132,9 +133,19 @@
   <tr><td>Lluvia de power-ups</td><td>Durante un tramo aparecen power-ups mucho más seguido</td><td>Un power-up cada 1,5 s exactos (10 durante los 15 s). El primero aparece 1,5 s después de agarrarla</td></tr>
   <tr><td>Paleta central</td><td>Aparece una paleta chica en el medio de la cancha que se mueve de arriba hacia abajo y bloquea tiros de ambos jugadores</td><td>60 px de alto, 180 px/s</td></tr>
 </table>
-<p class="note">Total: 8 tipos de pala/puntaje/arco con variante verde y roja + 9 amarillos = 25 power-ups. La pelota zigzagueante y la curva reemplazan a la antigua pelota errática, que se quitó por ser demasiado impredecible. Ninguna de las dos puede hacer que la pelota vuelva hacia el arco del que viene: su ángulo nunca pasa de 70° respecto de la horizontal. Si rebotan en una pared, el zigzag y la curva se espejan con el rebote.</p>
+<p class="note">Total: 9 tipos de pala/puntaje/arco con variante verde y roja + 9 amarillos = 27 power-ups. La pelota zigzagueante y la curva reemplazan a la antigua pelota errática, que se quitó por ser demasiado impredecible. Ninguna de las dos puede hacer que la pelota vuelva hacia el arco del que viene: su ángulo nunca pasa de 70° respecto de la horizontal. Si rebotan en una pared, el zigzag y la curva se espejan con el rebote.</p>
 
 <p class="note">Escudo y arco chico: las barreras están sobre la línea del arco, detrás de la pala, que se sigue moviendo por toda la altura. Solo hacen rebotar pelotas que llegan desde la cancha (una pelota que ya entró por el hueco del arco chico no se saca). Si un lado tiene los dos, pegar en una pared del arco chico no gasta el escudo.</p>
+
+<p><b>Cañón, paso a paso:</b></p>
+<ul>
+  <li>Mientras el cañón espera su golpe, la pala (todas las de ese lado, si tiene más de una) muestra un pequeño caño naranja adelante.</li>
+  <li>Cuando la pala toca la pelota, la agarra: la pelota queda quieta pegada adelante de la pala. Si tenía zigzag o curva, quedan en pausa mientras está retenida.</li>
+  <li>Aparece una flecha naranja que marca hacia dónde apunta, y una mecha (barra naranja sobre la pala) que se consume en 2 s. Mientras tanto, las teclas de esa pala (W / S, o las flechas del Jugador 2) dejan de moverla y mueven la flecha, a 90°/s, hasta 60° hacia arriba o hacia abajo. Con los controles invertidos, la flecha se mueve al revés.</li>
+  <li>Al terminar la mecha, la pelota sale disparada en la dirección de la flecha a 1,6 × la velocidad que traía (como mínimo, 600 px/s), con un sonido de cañonazo. Cuenta como golpe de esa pala.</li>
+  <li>Si hay otras pelotas en juego, siguen moviéndose mientras se apunta.</li>
+  <li>La IA con cañón apunta lejos de la pala del jugador: hacia abajo si el jugador está arriba, y al revés.</li>
+</ul>
 
 <h3>Reglas de activación</h3>
 <ul>
@@ -153,26 +164,6 @@
   <li>Sonido de power-up agarrado.</li>
 </ul>
 
-<h3>Power-ups nuevos <span class="tag pend">pendiente</span></h3>
-<p>Un power-up más (dos contando las versiones verde y roja), que lleva el total de 25 a 27. Siguen las mismas reglas que el resto: los verdes y rojos dependen de quién mandó la pelota, y se cancelan al terminar la ronda.</p>
-
-<table>
-  <tr><th style="width:16%">Power-up</th><th><span class="dot g"></span>Verde</th><th><span class="dot r"></span>Rojo</th><th style="width:22%">Valor</th></tr>
-  <tr><td>Cañón</td><td>Tu pala se convierte en cañón (ver abajo)</td><td>La pala del rival se convierte en cañón</td><td>Se usa en el próximo golpe de esa pala, o se pierde a los 15 s</td></tr>
-</table>
-
-<h3>Detalle de los power-ups nuevos <span class="tag pend">pendiente</span></h3>
-<ul>
-  <li><b>Cañón:</b> la próxima vez que esa pala toca la pelota, la agarra: la pelota se frena pegada adelante de la pala.
-    <ul>
-      <li>Aparece una flecha que sale de la pala y marca hacia dónde apunta. Mientras tanto, las teclas de esa pala (W / S, o las flechas del Jugador 2) dejan de moverla y mueven la flecha. Se puede apuntar hasta 60° hacia arriba o hacia abajo.</li>
-      <li>Una mecha se consume en 3 s y, al terminar, la pelota sale disparada en la dirección de la flecha a 1,6 × la velocidad que traía (como mínimo, 600 px/s).</li>
-      <li>Con los controles invertidos, la flecha también se mueve al revés.</li>
-      <li>Si hay otras pelotas en juego, siguen moviéndose mientras se apunta.</li>
-      <li>La IA con cañón apunta lejos de la pala del jugador.</li>
-    </ul>
-  </li>
-</ul>
 <p class="note">Con 27 power-ups cada uno aparece menos seguido. Más adelante conviene poder activar o desactivar power-ups por nivel del Modo Historia.</p>
 
 <h2>8. IA</h2>
@@ -357,7 +348,7 @@
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
 │                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrivelaShot,
-│                  Field, Sabotage, SlowMotionEffect, ShieldEffect, SmallGoalEffect,
+│                  Field, Sabotage, SlowMotionEffect, ShieldEffect, SmallGoalEffect, CannonEffect,
 │                  DebugKey: tecla de prueba, solo en desarrollo)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia)
 ├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell)

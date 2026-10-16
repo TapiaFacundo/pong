@@ -6,7 +6,7 @@ import {
   PADDLE_SPEED_DOWN_SCALE,
 } from "../config.js";
 
-const BUFF_KINDS = ["grow", "speedUp", "doublePoint", "shield", "smallGoal"];
+const BUFF_KINDS = ["grow", "speedUp", "doublePoint", "shield", "smallGoal", "cannon"];
 const HEIGHT_KINDS = ["grow", "shrink"];
 const SPEED_KINDS = ["speedUp", "slowDown"];
 
