@@ -147,6 +147,40 @@
   <li>Sonido de power-up agarrado.</li>
 </ul>
 
+<h3>Power-ups nuevos <span class="tag pend">pendiente</span></h3>
+<p>Cinco power-ups más, que llevan el total de 19 a 27. Siguen las mismas reglas que el resto: los verdes y rojos dependen de quién mandó la pelota, y se cancelan al terminar la ronda.</p>
+
+<table>
+  <tr><th style="width:16%">Power-up</th><th><span class="dot g"></span>Verde</th><th><span class="dot r"></span>Rojo</th><th style="width:22%">Valor</th></tr>
+  <tr><td>Escudo</td><td>Aparece una barrera detrás de tu pala que te salva de un gol</td><td>La barrera le aparece al rival</td><td>Un uso: desaparece al salvar un gol, o a los 15 s</td></tr>
+  <tr><td>Cañón</td><td>Tu pala se convierte en cañón (ver abajo)</td><td>La pala del rival se convierte en cañón</td><td>Se usa en el próximo golpe de esa pala, o se pierde a los 15 s</td></tr>
+  <tr><td>Arco chico</td><td>Tu arco se achica: aparecen paredes en las puntas de tu lado</td><td>Se achica el arco del rival</td><td>Las paredes tapan el 25 % de arriba y el 25 % de abajo del arco, durante 15 s</td></tr>
+</table>
+
+<table>
+  <tr><th style="width:16%">Power-up</th><th>Efecto (amarillo)</th><th style="width:22%">Valor</th></tr>
+  <tr><td>Pelota gigante</td><td>La pelota que lo agarró se agranda: más fácil de pegar, pero también agarra más power-ups y es más difícil esquivarla con la pala del rival</td><td>× 3 de tamaño (42 px de diámetro), durante 15 s</td></tr>
+  <tr><td>Cámara lenta</td><td>Todo lo que se mueve en la cancha (pelotas y palas) va a la mitad de velocidad. La cancha se tiñe de azul mientras dura</td><td>× 0,5 durante 5 s (más corto que el resto porque frena todo)</td></tr>
+</table>
+
+<h3>Detalle de los power-ups nuevos <span class="tag pend">pendiente</span></h3>
+<ul>
+  <li><b>Escudo:</b> una barrera celeste a lo alto de todo el arco, detrás de la pala. La primera pelota que llega al arco rebota en ella como en una pared y el escudo desaparece. Si se agarra otro escudo para el mismo lado, reinicia los 15 s pero no se acumulan usos.</li>
+  <li><b>Cañón:</b> la próxima vez que esa pala toca la pelota, la agarra: la pelota se frena pegada adelante de la pala.
+    <ul>
+      <li>Aparece una flecha que sale de la pala y marca hacia dónde apunta. Mientras tanto, las teclas de esa pala (W / S, o las flechas del Jugador 2) dejan de moverla y mueven la flecha. Se puede apuntar hasta 60° hacia arriba o hacia abajo.</li>
+      <li>Una mecha se consume en 3 s y, al terminar, la pelota sale disparada en la dirección de la flecha a 1,6 × la velocidad que traía (como mínimo, 600 px/s).</li>
+      <li>Con los controles invertidos, la flecha también se mueve al revés.</li>
+      <li>Si hay otras pelotas en juego, siguen moviéndose mientras se apunta.</li>
+      <li>La IA con cañón apunta lejos de la pala del jugador.</li>
+    </ul>
+  </li>
+  <li><b>Arco chico:</b> dos paredes cortas sobre la línea del arco, una en cada punta del lado afectado. La pelota que las toca rebota como en el techo o el piso. La pala se sigue moviendo por toda la altura.</li>
+  <li><b>Pelota gigante:</b> afecta solo a la pelota que agarró el power-up. Su tamaño de choque crece igual que su dibujo.</li>
+  <li><b>Cámara lenta:</b> frena la física de la cancha (pelotas y palas), no los relojes de los power-ups ni del sabotaje. La IA también se mueve a la mitad de velocidad.</li>
+</ul>
+<p class="note">Con 27 power-ups cada uno aparece menos seguido. Más adelante conviene poder activar o desactivar power-ups por nivel del Modo Historia.</p>
+
 <h2>8. IA</h2>
 <p>La IA sigue la posición Y de la pelota cuando viene hacia su lado. Tarda un tiempo de reacción en fijar un objetivo, apunta con un margen de error aleatorio y no se mueve si ya está a menos de 10 px del objetivo. En difícil e imposible, a veces también se reposiciona cuando la pelota se aleja (anticipación). Ningún rival predice la trayectoria de la pelota: se probó y era muy difícil de balancear (en la cancha grande, con tiempo de sobra, la IA no fallaba nunca).</p>
 <table>
