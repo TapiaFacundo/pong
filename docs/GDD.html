@@ -261,7 +261,7 @@
   <tr><td>5 · Los Gemelos<br><span class="note">jefe</span></td><td>Cancha de 1000 × 750. Controla dos palas: una en su arco y otra adelantada, a mitad de su lado de la cancha. La adelantada rebota la pelota como una pala normal; si la pelota la pasa, todavía queda la del arco. Cuando la pelota vuelve desde la pala del arco, atraviesa la adelantada por detrás. Las dos palas son distintas para que no parezcan clones: la adelantada es más chica (60 % del alto), usa la IA Difícil y, mientras la pelota va hacia el jugador, patrulla subiendo y bajando de pared a pared en vez de quedarse quieta; la del arco es más rápida (400 px/s) pero erra más (± 30 px). Así cada una se ubica en un lugar distinto. Los power-ups de pala que le toquen al jefe afectan a las dos, y las dos vuelven al centro al terminar cada ronda.</td></tr>
   <tr><td>6 · Trivela</td><td>Le pega de tres dedos. Cada vez que la pelota va hacia él, hay 50 % de chance de que su próximo tiro salga con efecto: sale como un golpe en la punta de la pala (abierto, hacia el lado donde pegó la pelota) y se curva de vuelta con la fuerza máxima de la pelota curva, aunque le pegue con el centro. El efecto dura solo ese tiro: el próximo golpe de cualquiera lo corta. El resto de los tiros salen normales, sin patrón fijo. Aviso: mientras la pelota va hacia él con un tiro con efecto preparado, su pala parpadea en amarillo. Si la pelota ya tiene el power-up de pelota curva, no se suma un segundo efecto.</td></tr>
   <tr><td>7 · Estadio</td><td>Cancha de 1200 × 900 con la cámara alejada: todo se ve a 2/3 de su tamaño. El rival es más rápido que el jugador: 450 px/s contra 400 (675 contra 600 con el × 1,5 de la cancha grande). Los power-ups aparecen en una zona central proporcionalmente más grande.</td></tr>
-  <tr><td>8 · Saboteador</td><td>Cada 12 s te aplica un efecto rojo al azar durante 4 s: controles invertidos o pala lenta. Los power-ups rojos salen con el doble de probabilidad que en los otros niveles.</td></tr>
+  <tr><td>8 · Saboteador</td><td>Cada 12 s de juego te aplica un efecto rojo al azar durante 4 s: controles invertidos o pala lenta. El reloj solo corre con la pelota en movimiento (no durante la espera del saque) y no se reinicia entre rondas, para que el sabotaje llegue aunque las rondas sean cortas. Al sabotear, su pala y la tuya destellan en rojo y aparece “¡Sabotaje!” con el nombre del efecto al lado de tu pala. Si ya tenías un efecto del mismo tipo (por ejemplo, pala rápida), el sabotaje lo reemplaza, igual que un power-up. Cada power-up rojo sale con el doble de probabilidad: los rojos pasan de ~32 % a ~48 % del total.</td></tr>
   <tr><td>9 · Tormenta</td><td>Cada ronda empieza con 2 pelotas, separadas 80 px en altura, que salen una hacia cada jugador (después de un punto, la primera va hacia quien lo perdió). La ronda sigue hasta que salieron las dos. Lluvia de power-ups permanente: aparece uno cada 1,5 s durante todo el partido. La IA sigue a la pelota que va a llegar antes a su lado; si cambia de pelota, vuelve a tardar su tiempo de reacción.</td></tr>
   <tr><td>10 · El Campeón<br><span class="note">jefe final</span></td><td>Cancha de 1200 × 900. Tiene fases según tus puntos:
     <ul>
@@ -306,14 +306,14 @@
 </table>
 
 <h3>Mecánicas nuevas que requiere</h3>
-<p>Hechas: configuración por nivel, progreso guardado, pantallas (salvo la final), la pala alta del nivel 3, la pelota rápida del nivel 4, el tiro con efecto de Trivela (nivel 6), la pala adelantada de Los Gemelos (nivel 5), la cancha de tamaño variable (niveles 5, 7 y 10) y Tormenta (nivel 9). El resto está pendiente.</p>
+<p>Hechas: configuración por nivel, progreso guardado, pantallas (salvo la final), la pala alta del nivel 3, la pelota rápida del nivel 4, el tiro con efecto de Trivela (nivel 6), la pala adelantada de Los Gemelos (nivel 5), la cancha de tamaño variable (niveles 5, 7 y 10), Tormenta (nivel 9) y el Saboteador (nivel 8). Falta El Campeón (nivel 10) y la pantalla final.</p>
 <ul>
   <li><b>Configuración por nivel:</b> cada nivel se describe como datos (IA, cancha, reglas de pelota, power-ups, habilidades) y la partida se arma a partir de eso.</li>
   <li><b>Cancha de tamaño variable:</b> 1000 × 750 y 1200 × 900, con la cámara alejada para que entre en la pantalla (zoom 0,8 y 0,67), y palas más rápidas en proporción al alto, hecha. El marcador queda en el mismo lugar y tamaño de pantalla; la pelota, las palas y los power-ups se ven más chicos. La zona de aparición de power-ups crece en proporción a la cancha.</li>
   <li><b>Pala adelantada:</b> segunda pala de la IA a mitad de su lado (niveles 5 y 10), hecha.</li>
   <li><b>IA con varias pelotas:</b> sigue a la que va a llegar antes (niveles 9 y 10), hecha.</li>
-  <li><b>Habilidades de rival:</b> tiro con efecto de Trivela (niveles 6 y 10), hecho; sabotaje con efectos rojos (nivel 8), <span class="tag pend">pendiente</span>.</li>
-  <li><b>Reglas de partida por nivel:</b> pala más alta (3), velocidad y aceleración de la pelota (4), pelotas por ronda (9) y lluvia permanente (9), hechas; bola extra por partido largo (10) y probabilidad de cada color de power-up (8), <span class="tag pend">pendiente</span>.</li>
+  <li><b>Habilidades de rival:</b> tiro con efecto de Trivela (niveles 6 y 10) y sabotaje con efectos rojos (nivel 8), hechos.</li>
+  <li><b>Reglas de partida por nivel:</b> pala más alta (3), velocidad y aceleración de la pelota (4), pelotas por ronda (9), lluvia permanente (9) y probabilidad de cada color de power-up (8), hechas; bola extra por partido largo (10), <span class="tag pend">pendiente</span>.</li>
   <li><b>Fases de jefe</b> <span class="tag pend">pendiente</span> que cambian la IA y las habilidades según el marcador (10).</li>
   <li><b>Progreso guardado</b> y las pantallas del modo (la pantalla final, <span class="tag pend">pendiente</span>).</li>
 </ul>
@@ -329,7 +329,7 @@
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
 │                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrivelaShot,
-│                  Field)
+│                  Field, Sabotage)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia)
 ├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;

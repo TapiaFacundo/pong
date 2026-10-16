@@ -15,13 +15,16 @@ import PowerUp from "../entities/PowerUp.js";
 const MAX_POSITION_ATTEMPTS = 20;
 
 export default class PowerUpSpawner {
-  // spawnDelay: { min, max } del intervalo normal entre power-ups (un nivel
-  // del Modo Historia puede cambiarlo; si no, 5 a 6,5 s).
-  constructor(scene, ballManager, onActivate, { spawnDelay } = {}) {
+  // Opciones de un nivel del Modo Historia (si faltan, las normales):
+  // - spawnDelay: { min, max } del intervalo normal entre power-ups (5 a 6,5 s).
+  // - colorWeights: probabilidad relativa de cada power-up según su color
+  //   (por ejemplo { red: 2 }: cada rojo sale el doble que los demás).
+  constructor(scene, ballManager, onActivate, { spawnDelay, colorWeights } = {}) {
     this.scene = scene;
     this.ballManager = ballManager;
     this.onActivate = onActivate;
     this.spawnDelay = spawnDelay ?? { min: POWERUP_SPAWN_MIN_DELAY, max: POWERUP_SPAWN_MAX_DELAY };
+    this.colorWeights = colorWeights ?? null;
     this.activePowerUps = [];
     this.stopped = false;
     this.rainActive = false;
@@ -72,11 +75,26 @@ export default class PowerUpSpawner {
     }
   }
 
+  // Elige qué power-up aparece: al azar, o pesado por color si el nivel lo pide.
+  pickDefinition() {
+    if (!this.colorWeights) return Phaser.Utils.Array.GetRandom(POWERUP_DEFINITIONS);
+
+    const weightOf = (definition) => this.colorWeights[definition.colorCategory] ?? 1;
+    const totalWeight = POWERUP_DEFINITIONS.reduce((sum, definition) => sum + weightOf(definition), 0);
+
+    let roll = Math.random() * totalWeight;
+    for (const definition of POWERUP_DEFINITIONS) {
+      roll -= weightOf(definition);
+      if (roll < 0) return definition;
+    }
+    return POWERUP_DEFINITIONS[POWERUP_DEFINITIONS.length - 1];
+  }
+
   spawn() {
     const position = this.findFreePosition();
 
     if (position) {
-      const definition = Phaser.Utils.Array.GetRandom(POWERUP_DEFINITIONS);
+      const definition = this.pickDefinition();
       const powerUp = new PowerUp(this.scene, position.x, position.y, definition);
       this.activePowerUps.push(powerUp);
 

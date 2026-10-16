@@ -51,6 +51,7 @@ export const KEYS = {
   GANA_EL_NIVEL_N_PARA_DESBLOQUEARLO: "Ganá el nivel {n} para desbloquearlo",
   FLECHAS_ELEGIR_ENTER_JUGAR_ESC_VOLVER: "Flechas: elegir   ENTER: jugar   ESC: volver",
   ESC_VOLVER: "ESC: volver",
+  SABOTAJE: "¡Sabotaje!",
   GANASTE: "¡Ganaste!",
   PERDISTE: "Perdiste",
   LE_GANASTE_A_RIVAL: "Le ganaste a {rival}",

@@ -39,15 +39,22 @@ export default class PowerUpEffects {
     const targetSide = this.resolveTarget(kind, colorCategory, attackerSide);
     if (!targetSide) return null;
 
-    const slot = this.slotForKind(kind);
-    const paddles = this.paddlesBySide[targetSide];
+    return this.applyToSide(targetSide, kind, POWERUP_EFFECT_DURATION);
+  }
 
-    this.clearSlot(targetSide, slot);
+  // Aplica un efecto de pala a todas las palas de un lado durante `duration`
+  // ms. Un efecto del mismo tipo (tamaño, velocidad o controles) reemplaza al
+  // anterior. Lo usan los power-ups y el sabotaje del Saboteador.
+  applyToSide(side, kind, duration) {
+    const slot = this.slotForKind(kind);
+    const paddles = this.paddlesBySide[side];
+
+    this.clearSlot(side, slot);
     paddles.forEach((paddle) => this.applyKind(paddle, kind));
 
-    this.timers[targetSide][slot] = this.scene.time.delayedCall(POWERUP_EFFECT_DURATION, () => {
+    this.timers[side][slot] = this.scene.time.delayedCall(duration, () => {
       paddles.forEach((paddle) => this.revertSlot(paddle, slot));
-      delete this.timers[targetSide][slot];
+      delete this.timers[side][slot];
     });
 
     // La pala principal del lado afectado, para el destello de feedback.

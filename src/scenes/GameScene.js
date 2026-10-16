@@ -30,6 +30,7 @@ import BallManager from "../systems/BallManager.js";
 import BallEffects from "../systems/BallEffects.js";
 import CenterPaddleEffect from "../systems/CenterPaddleEffect.js";
 import TrivelaShot from "../systems/TrivelaShot.js";
+import Sabotage from "../systems/Sabotage.js";
 import Field from "../systems/Field.js";
 import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
@@ -54,6 +55,7 @@ export default class GameScene extends Phaser.Scene {
     this.trivelaShot = null;
     this.paddleForward = null;
     this.controllerForward = null;
+    this.sabotage = null;
   }
 
   create() {
@@ -118,11 +120,22 @@ export default class GameScene extends Phaser.Scene {
 
     if (rules.forwardPaddle) this.addForwardPaddle(rules.forwardPaddle);
 
+    if (rules.sabotage) {
+      this.sabotage = new Sabotage(this, rules.sabotage, {
+        ballManager: this.ballManager,
+        powerUpEffects: this.powerUpEffects,
+        feedback: this.powerUpFeedback,
+        targetSide: "p1",
+        targetPaddle: this.paddleLeft,
+        sourcePaddle: this.paddleRight,
+      });
+    }
+
     this.powerUpSpawner = new PowerUpSpawner(
       this,
       this.ballManager,
       (definition, ball) => this.onPowerUpActivated(definition, ball),
-      { spawnDelay: rules.powerUpSpawnDelay }
+      { spawnDelay: rules.powerUpSpawnDelay, colorWeights: rules.powerUpColorWeights }
     );
 
     this.doublePointIndicator = this.add
@@ -163,6 +176,7 @@ export default class GameScene extends Phaser.Scene {
     this.controllerForward?.update(delta);
     this.ballManager.update(delta);
     this.trivelaShot?.update(this.ballManager.balls);
+    this.sabotage?.update(delta);
   }
 
   drawMidLine() {

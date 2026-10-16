@@ -1,5 +1,10 @@
 import { POWERUP_COLORS, POWERUP_TEXT_COLORS, POWERUP_LABELS, COLORS } from "../config.js";
+import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
+
+// Corrimiento del texto de sabotaje respecto de la pala afectada, para que no
+// quede cortado contra el borde de la pantalla.
+const SABOTAGE_LABEL_OFFSET_X = 130;
 
 export default class PowerUpFeedback {
   constructor(scene) {
@@ -15,6 +20,17 @@ export default class PowerUpFeedback {
     this.spawnLabel(x, y, label, textColor);
 
     if (targetPaddle) this.flashPaddle(targetPaddle, color);
+  }
+
+  // Sabotaje del Saboteador: destellan en rojo su pala y la afectada, y sobre
+  // la afectada aparece "¡Sabotaje!" con el nombre del efecto.
+  playSabotage(targetPaddle, sourcePaddle, kind) {
+    const label = `${getPhrase(KEYS.SABOTAJE)} ${getPhrase(POWERUP_LABELS[kind])}`;
+    const direction = targetPaddle.x < sourcePaddle.x ? 1 : -1;
+
+    this.spawnLabel(targetPaddle.x + direction * SABOTAGE_LABEL_OFFSET_X, targetPaddle.y, label, POWERUP_TEXT_COLORS.red);
+    this.flashPaddle(targetPaddle, POWERUP_COLORS.red);
+    this.flashPaddle(sourcePaddle, POWERUP_COLORS.red);
   }
 
   spawnBurst(x, y, color) {
