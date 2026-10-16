@@ -11,7 +11,6 @@ import {
   STORY_WIN_SCORE,
   STORY_RESULT_DELAY,
   PADDLE_POWERUP_KINDS,
-  POWERUP_TEXT_COLORS,
   POWERUP_EFFECT_DURATION,
   SLOW_MOTION_DURATION,
   SERVE_DELAY_START,
@@ -42,6 +41,7 @@ import SmallGoalEffect from "../systems/SmallGoalEffect.js";
 import CannonEffect from "../systems/CannonEffect.js";
 import BossPhases from "../systems/BossPhases.js";
 import Field from "../systems/Field.js";
+import EffectIndicators from "../systems/EffectIndicators.js";
 import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import { getLevel } from "../data/levels.js";
@@ -94,7 +94,7 @@ export default class GameScene extends Phaser.Scene {
       this,
       this.paddleLeft,
       this.paddleRight,
-      (side) => this.onBallOut(side),
+      (side, ball) => this.onBallOut(side, ball),
       ballSettings
     );
     this.ballsPerRound = rules.ballsPerRound ?? 1;
@@ -125,6 +125,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.powerUpEffects = new PowerUpEffects(this, { p1: this.paddleLeft, p2: this.paddleRight });
     this.powerUpFeedback = new PowerUpFeedback(this);
+    this.effectIndicators = new EffectIndicators(this, field);
     this.ballEffects = new BallEffects(this);
     this.centerPaddleEffect = new CenterPaddleEffect(this, this.ballManager);
     this.slowMotion = new SlowMotionEffect(this, field);
@@ -159,11 +160,6 @@ export default class GameScene extends Phaser.Scene {
       (definition, ball) => this.onPowerUpActivated(definition, ball),
       { spawnDelay: rules.powerUpSpawnDelay, colorWeights: rules.powerUpColorWeights }
     );
-
-    this.doublePointIndicator = this.add
-      .text(0, 0, "×2", { fontSize: "18px", color: POWERUP_TEXT_COLORS.yellow })
-      .setOrigin(0.5)
-      .setVisible(false);
 
     if (this.level?.phases) {
       this.bossPhases = new BossPhases(this.level.phases, (phase, number) => this.enterBossPhase(phase, number));
@@ -234,6 +230,7 @@ export default class GameScene extends Phaser.Scene {
   update(time, delta) {
     if (this.matchOver) return;
 
+    this.effectIndicators.update();
     this.controllerLeft.update(delta);
     this.controllerRight.update(delta);
     this.controllerForward?.update(delta);
@@ -259,7 +256,10 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  onBallOut(exitSide) {
+  onBallOut(exitSide, ball) {
+    // Sus efectos (gigante, invisible...) se terminan con ella, aunque queden otras pelotas.
+    this.ballEffects.clearBall(ball);
+
     const scoringSide = exitSide === "left" ? "p2" : "p1";
     this.lastScoringSide = scoringSide;
 
@@ -354,24 +354,53 @@ export default class GameScene extends Phaser.Scene {
   // lo mismo que como power-up.
   applyEffectToSide(kind, side, duration) {
     if (kind === "cannon") {
-      this.cannonEffect.arm(side, POWERUP_EFFECT_DURATION);
+      this.effectIndicators.track(side, kind, this.cannonEffect.arm(side, POWERUP_EFFECT_DURATION));
     } else if (kind === "doublePoint") {
       this.scoreManager.setDoublePoint(side);
       this.updateDoublePointIndicator();
     } else {
-      this.powerUpEffects.applyToSide(side, kind, duration);
+      this.effectIndicators.track(side, kind, this.powerUpEffects.applyToSide(side, kind, duration));
     }
   }
 
+  // El punto doble no tiene tiempo: su ícono se ve completo hasta el próximo punto.
   updateDoublePointIndicator() {
     const side = this.scoreManager.doublePointSide;
 
-    if (side === "p1") {
-      this.field.placeOnScreen(this.doublePointIndicator, GAME_WIDTH / 2 - 60, 65).setVisible(true);
-    } else if (side === "p2") {
-      this.field.placeOnScreen(this.doublePointIndicator, GAME_WIDTH / 2 + 60, 65).setVisible(true);
-    } else {
-      this.doublePointIndicator.setVisible(false);
+    this.effectIndicators.hide("p1", "doublePoint");
+    this.effectIndicators.hide("p2", "doublePoint");
+    if (side) this.effectIndicators.showUntimed(side, "doublePoint");
+  }
+
+  paddleForSide(side) {
+    return side === "p1" ? this.paddleLeft : this.paddleRight;
+  }
+
+  // Cañón, arco chico y escudo: se aplican a un lado. Devuelven su temporizador.
+  applyGoalSideEffect(kind, side) {
+    if (kind === "cannon") return this.cannonEffect.arm(side, POWERUP_EFFECT_DURATION);
+    if (kind === "smallGoal") return this.smallGoalEffect.activate(side, POWERUP_EFFECT_DURATION);
+    return this.shieldEffect.activate(side, POWERUP_EFFECT_DURATION);
+  }
+
+  // Amarillos con duración (afectan a los dos). Devuelven su temporizador.
+  applyNeutralEffect(kind, ball) {
+    switch (kind) {
+      case "zigzag":
+      case "curve":
+        return this.ballEffects.applyMotion(ball, kind);
+      case "slowMotion":
+        return this.slowMotion.activate(SLOW_MOTION_DURATION);
+      case "giant":
+        return this.ballEffects.applyGiant(ball);
+      case "invisible":
+        return this.ballEffects.applyInvisible(ball);
+      case "rain":
+        return this.powerUpSpawner.startRain(POWERUP_EFFECT_DURATION);
+      case "centerPaddle":
+        return this.centerPaddleEffect.activate(POWERUP_EFFECT_DURATION);
+      default:
+        return null;
     }
   }
 
@@ -382,24 +411,16 @@ export default class GameScene extends Phaser.Scene {
     let targetPaddle = null;
 
     if (PADDLE_POWERUP_KINDS.includes(definition.kind)) {
-      targetPaddle = this.powerUpEffects.applyPaddleEffect(definition.kind, definition.colorCategory, attackerSide);
-    } else if (definition.kind === "cannon") {
-      const targetSide = this.powerUpEffects.resolveTarget(definition.kind, definition.colorCategory, attackerSide);
-      if (targetSide) {
-        this.cannonEffect.arm(targetSide, POWERUP_EFFECT_DURATION);
-        targetPaddle = targetSide === "p1" ? this.paddleLeft : this.paddleRight;
+      const applied = this.powerUpEffects.applyPaddleEffect(definition.kind, definition.colorCategory, attackerSide);
+      if (applied) {
+        this.effectIndicators.track(applied.side, definition.kind, applied.timer);
+        targetPaddle = this.paddleForSide(applied.side);
       }
-    } else if (definition.kind === "smallGoal") {
+    } else if (["cannon", "smallGoal", "shield"].includes(definition.kind)) {
       const targetSide = this.powerUpEffects.resolveTarget(definition.kind, definition.colorCategory, attackerSide);
       if (targetSide) {
-        this.smallGoalEffect.activate(targetSide, POWERUP_EFFECT_DURATION);
-        targetPaddle = targetSide === "p1" ? this.paddleLeft : this.paddleRight;
-      }
-    } else if (definition.kind === "shield") {
-      const targetSide = this.powerUpEffects.resolveTarget(definition.kind, definition.colorCategory, attackerSide);
-      if (targetSide) {
-        this.shieldEffect.activate(targetSide, POWERUP_EFFECT_DURATION);
-        targetPaddle = targetSide === "p1" ? this.paddleLeft : this.paddleRight;
+        this.effectIndicators.track(targetSide, definition.kind, this.applyGoalSideEffect(definition.kind, targetSide));
+        targetPaddle = this.paddleForSide(targetSide);
       }
     } else if (definition.kind === "doublePoint") {
       const targetSide = this.powerUpEffects.resolveTarget(definition.kind, definition.colorCategory, attackerSide);
@@ -417,18 +438,9 @@ export default class GameScene extends Phaser.Scene {
       this.centerPaddleEffect.registerBall(newBall);
     } else if (definition.kind === "turbo") {
       ball.applyTurbo();
-    } else if (definition.kind === "zigzag" || definition.kind === "curve") {
-      this.ballEffects.applyMotion(ball, definition.kind);
-    } else if (definition.kind === "slowMotion") {
-      this.slowMotion.activate(SLOW_MOTION_DURATION);
-    } else if (definition.kind === "giant") {
-      this.ballEffects.applyGiant(ball);
-    } else if (definition.kind === "invisible") {
-      this.ballEffects.applyInvisible(ball);
-    } else if (definition.kind === "rain") {
-      this.powerUpSpawner.startRain(POWERUP_EFFECT_DURATION);
-    } else if (definition.kind === "centerPaddle") {
-      this.centerPaddleEffect.activate(POWERUP_EFFECT_DURATION);
+    } else {
+      // Amarillos con duración: su ícono va en el centro, debajo del marcador.
+      this.effectIndicators.track(null, definition.kind, this.applyNeutralEffect(definition.kind, ball));
     }
 
     this.powerUpFeedback.playPickup(pickupX, pickupY, definition, targetPaddle);
@@ -446,6 +458,7 @@ export default class GameScene extends Phaser.Scene {
     this.smallGoalEffect.clearAll();
     this.cannonEffect.clearAll();
     this.ballManager.clearAll();
+    this.effectIndicators.clearAll();
     this.trivelaShot?.clear();
 
     if (this.level) {

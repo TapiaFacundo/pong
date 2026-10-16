@@ -65,6 +65,7 @@ export default class PowerUpSpawner {
     // Reprograma el próximo spawn con el intervalo de la lluvia en vez de
     // esperar al que ya estaba pendiente con el intervalo normal.
     this.startTimer();
+    return this.rainTimer;
   }
 
   stopRain() {

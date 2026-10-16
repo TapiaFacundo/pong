@@ -16,11 +16,24 @@ const DEBUG_KEY = "G";
 //   del jefe final sin jugar cada punto).
 // - "allPowerUps": pone en la cancha los 27 power-ups juntos (9 × 3), para
 //   ver sus íconos; se pueden agarrar con la pelota como cualquier otro.
+// - "effectsDemo": activa juntos varios power-ups (los de DEMO_POWERUP_IDS),
+//   como si los hubiera agarrado el jugador 1, para ver los indicadores de
+//   duración de los dos lados y los del centro.
 // - "powerUp": activa DEBUG_POWERUP_ID sobre la pelota en juego, como si la
 //   pelota lo hubiera agarrado. En los verdes y rojos cuenta siempre como si la
 //   hubiera mandado el jugador 1 (el verde es para él; el rojo, para el rival).
-const DEBUG_ACTION = "allPowerUps";
+const DEBUG_ACTION = "effectsDemo";
 const DEBUG_POWERUP_ID = "cannon-green";
+const DEMO_POWERUP_IDS = [
+  "grow-green",
+  "invert-red",
+  "double-point-green",
+  "shield-red",
+  "slow-down-green",
+  "giant-ball",
+  "slow-motion",
+  "center-paddle",
+];
 
 export default class DebugKey {
   constructor(scene) {
@@ -37,8 +50,10 @@ export default class DebugKey {
       this.scene.awardPoint("p1");
     } else if (DEBUG_ACTION === "allPowerUps") {
       this.spawnAllPowerUps();
+    } else if (DEBUG_ACTION === "effectsDemo") {
+      DEMO_POWERUP_IDS.forEach((id) => this.activatePowerUp(id));
     } else {
-      this.activatePowerUp();
+      this.activatePowerUp(DEBUG_POWERUP_ID);
     }
   }
 
@@ -55,9 +70,9 @@ export default class DebugKey {
     });
   }
 
-  activatePowerUp() {
+  activatePowerUp(powerUpId) {
     const ball = this.scene.ballManager.primary;
-    const definition = POWERUP_DEFINITIONS.find((item) => item.id === DEBUG_POWERUP_ID);
+    const definition = POWERUP_DEFINITIONS.find((item) => item.id === powerUpId);
     if (!ball || !definition) return;
 
     const lastTouchedBy = ball.lastTouchedBy;

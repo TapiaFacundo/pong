@@ -21,6 +21,7 @@ export default class CenterPaddleEffect {
     this.centerPaddle = new CenterPaddle(this.scene);
     this.ballManager.balls.forEach((ball) => this.registerBall(ball));
     this.expireTimer = this.scene.time.delayedCall(duration, () => this.clear());
+    return this.expireTimer;
   }
 
   registerBall(ball) {

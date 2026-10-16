@@ -39,9 +39,11 @@ export default class CannonEffect {
     this.loaded = {}; // side -> { ball, paddle, direction, angle, elapsed, graphics }
   }
 
-  // Volver a agarrarlo reinicia el tiempo (no suma disparos).
+  // Volver a agarrarlo reinicia el tiempo (no suma disparos). Devuelve el
+  // temporizador de la espera (se corta al agarrar la pelota), o null si esa
+  // pala ya tiene la pelota agarrada.
   arm(side, duration) {
-    if (this.loaded[side]) return;
+    if (this.loaded[side]) return null;
     this.disarm(side);
 
     const barrels = this.paddlesBySide[side].map(() =>
@@ -50,6 +52,7 @@ export default class CannonEffect {
     const expireTimer = this.scene.time.delayedCall(duration, () => this.disarm(side));
     this.armed[side] = { expireTimer, barrels };
     this.updateBarrels(side);
+    return expireTimer;
   }
 
   disarm(side) {

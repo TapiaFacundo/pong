@@ -23,13 +23,14 @@ export default class SlowMotionEffect {
     return this.expireTimer !== null;
   }
 
-  // Volver a agarrarlo reinicia el tiempo.
+  // Volver a agarrarlo reinicia el tiempo. Devuelve el temporizador del efecto.
   activate(duration) {
     this.clear();
 
     this.scene.physics.world.timeScale = SLOW_MOTION_TIME_SCALE;
     this.tint.setVisible(true);
     this.expireTimer = this.scene.time.delayedCall(duration, () => this.clear());
+    return this.expireTimer;
   }
 
   clear() {

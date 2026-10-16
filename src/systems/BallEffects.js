@@ -16,13 +16,15 @@ export default class BallEffects {
   }
 
   // Pelota gigante: la pelota crece durante POWERUP_EFFECT_DURATION. Volver a
-  // agarrarlo reinicia el tiempo (no la agranda más).
+  // agarrarlo reinicia el tiempo (no la agranda más). Los apply* devuelven el
+  // temporizador del efecto.
   applyGiant(ball) {
     this.clearGiant(ball);
 
     ball.setSizeScale(BALL_GIANT_SCALE);
     const expireEvent = this.scene.time.delayedCall(POWERUP_EFFECT_DURATION, () => this.clearGiant(ball));
     this.giantTimers.set(ball, expireEvent);
+    return expireEvent;
   }
 
   clearGiant(ball) {
@@ -44,6 +46,7 @@ export default class BallEffects {
     const expireEvent = this.scene.time.delayedCall(POWERUP_EFFECT_DURATION, () => this.clearMotion(ball, kind));
 
     this.motionTimers[kind].set(ball, { motion, expireEvent });
+    return expireEvent;
   }
 
   clearMotion(ball, kind) {
@@ -74,6 +77,7 @@ export default class BallEffects {
     this.invisibleTimers.set(ball, { blinkEvent, expireEvent });
     // La IA lo lee para errar más mientras dura el efecto.
     ball.isInvisible = true;
+    return expireEvent;
   }
 
   clearInvisible(ball) {
@@ -86,6 +90,13 @@ export default class BallEffects {
     ball.isInvisible = false;
 
     if (ball.circle.body) ball.circle.setVisible(true);
+  }
+
+  // Saca todos los efectos de una pelota (por ejemplo, cuando sale de la cancha).
+  clearBall(ball) {
+    this.clearInvisible(ball);
+    this.clearGiant(ball);
+    Object.keys(this.motionTimers).forEach((kind) => this.clearMotion(ball, kind));
   }
 
   clearAll() {

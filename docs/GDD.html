@@ -135,7 +135,7 @@
   <tr><td>Acelerar pala</td><td>Acelera tu pala</td><td>Acelera la pala del rival</td><td>× 1,6 de velocidad</td></tr>
   <tr><td>Ralentizar pala</td><td>Ralentiza la pala del rival</td><td>Ralentiza tu propia pala</td><td>× 0,6 de velocidad</td></tr>
   <tr><td>Controles invertidos</td><td>Invierte los controles del rival</td><td>Invierte tus propios controles</td><td>—</td></tr>
-  <tr><td>Punto doble</td><td>Tu próximo punto vale x2</td><td>El próximo punto del rival vale x2</td><td>Indicador “×2” bajo el marcador</td></tr>
+  <tr><td>Punto doble</td><td>Tu próximo punto vale x2</td><td>El próximo punto del rival vale x2</td><td>Ícono “×2” en la esquina de quien lo tiene, hasta el próximo punto</td></tr>
   <tr><td>Escudo</td><td>Aparece una barrera celeste detrás de tu pala, a lo alto de todo el arco, que te salva de un gol: la primera pelota que llega rebota hacia la cancha con su misma velocidad y el escudo se rompe</td><td>La barrera le aparece al rival</td><td>Un uso, o 15 s. Otro escudo para el mismo lado reinicia el tiempo sin sumar usos</td></tr>
   <tr><td>Arco chico</td><td>Tu arco se achica: aparecen dos paredes grises sobre la línea de tu arco, una en cada punta. La pelota que las toca rebota hacia la cancha; no se rompen</td><td>Se achica el arco del rival</td><td>Cada pared tapa el 25 % del alto, durante 15 s</td></tr>
   <tr><td>Cañón</td><td>Tu pala se convierte en cañón: la próxima vez que toca la pelota, la agarra y la disparás (ver abajo)</td><td>La pala del rival se convierte en cañón</td><td>Se usa en el próximo golpe de esa pala, o se pierde a los 15 s</td></tr>
@@ -185,6 +185,17 @@
   <li>Sonido de power-up agarrado.</li>
 </ul>
 
+<h3>Indicadores de duración</h3>
+<p>Mientras un efecto está activo, su ícono (más chico que en la cancha) se ve arriba de la pantalla, y se va borrando en el sentido de las agujas del reloj, empezando por las 12, a medida que se le acaba el tiempo.</p>
+<ul>
+  <li><b>Efectos sobre un jugador</b> (pala, controles, escudo, arco chico, cañón, punto doble): en la esquina de arriba de su lado, en fila desde la esquina hacia el centro. Se dejan libres los costados y la parte de abajo para los botones táctiles de la versión para celulares.</li>
+  <li><b>Color según a quién afecta:</b> verde si le conviene a ese jugador y rojo si lo perjudica, sin importar el color del power-up que lo causó. Por ejemplo, si el rival agarra una “Pala grande” roja, tu pala crece y el ícono aparece verde de tu lado. Los sabotajes y refuerzos del Saboteador se muestran igual.</li>
+  <li><b>Neutros</b> (amarillos con duración: zigzagueante, curva, gigante, invisible, cámara lenta, lluvia, paleta central): en amarillo, centrados debajo del marcador. Si dos pelotas tienen el mismo efecto se ve un solo ícono.</li>
+  <li><b>Punto doble:</b> no tiene tiempo, así que su ícono se ve completo hasta el próximo punto.</li>
+  <li>El ícono desaparece cuando el efecto vence, se reemplaza por otro del mismo tipo, o se corta antes: escudo roto, cañón que agarró la pelota, pelota que salió de la cancha o fin de la ronda.</li>
+  <li>Turbo y bola extra son instantáneos y no tienen indicador.</li>
+</ul>
+
 <p class="note">Con 27 power-ups cada uno aparece menos seguido. Más adelante conviene poder activar o desactivar power-ups por nivel del Modo Historia.</p>
 
 <h2>8. IA</h2>
@@ -217,7 +228,7 @@
   <tr><td>Dificultad</td><td>Solo con 1 jugador: fácil, normal, difícil o imposible (arranca en normal).</td></tr>
   <tr><td>Puntos</td><td>5, 7 o 10 puntos. Al elegir, empieza la partida.</td></tr>
   <tr><td>Cómo jugar</td><td>Se abre con el ícono ? del menú (y antes del nivel 1 del Modo Historia). Texto corto: controles de cada jugador, Esc para pausar, y que los power-ups se tocan con la pelota: verde a tu favor, rojo en tu contra, amarillo para los dos.</td></tr>
-  <tr><td>Partida</td><td>Cancha con línea central punteada, marcador de cada jugador arriba y el indicador “×2” debajo del marcador de quien tenga punto doble.</td></tr>
+  <tr><td>Partida</td><td>Cancha con línea central punteada, marcador de cada jugador arriba y los indicadores de duración de los efectos activos (ver sección de power-ups).</td></tr>
   <tr><td>Pausa</td><td>Se superpone a la partida congelada: Reanudar, Volver al menú y Opciones (panel de idioma). Esc o ← reanudan (o cierran el panel de idioma si está abierto).</td></tr>
   <tr><td>Victoria</td><td>“¡Gana {jugador}!” (Jugador 1, Jugador 2 o CPU) y la opción “Volver al menú” (también con Esc).</td></tr>
 </table>
@@ -374,7 +385,7 @@
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
 │                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrivelaShot,
 │                  Field, Sabotage, SlowMotionEffect, ShieldEffect, SmallGoalEffect, CannonEffect,
-│                  BossPhases,
+│                  BossPhases, EffectIndicators,
 │                  DebugKey: tecla de prueba, solo en desarrollo)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia)
 ├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell, PowerUpIcon,

@@ -18,6 +18,7 @@ export default class ShieldEffect {
   }
 
   // Volver a agarrar un escudo para el mismo lado reinicia el tiempo (no suma usos).
+  // Devuelve el temporizador del escudo (se corta antes si se rompe).
   activate(side, duration) {
     this.clear(side);
 
@@ -29,6 +30,7 @@ export default class ShieldEffect {
     const expireTimer = this.scene.time.delayedCall(duration, () => this.clear(side));
 
     this.shields[side] = { barrier, expireTimer };
+    return expireTimer;
   }
 
   update(balls) {

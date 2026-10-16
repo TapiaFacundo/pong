@@ -7,6 +7,11 @@ import {
 } from "../config.js";
 
 const BUFF_KINDS = ["grow", "speedUp", "doublePoint", "shield", "smallGoal", "cannon"];
+
+// Si un efecto le conviene al lado que lo recibe (pala grande, escudo...) o lo perjudica.
+export function isBuffKind(kind) {
+  return BUFF_KINDS.includes(kind);
+}
 const HEIGHT_KINDS = ["grow", "shrink"];
 const SPEED_KINDS = ["speedUp", "slowDown"];
 
@@ -35,16 +40,19 @@ export default class PowerUpEffects {
     return isBuff === (colorCategory === "green") ? attackerSide : defenderSide;
   }
 
+  // Devuelve a qué lado se aplicó y el temporizador del efecto (o null si
+  // nadie había tocado la pelota todavía).
   applyPaddleEffect(kind, colorCategory, attackerSide) {
     const targetSide = this.resolveTarget(kind, colorCategory, attackerSide);
     if (!targetSide) return null;
 
-    return this.applyToSide(targetSide, kind, POWERUP_EFFECT_DURATION);
+    return { side: targetSide, timer: this.applyToSide(targetSide, kind, POWERUP_EFFECT_DURATION) };
   }
 
   // Aplica un efecto de pala a todas las palas de un lado durante `duration`
   // ms. Un efecto del mismo tipo (tamaño, velocidad o controles) reemplaza al
-  // anterior. Lo usan los power-ups y el sabotaje del Saboteador.
+  // anterior. Lo usan los power-ups y el sabotaje del Saboteador. Devuelve el
+  // temporizador del efecto.
   applyToSide(side, kind, duration) {
     const slot = this.slotForKind(kind);
     const paddles = this.paddlesBySide[side];
@@ -57,8 +65,7 @@ export default class PowerUpEffects {
       delete this.timers[side][slot];
     });
 
-    // La pala principal del lado afectado, para el destello de feedback.
-    return paddles[0];
+    return this.timers[side][slot];
   }
 
   slotForKind(kind) {

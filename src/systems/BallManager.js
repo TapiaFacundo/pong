@@ -95,10 +95,10 @@ export default class BallManager {
       const radius = ball.radius;
       if (ball.x < -radius) {
         this.removeBall(ball);
-        this.onBallOut("left");
+        this.onBallOut("left", ball);
       } else if (ball.x > this.scene.physics.world.bounds.right + radius) {
         this.removeBall(ball);
-        this.onBallOut("right");
+        this.onBallOut("right", ball);
       }
     }
   }

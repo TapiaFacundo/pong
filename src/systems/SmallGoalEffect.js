@@ -13,7 +13,7 @@ export default class SmallGoalEffect {
     this.goals = {}; // side -> { barriers, expireTimer }
   }
 
-  // Volver a agarrarlo para el mismo lado reinicia el tiempo.
+  // Volver a agarrarlo para el mismo lado reinicia el tiempo. Devuelve el temporizador.
   activate(side, duration) {
     this.clear(side);
 
@@ -29,6 +29,7 @@ export default class SmallGoalEffect {
     const expireTimer = this.scene.time.delayedCall(duration, () => this.clear(side));
 
     this.goals[side] = { barriers, expireTimer };
+    return expireTimer;
   }
 
   update(balls) {
