@@ -15,7 +15,8 @@ import { KEYS } from "../enums/keys.js";
 //   sigue la altura de la pelota, true/1 = apunta a donde va a llegar,
 //   intermedio = a mitad de camino) y
 //   `trackFirstArrival` (con varias pelotas, sigue a la que llega antes;
-//   si no, sigue siempre a la primera).
+//   si no, sigue siempre a la primera). Opcional: `patrolWhenIdle` (mientras
+//   la pelota se aleja, patrulla de pared a pared en vez de quedarse quieta).
 // - field: tamaño de la cancha; si es más grande que la normal, la cámara se
 //   aleja y las palas se aceleran en proporción al alto.
 // - rules (opcional): reglas especiales del nivel.
@@ -40,11 +41,12 @@ const LARGE_FIELD = { width: 1200, height: 900 };
 
 const TRIVELA_SHOT = { chance: 0.5 };
 
-// Pala adelantada de Los Gemelos: más chica, con la IA Difícil de siempre.
-// Se distingue de la del arco, que es más rápida pero erra más.
+// Pala adelantada de Los Gemelos: más chica, con la IA Difícil de siempre, y
+// mientras la pelota va hacia el jugador patrulla de pared a pared en vez de
+// quedarse quieta. Se distingue de la del arco, que es más rápida pero erra más.
 const TWINS_FORWARD_PADDLE = {
   heightScale: 0.6,
-  ai: { ...AI_DIFFICULTIES.hard, prediction: false, trackFirstArrival: false },
+  ai: { ...AI_DIFFICULTIES.hard, prediction: false, trackFirstArrival: false, patrolWhenIdle: true },
 };
 
 export const LEVELS = [

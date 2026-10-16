@@ -39,6 +39,10 @@ export default class AI {
     this.prediction = settings.prediction === true ? 1 : Number(settings.prediction) || 0;
     // Con varias pelotas: seguir a la que va a llegar antes (si no, siempre a la primera).
     this.trackFirstArrival = settings.trackFirstArrival ?? false;
+    // Mientras la pelota se aleja: patrullar de pared a pared en vez de
+    // quedarse quieta (o de la anticipación ocasional).
+    this.patrolWhenIdle = settings.patrolWhenIdle ?? false;
+    this.patrolDirection = 1;
     this.paddle.setBaseSpeed(settings.speed);
   }
 
@@ -134,7 +138,11 @@ export default class AI {
     if (!this.isApproaching(ball)) {
       this.wasBallApproaching = false;
       this.trackedBall = null;
-      this.updateAnticipation(ball, delta);
+      if (this.patrolWhenIdle) {
+        this.patrol();
+      } else {
+        this.updateAnticipation(ball, delta);
+      }
       return;
     }
 
@@ -184,6 +192,19 @@ export default class AI {
       this.moveTowardTarget();
     } else {
       this.paddle.stop();
+    }
+  }
+
+  // Sube y baja de pared a pared, dando la vuelta al tocar el borde.
+  patrol() {
+    const body = this.paddle.rect.body;
+    if (body.blocked.up || body.top <= body.world.bounds.top) this.patrolDirection = 1;
+    if (body.blocked.down || body.bottom >= body.world.bounds.bottom) this.patrolDirection = -1;
+
+    if (this.patrolDirection > 0) {
+      this.paddle.moveDown();
+    } else {
+      this.paddle.moveUp();
     }
   }
 
