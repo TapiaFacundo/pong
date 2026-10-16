@@ -34,6 +34,7 @@ import TrivelaShot from "../systems/TrivelaShot.js";
 import Sabotage from "../systems/Sabotage.js";
 import DebugKey from "../systems/DebugKey.js";
 import SlowMotionEffect from "../systems/SlowMotionEffect.js";
+import ShieldEffect from "../systems/ShieldEffect.js";
 import Field from "../systems/Field.js";
 import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
@@ -121,6 +122,7 @@ export default class GameScene extends Phaser.Scene {
     this.ballEffects = new BallEffects(this);
     this.centerPaddleEffect = new CenterPaddleEffect(this, this.ballManager);
     this.slowMotion = new SlowMotionEffect(this, field);
+    this.shieldEffect = new ShieldEffect(this, field, this.powerUpFeedback);
 
     if (rules.forwardPaddle) this.addForwardPaddle(rules.forwardPaddle);
 
@@ -186,6 +188,7 @@ export default class GameScene extends Phaser.Scene {
     this.ballManager.update(delta / this.physics.world.timeScale);
     this.trivelaShot?.update(this.ballManager.balls);
     this.sabotage?.update(delta);
+    this.shieldEffect.update(this.ballManager.balls);
   }
 
   drawMidLine() {
@@ -228,6 +231,7 @@ export default class GameScene extends Phaser.Scene {
     this.ballEffects.clearAll();
     this.centerPaddleEffect.clear();
     this.slowMotion.clear();
+    this.shieldEffect.clearAll();
 
     this.paddleLeft.recenter(PADDLE_RECENTER_DURATION);
     this.paddleRight.recenter(PADDLE_RECENTER_DURATION);
@@ -284,6 +288,12 @@ export default class GameScene extends Phaser.Scene {
 
     if (PADDLE_POWERUP_KINDS.includes(definition.kind)) {
       targetPaddle = this.powerUpEffects.applyPaddleEffect(definition.kind, definition.colorCategory, attackerSide);
+    } else if (definition.kind === "shield") {
+      const targetSide = this.powerUpEffects.resolveTarget(definition.kind, definition.colorCategory, attackerSide);
+      if (targetSide) {
+        this.shieldEffect.activate(targetSide, POWERUP_EFFECT_DURATION);
+        targetPaddle = targetSide === "p1" ? this.paddleLeft : this.paddleRight;
+      }
     } else if (definition.kind === "doublePoint") {
       const targetSide = this.powerUpEffects.resolveTarget(definition.kind, definition.colorCategory, attackerSide);
       if (targetSide) {
@@ -325,6 +335,7 @@ export default class GameScene extends Phaser.Scene {
     this.ballEffects.clearAll();
     this.centerPaddleEffect.clear();
     this.slowMotion.clear();
+    this.shieldEffect.clearAll();
     this.ballManager.clearAll();
     this.trivelaShot?.clear();
 

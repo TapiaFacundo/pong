@@ -11,7 +11,7 @@ const DEBUG_KEY = "G";
 // Qué se prueba ahora: activar este power-up sobre la pelota en juego, como si
 // la pelota lo hubiera agarrado. En los verdes y rojos cuenta como si la
 // hubiera mandado el jugador 1 (si nadie la tocó todavía).
-const DEBUG_POWERUP_ID = "slow-motion";
+const DEBUG_POWERUP_ID = "shield-green";
 
 export default class DebugKey {
   constructor(scene) {
