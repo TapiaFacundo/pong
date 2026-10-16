@@ -2,10 +2,8 @@ import Phaser from "phaser";
 import {
   AI_DEAD_ZONE,
   AI_DIFFICULTIES,
-  AI_PREDICTION_MISS,
   AI_INVISIBLE_BALL_MISS,
   AI_INVERTED_EXTRA_REACTION,
-  BALL_SIZE,
 } from "../config.js";
 
 export default class AI {
@@ -20,7 +18,6 @@ export default class AI {
     this.targetY = paddle.y;
     this.wasBallApproaching = false;
     this.trackedBall = null;
-    this.predictionMissFactor = 0;
     this.blindMissOffset = 0;
 
     this.setDifficulty(difficulty);
@@ -34,9 +31,6 @@ export default class AI {
     this.reactionDelay = settings.reactionDelay;
     this.errorMargin = settings.errorMargin;
     this.anticipationChance = settings.anticipationChance ?? 0;
-    // Predicción de trayectoria: 0 = sigue la altura actual de la pelota,
-    // 1 = apunta a donde va a llegar; valores intermedios, a mitad de camino.
-    this.prediction = settings.prediction === true ? 1 : Number(settings.prediction) || 0;
     // Con varias pelotas: seguir a la que va a llegar antes (si no, siempre a la primera).
     this.trackFirstArrival = settings.trackFirstArrival ?? false;
     // Mientras la pelota se aleja: patrullar de pared a pared en vez de
@@ -77,52 +71,19 @@ export default class AI {
   }
 
   // Al empezar cada jugada (la pelota empieza a venir hacia este lado) se
-  // sortean los errores que la IA arrastra durante toda esa jugada. A
-  // diferencia del margen de error normal, que se vuelve a sortear en cada
-  // reacción y en promedio se compensa, estos no se compensan: la IA de
-  // verdad se equivoca.
+  // sortea el error que la IA arrastra durante toda esa jugada si la pelota
+  // está invisible. A diferencia del margen de error normal, que se vuelve a
+  // sortear en cada reacción y en promedio se compensa, este no se compensa:
+  // la IA de verdad se equivoca.
   startPlay() {
     this.reactionTimer = 0;
-    this.predictionMissFactor = Phaser.Math.FloatBetween(-1, 1);
     this.blindMissOffset = Phaser.Math.FloatBetween(-AI_INVISIBLE_BALL_MISS, AI_INVISIBLE_BALL_MISS);
   }
 
-  // Altura a la que apunta la IA cuando la pelota viene hacia su lado.
+  // Altura a la que apunta la IA cuando la pelota viene hacia su lado: la
+  // altura actual de la pelota (con la pelota invisible, "no la ve bien" y erra más).
   aimY(ball) {
-    let aim = ball.y;
-
-    if (this.prediction > 0) {
-      // La predicción nunca es exacta: arrastra un desvío fijo durante toda la
-      // jugada. Si no, con tiempo de sobra (cancha grande) la IA no falla nunca.
-      const predictedY = this.predictArrival(ball).y + this.predictionMissFactor * AI_PREDICTION_MISS;
-      aim = ball.y + (predictedY - ball.y) * this.prediction;
-    }
-
-    // Con la pelota invisible la IA "no la ve bien" y erra más.
-    if (ball.isInvisible) aim += this.blindMissOffset;
-
-    return aim;
-  }
-
-  // Dónde va a cruzar la pelota la x de esta pala, contando los rebotes en el
-  // techo y el piso (en línea recta: no adivina curvas ni zigzags).
-  predictArrival(ball) {
-    const velocity = ball.circle.body.velocity;
-    if (velocity.x === 0) return { y: ball.y };
-
-    const secondsToArrive = (this.paddle.x - ball.x) / velocity.x;
-    if (secondsToArrive <= 0) return { y: ball.y };
-
-    const bounds = this.paddle.scene.physics.world.bounds;
-    const radius = BALL_SIZE / 2;
-    const top = bounds.top + radius;
-    const span = bounds.bottom - radius - top;
-
-    // Desplegar los rebotes: la posición "sin paredes" se pliega dentro de la cancha.
-    let offset = (ball.y + velocity.y * secondsToArrive - top) % (2 * span);
-    if (offset < 0) offset += 2 * span;
-
-    return { y: top + (offset > span ? 2 * span - offset : offset) };
+    return ball.isInvisible ? ball.y + this.blindMissOffset : ball.y;
   }
 
   update(delta) {

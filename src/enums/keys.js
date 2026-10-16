@@ -82,7 +82,7 @@ export const KEYS = {
   SUS_TIROS_CON_EFECTO_SE_CURVAN: "Sus tiros con efecto se curvan.",
   LE_PEGO_DE_AFUERA_DEL_PIE_SUERTE_ADIVINANDO: "Le pego de afuera del pie. Suerte adivinando.",
   ESTADIO: "Estadio",
-  CANCHA_GRANDE_Y_CALCULA_DONDE_VA_A_LLEGAR_LA_PELOTA: "Cancha grande, y calcula dónde va a llegar la pelota.",
+  CANCHA_GRANDE_Y_UN_RIVAL_MAS_RAPIDO_QUE_VOS: "Cancha grande y un rival más rápido que vos.",
   BIENVENIDO_A_LA_CANCHA_GRANDE: "Bienvenido a la cancha grande.",
   SABOTEADOR: "Saboteador",
   CADA_TANTO_TE_INVIERTE_LOS_CONTROLES_O_TE_FRENA_LA_PALA: "Cada tanto te invierte los controles o te frena la pala.",

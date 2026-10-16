@@ -148,7 +148,7 @@
 </ul>
 
 <h2>8. IA</h2>
-<p>La IA sigue la posición Y de la pelota cuando viene hacia su lado. Tarda un tiempo de reacción en fijar un objetivo, apunta con un margen de error aleatorio y no se mueve si ya está a menos de 10 px del objetivo. En difícil e imposible, a veces también se reposiciona cuando la pelota se aleja (anticipación). Algunos rivales del Modo Historia tienen además predicción de trayectoria (sección 12): apuntan a donde va a llegar la pelota en vez de a su altura actual.</p>
+<p>La IA sigue la posición Y de la pelota cuando viene hacia su lado. Tarda un tiempo de reacción en fijar un objetivo, apunta con un margen de error aleatorio y no se mueve si ya está a menos de 10 px del objetivo. En difícil e imposible, a veces también se reposiciona cuando la pelota se aleja (anticipación). Ningún rival predice la trayectoria de la pelota: se probó y era muy difícil de balancear (en la cancha grande, con tiempo de sobra, la IA no fallaba nunca).</p>
 <table>
   <tr><th>Dificultad</th><th>Velocidad máxima</th><th>Tiempo de reacción</th><th>Margen de error</th><th>Anticipación</th></tr>
   <tr><td>Fácil</td><td>200 px/s</td><td>300 ms</td><td>± 50 px</td><td>No</td></tr>
@@ -226,30 +226,30 @@
   <tr><td>4</td><td>Velocista</td><td>Pelota más rápida y que acelera más</td><td>Normal rápida</td><td>800 × 600</td></tr>
   <tr><td>5</td><td><b>Los Gemelos</b> (jefe)</td><td>Dos palas distintas: una en el arco y una adelantada más chica</td><td>Arco: rápida pero con más error; adelantada: Difícil</td><td>1000 × 750</td></tr>
   <tr><td>6</td><td>Trivela</td><td>Tiros con efecto (curvos) intercalados con tiros rectos</td><td>Difícil</td><td>800 × 600</td></tr>
-  <tr><td>7</td><td>Estadio</td><td>Cancha grande, IA con predicción de trayectoria</td><td>Difícil + predicción</td><td>1200 × 900</td></tr>
+  <tr><td>7</td><td>Estadio</td><td>Cancha grande y un rival más rápido que vos</td><td>Difícil rápida</td><td>1200 × 900</td></tr>
   <tr><td>8</td><td>Saboteador</td><td>Te aplica efectos rojos, más power-ups rojos</td><td>Difícil</td><td>800 × 600</td></tr>
-  <tr><td>9</td><td>Tormenta</td><td>2 pelotas por ronda y lluvia permanente</td><td>Difícil + predicción</td><td>800 × 600</td></tr>
-  <tr><td>10</td><td><b>El Campeón</b> (jefe final)</td><td>Tres fases que suman trucos; bola extra si el partido se alarga</td><td>Difícil + predicción → Imposible</td><td>1200 × 900</td></tr>
+  <tr><td>9</td><td>Tormenta</td><td>2 pelotas por ronda y lluvia permanente</td><td>Difícil</td><td>800 × 600</td></tr>
+  <tr><td>10</td><td><b>El Campeón</b> (jefe final)</td><td>Tres fases que suman trucos; bola extra si el partido se alarga</td><td>Difícil → Imposible</td><td>1200 × 900</td></tr>
 </table>
 <p class="note">Todos los niveles tienen power-ups. Salvo que el nivel diga otra cosa, aparecen con el spawn normal (5 a 6,5 s) y con los 19 tipos.</p>
 
 <h3>IA por nivel</h3>
 <table>
-  <tr><th style="width:26%">Nivel</th><th>Velocidad</th><th>Reacción</th><th>Error</th><th>Anticipación</th><th>Predicción</th></tr>
-  <tr><td>1 · Novato</td><td>200 px/s</td><td>300 ms</td><td>± 50 px</td><td>No</td><td>No</td></tr>
-  <tr><td>2 · Aprendiz</td><td>280 px/s</td><td>100 ms</td><td>± 20 px</td><td>No</td><td>No</td></tr>
-  <tr><td>3 · El Muro</td><td>200 px/s</td><td>100 ms</td><td>± 20 px</td><td>No</td><td>No</td></tr>
-  <tr><td>4 · Velocista</td><td>380 px/s</td><td>100 ms</td><td>± 20 px</td><td>No</td><td>No</td></tr>
-  <tr><td>5 · Los Gemelos (arco)</td><td>400 px/s (× 1,25)</td><td>40 ms</td><td>± 30 px</td><td>35 %</td><td>No</td></tr>
-  <tr><td>5 · Los Gemelos (adelantada)</td><td>340 px/s (× 1,25)</td><td>40 ms</td><td>± 4 px</td><td>35 %</td><td>No</td></tr>
-  <tr><td>6 · Trivela</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 %</td><td>No</td></tr>
-  <tr><td>7 · Estadio</td><td>340 px/s (× 1,5)</td><td>40 ms</td><td>± 4 px</td><td>35 %</td><td>Sí</td></tr>
-  <tr><td>8 · Saboteador</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 %</td><td>No</td></tr>
-  <tr><td>9 · Tormenta</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 %</td><td>Sí</td></tr>
-  <tr><td>10 · Fases 1 y 2</td><td>340 px/s (× 1,5)</td><td>40 ms</td><td>± 4 px</td><td>35 %</td><td>Sí</td></tr>
-  <tr><td>10 · Fase 3</td><td>450 px/s (× 1,5)</td><td>10 ms</td><td>± 2 px</td><td>50 %</td><td>Sí</td></tr>
+  <tr><th style="width:26%">Nivel</th><th>Velocidad</th><th>Reacción</th><th>Error</th><th>Anticipación</th></tr>
+  <tr><td>1 · Novato</td><td>200 px/s</td><td>300 ms</td><td>± 50 px</td><td>No</td></tr>
+  <tr><td>2 · Aprendiz</td><td>280 px/s</td><td>100 ms</td><td>± 20 px</td><td>No</td></tr>
+  <tr><td>3 · El Muro</td><td>200 px/s</td><td>100 ms</td><td>± 20 px</td><td>No</td></tr>
+  <tr><td>4 · Velocista</td><td>380 px/s</td><td>100 ms</td><td>± 20 px</td><td>No</td></tr>
+  <tr><td>5 · Los Gemelos (arco)</td><td>400 px/s (× 1,25)</td><td>40 ms</td><td>± 30 px</td><td>35 %</td></tr>
+  <tr><td>5 · Los Gemelos (adelantada)</td><td>340 px/s (× 1,25)</td><td>40 ms</td><td>± 4 px</td><td>35 %</td></tr>
+  <tr><td>6 · Trivela</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 %</td></tr>
+  <tr><td>7 · Estadio</td><td>450 px/s (× 1,5)</td><td>40 ms</td><td>± 4 px</td><td>35 %</td></tr>
+  <tr><td>8 · Saboteador</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 %</td></tr>
+  <tr><td>9 · Tormenta</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 %</td></tr>
+  <tr><td>10 · Fases 1 y 2</td><td>340 px/s (× 1,5)</td><td>40 ms</td><td>± 4 px</td><td>35 %</td></tr>
+  <tr><td>10 · Fase 3</td><td>450 px/s (× 1,5)</td><td>10 ms</td><td>± 2 px</td><td>50 %</td></tr>
 </table>
-<p class="note">“× 1,25” y “× 1,5”: en las canchas más altas, las palas de los dos jugadores se mueven más rápido en esa proporción, para que cruzar la cancha tarde lo mismo que en la normal. <b>Predicción de trayectoria</b>: la IA calcula dónde va a llegar la pelota contando los rebotes en las paredes, en vez de seguir su altura actual. “Sí” = apunta a ese punto; “50 %” = apunta a mitad de camino entre la altura actual de la pelota y ese punto. Calcula en línea recta, así que no adivina curvas ni zigzags. La predicción nunca es exacta: en cada jugada arrastra un desvío de hasta ± 75 px, así que llega desubicada en aproximadamente 1 de cada 4 tiros. Sin ese desvío, en la cancha grande la IA tiene tiempo de sobra para acomodarse y no falla nunca.</p>
+<p class="note">“× 1,25” y “× 1,5”: en las canchas más altas, las palas de los dos jugadores se mueven más rápido en esa proporción, para que cruzar la cancha tarde lo mismo que en la normal.</p>
 
 <h3>Detalle de cada nivel</h3>
 <table>
@@ -260,12 +260,12 @@
   <tr><td>4 · Velocista</td><td>La pelota sale a 440 px/s (en vez de 380) y acelera un 4 % por golpe (en vez de 2,5 %). Pone a prueba los reflejos.</td></tr>
   <tr><td>5 · Los Gemelos<br><span class="note">jefe</span></td><td>Cancha de 1000 × 750. Controla dos palas: una en su arco y otra adelantada, a mitad de su lado de la cancha. La adelantada rebota la pelota como una pala normal; si la pelota la pasa, todavía queda la del arco. Cuando la pelota vuelve desde la pala del arco, atraviesa la adelantada por detrás. Las dos palas son distintas para que no parezcan clones: la adelantada es más chica (60 % del alto), usa la IA Difícil y, mientras la pelota va hacia el jugador, patrulla subiendo y bajando de pared a pared en vez de quedarse quieta; la del arco es más rápida (400 px/s) pero erra más (± 30 px). Así cada una se ubica en un lugar distinto. Los power-ups de pala que le toquen al jefe afectan a las dos, y las dos vuelven al centro al terminar cada ronda.</td></tr>
   <tr><td>6 · Trivela</td><td>Le pega de tres dedos. Cada vez que la pelota va hacia él, hay 50 % de chance de que su próximo tiro salga con efecto: sale como un golpe en la punta de la pala (abierto, hacia el lado donde pegó la pelota) y se curva de vuelta con la fuerza máxima de la pelota curva, aunque le pegue con el centro. El efecto dura solo ese tiro: el próximo golpe de cualquiera lo corta. El resto de los tiros salen normales, sin patrón fijo. Aviso: mientras la pelota va hacia él con un tiro con efecto preparado, su pala parpadea en amarillo. Si la pelota ya tiene el power-up de pelota curva, no se suma un segundo efecto.</td></tr>
-  <tr><td>7 · Estadio</td><td>Cancha de 1200 × 900 con la cámara alejada: todo se ve a 2/3 de su tamaño. Estreno de la predicción de trayectoria. Los power-ups aparecen en una zona central proporcionalmente más grande.</td></tr>
+  <tr><td>7 · Estadio</td><td>Cancha de 1200 × 900 con la cámara alejada: todo se ve a 2/3 de su tamaño. El rival es más rápido que el jugador: 450 px/s contra 400 (675 contra 600 con el × 1,5 de la cancha grande). Los power-ups aparecen en una zona central proporcionalmente más grande.</td></tr>
   <tr><td>8 · Saboteador</td><td>Cada 12 s te aplica un efecto rojo al azar durante 4 s: controles invertidos o pala lenta. Los power-ups rojos salen con el doble de probabilidad que en los otros niveles.</td></tr>
   <tr><td>9 · Tormenta</td><td>Cada ronda empieza con 2 pelotas, separadas 80 px en altura, que salen una hacia cada jugador (después de un punto, la primera va hacia quien lo perdió). La ronda sigue hasta que salieron las dos. Lluvia de power-ups permanente: aparece uno cada 1,5 s durante todo el partido. La IA sigue a la pelota que va a llegar antes a su lado; si cambia de pelota, vuelve a tardar su tiempo de reacción.</td></tr>
   <tr><td>10 · El Campeón<br><span class="note">jefe final</span></td><td>Cancha de 1200 × 900. Tiene fases según tus puntos:
     <ul>
-      <li><b>Fase 1</b> (desde el inicio): Difícil + predicción.</li>
+      <li><b>Fase 1</b> (desde el inicio): Difícil.</li>
       <li><b>Fase 2</b> (cuando llegás a 3 puntos): suma el tiro con efecto de Trivela.</li>
       <li><b>Fase 3</b> (cuando llegás a 5 puntos): pasa a Imposible y suma la pala adelantada de Los Gemelos.</li>
     </ul>
@@ -282,7 +282,7 @@
   <tr><td>Velocista</td><td>La pelota sale más rápido y acelera más.</td><td>“Pestañeá y te la perdiste.”</td></tr>
   <tr><td>Los Gemelos</td><td>Dos palas: una en el arco y otra adelantada.</td><td>“Dos contra uno no es trampa si somos gemelos.”</td></tr>
   <tr><td>Trivela</td><td>Sus tiros con efecto se curvan.</td><td>“Le pego de afuera del pie. Suerte adivinando.”</td></tr>
-  <tr><td>Estadio</td><td>Cancha grande, y calcula dónde va a llegar la pelota.</td><td>“Bienvenido a la cancha grande.”</td></tr>
+  <tr><td>Estadio</td><td>Cancha grande y un rival más rápido que vos.</td><td>“Bienvenido a la cancha grande.”</td></tr>
   <tr><td>Saboteador</td><td>Cada tanto te invierte los controles o te frena la pala.</td><td>“¿Tus controles andan raro? Qué casualidad.”</td></tr>
   <tr><td>Tormenta</td><td>Dos pelotas por ronda y lluvia de power-ups.</td><td>“Espero que te guste el caos.”</td></tr>
   <tr><td>El Campeón</td><td>Suma trucos a medida que te acercás a ganarle.</td><td>“Llegaste lejos. Acá se termina.”</td></tr>
@@ -306,12 +306,11 @@
 </table>
 
 <h3>Mecánicas nuevas que requiere</h3>
-<p>Hechas: configuración por nivel, progreso guardado, pantallas (salvo la final), la pala alta del nivel 3, la pelota rápida del nivel 4, el tiro con efecto de Trivela (nivel 6), la pala adelantada de Los Gemelos (nivel 5), la predicción de trayectoria de la IA, la cancha de tamaño variable (niveles 5, 7 y 10) y Tormenta (nivel 9). El resto está pendiente.</p>
+<p>Hechas: configuración por nivel, progreso guardado, pantallas (salvo la final), la pala alta del nivel 3, la pelota rápida del nivel 4, el tiro con efecto de Trivela (nivel 6), la pala adelantada de Los Gemelos (nivel 5), la cancha de tamaño variable (niveles 5, 7 y 10) y Tormenta (nivel 9). El resto está pendiente.</p>
 <ul>
   <li><b>Configuración por nivel:</b> cada nivel se describe como datos (IA, cancha, reglas de pelota, power-ups, habilidades) y la partida se arma a partir de eso.</li>
   <li><b>Cancha de tamaño variable:</b> 1000 × 750 y 1200 × 900, con la cámara alejada para que entre en la pantalla (zoom 0,8 y 0,67), y palas más rápidas en proporción al alto, hecha. El marcador queda en el mismo lugar y tamaño de pantalla; la pelota, las palas y los power-ups se ven más chicos. La zona de aparición de power-ups crece en proporción a la cancha.</li>
   <li><b>Pala adelantada:</b> segunda pala de la IA a mitad de su lado (niveles 5 y 10), hecha.</li>
-  <li><b>Predicción de trayectoria de la IA</b> (niveles 7, 9 y 10), hecha.</li>
   <li><b>IA con varias pelotas:</b> sigue a la que va a llegar antes (niveles 9 y 10), hecha.</li>
   <li><b>Habilidades de rival:</b> tiro con efecto de Trivela (niveles 6 y 10), hecho; sabotaje con efectos rojos (nivel 8), <span class="tag pend">pendiente</span>.</li>
   <li><b>Reglas de partida por nivel:</b> pala más alta (3), velocidad y aceleración de la pelota (4), pelotas por ronda (9) y lluvia permanente (9), hechas; bola extra por partido largo (10) y probabilidad de cada color de power-up (8), <span class="tag pend">pendiente</span>.</li>

@@ -22,12 +22,9 @@ export const AI_DIFFICULTIES = {
   impossible: { speed: PADDLE_SPEED + 50, reactionDelay: 10, errorMargin: 2, anticipationChance: 0.5 },
 };
 
-// Errores de la IA que se sortean una vez por jugada (no se compensan como
-// el margen de error normal, que se vuelve a sortear en cada reacción):
-// - Predicción de trayectoria: hasta este desvío (px) al calcular dónde llega
-//   la pelota. Con ± 75 px y una pala de 100, falla ~1 de cada 4 jugadas.
-export const AI_PREDICTION_MISS = 75;
-// - Pelota invisible: hasta este error extra (px) mientras dura el efecto.
+// Pelota invisible: hasta este error extra (px) al apuntar mientras dura el
+// efecto. Se sortea una vez por jugada (no se compensa como el margen de error
+// normal, que se vuelve a sortear en cada reacción).
 export const AI_INVISIBLE_BALL_MISS = 90;
 // Controles invertidos en contra de la IA: reacciona este tiempo (ms) más lento.
 export const AI_INVERTED_EXTRA_REACTION = 150;

@@ -11,10 +11,7 @@ import { KEYS } from "../enums/keys.js";
 //   tarjeta de presentación (nombre, habilidad en una línea y su frase).
 // - boss: null, "boss" o "final".
 // - ai: configuración de la IA del rival, con la misma forma que
-//   AI_DIFFICULTIES, más `prediction` (predicción de trayectoria: false/0 =
-//   sigue la altura de la pelota, true/1 = apunta a donde va a llegar,
-//   intermedio = a mitad de camino) y
-//   `trackFirstArrival` (con varias pelotas, sigue a la que llega antes;
+//   AI_DIFFICULTIES, más `trackFirstArrival` (con varias pelotas, sigue a la que llega antes;
 //   si no, sigue siempre a la primera). Opcional: `patrolWhenIdle` (mientras
 //   la pelota se aleja, patrulla de pared a pared en vez de quedarse quieta).
 // - field: tamaño de la cancha; si es más grande que la normal, la cámara se
@@ -46,7 +43,7 @@ const TRIVELA_SHOT = { chance: 0.5 };
 // quedarse quieta. Se distingue de la del arco, que es más rápida pero erra más.
 const TWINS_FORWARD_PADDLE = {
   heightScale: 0.6,
-  ai: { ...AI_DIFFICULTIES.hard, prediction: false, trackFirstArrival: false, patrolWhenIdle: true },
+  ai: { ...AI_DIFFICULTIES.hard, trackFirstArrival: false, patrolWhenIdle: true },
 };
 
 export const LEVELS = [
@@ -56,7 +53,7 @@ export const LEVELS = [
     abilityKey: KEYS.SIN_TRUCOS_IDEAL_PARA_APRENDER,
     quoteKey: KEYS.TRANQUI_YO_TAMBIEN_ESTOY_APRENDIENDO,
     boss: null,
-    ai: { ...AI_DIFFICULTIES.easy, prediction: false, trackFirstArrival: false },
+    ai: { ...AI_DIFFICULTIES.easy, trackFirstArrival: false },
     field: NORMAL_FIELD,
   },
   {
@@ -65,7 +62,7 @@ export const LEVELS = [
     abilityKey: KEYS.UN_RIVAL_PAREJO_SIN_TRUCOS,
     quoteKey: KEYS.YA_PRACTIQUE_ESTA_VEZ_NO_TE_LA_HAGO_FACIL,
     boss: null,
-    ai: { ...AI_DIFFICULTIES.normal, prediction: false, trackFirstArrival: false },
+    ai: { ...AI_DIFFICULTIES.normal, trackFirstArrival: false },
     field: NORMAL_FIELD,
   },
   {
@@ -74,7 +71,7 @@ export const LEVELS = [
     abilityKey: KEYS.SU_PALA_ES_ENORME_PERO_LENTA,
     quoteKey: KEYS.POR_ACA_NO_PASA_NADA,
     boss: null,
-    ai: { ...AI_DIFFICULTIES.normal, speed: 200, prediction: false, trackFirstArrival: false },
+    ai: { ...AI_DIFFICULTIES.normal, speed: 200, trackFirstArrival: false },
     field: NORMAL_FIELD,
     rules: { rivalPaddleHeightScale: 1.6 },
   },
@@ -84,7 +81,7 @@ export const LEVELS = [
     abilityKey: KEYS.LA_PELOTA_SALE_MAS_RAPIDO_Y_ACELERA_MAS,
     quoteKey: KEYS.PESTANEA_Y_TE_LA_PERDISTE,
     boss: null,
-    ai: { ...AI_DIFFICULTIES.normal, speed: 380, prediction: false, trackFirstArrival: false },
+    ai: { ...AI_DIFFICULTIES.normal, speed: 380, trackFirstArrival: false },
     field: NORMAL_FIELD,
     rules: { ballSpeed: 440, ballSpeedIncrement: 1.04 },
   },
@@ -95,7 +92,7 @@ export const LEVELS = [
     quoteKey: KEYS.DOS_CONTRA_UNO_NO_ES_TRAMPA_SI_SOMOS_GEMELOS,
     boss: "boss",
     // Pala del arco: más rápida (400 px/s) pero con más error (± 30 px).
-    ai: { ...AI_DIFFICULTIES.hard, speed: 400, errorMargin: 30, prediction: false, trackFirstArrival: false },
+    ai: { ...AI_DIFFICULTIES.hard, speed: 400, errorMargin: 30, trackFirstArrival: false },
     field: MEDIUM_FIELD,
     rules: { forwardPaddle: TWINS_FORWARD_PADDLE },
   },
@@ -105,17 +102,18 @@ export const LEVELS = [
     abilityKey: KEYS.SUS_TIROS_CON_EFECTO_SE_CURVAN,
     quoteKey: KEYS.LE_PEGO_DE_AFUERA_DEL_PIE_SUERTE_ADIVINANDO,
     boss: null,
-    ai: { ...AI_DIFFICULTIES.hard, prediction: false, trackFirstArrival: false },
+    ai: { ...AI_DIFFICULTIES.hard, trackFirstArrival: false },
     field: NORMAL_FIELD,
     rules: { trivela: TRIVELA_SHOT },
   },
   {
     id: 7,
     nameKey: KEYS.ESTADIO,
-    abilityKey: KEYS.CANCHA_GRANDE_Y_CALCULA_DONDE_VA_A_LLEGAR_LA_PELOTA,
+    abilityKey: KEYS.CANCHA_GRANDE_Y_UN_RIVAL_MAS_RAPIDO_QUE_VOS,
     quoteKey: KEYS.BIENVENIDO_A_LA_CANCHA_GRANDE,
     boss: null,
-    ai: { ...AI_DIFFICULTIES.hard, prediction: true, trackFirstArrival: false },
+    // Más rápido que el jugador (450 px/s contra 400, antes del × 1,5 de la cancha grande).
+    ai: { ...AI_DIFFICULTIES.hard, speed: 450, trackFirstArrival: false },
     field: LARGE_FIELD,
   },
   {
@@ -124,7 +122,7 @@ export const LEVELS = [
     abilityKey: KEYS.CADA_TANTO_TE_INVIERTE_LOS_CONTROLES_O_TE_FRENA_LA_PALA,
     quoteKey: KEYS.TUS_CONTROLES_ANDAN_RARO_QUE_CASUALIDAD,
     boss: null,
-    ai: { ...AI_DIFFICULTIES.hard, prediction: false, trackFirstArrival: false },
+    ai: { ...AI_DIFFICULTIES.hard, trackFirstArrival: false },
     field: NORMAL_FIELD,
     rules: {
       sabotage: { interval: 12000, duration: 4000, effects: ["invert", "slowDown"] },
@@ -137,7 +135,7 @@ export const LEVELS = [
     abilityKey: KEYS.DOS_PELOTAS_POR_RONDA_Y_LLUVIA_DE_POWER_UPS,
     quoteKey: KEYS.ESPERO_QUE_TE_GUSTE_EL_CAOS,
     boss: null,
-    ai: { ...AI_DIFFICULTIES.hard, prediction: true, trackFirstArrival: true },
+    ai: { ...AI_DIFFICULTIES.hard, trackFirstArrival: true },
     field: NORMAL_FIELD,
     rules: { ballsPerRound: 2, powerUpSpawnDelay: { min: 1500, max: 1500 } },
   },
@@ -147,14 +145,14 @@ export const LEVELS = [
     abilityKey: KEYS.SUMA_TRUCOS_A_MEDIDA_QUE_TE_ACERCAS_A_GANARLE,
     quoteKey: KEYS.LLEGASTE_LEJOS_ACA_SE_TERMINA,
     boss: "final",
-    ai: { ...AI_DIFFICULTIES.hard, prediction: true, trackFirstArrival: true },
+    ai: { ...AI_DIFFICULTIES.hard, trackFirstArrival: true },
     field: LARGE_FIELD,
     rules: { extraBallAfterTotalScore: 10 },
     phases: [
       { fromPlayerScore: 3, rules: { trivela: TRIVELA_SHOT } },
       {
         fromPlayerScore: 5,
-        ai: { ...AI_DIFFICULTIES.impossible, prediction: true, trackFirstArrival: true },
+        ai: { ...AI_DIFFICULTIES.impossible, trackFirstArrival: true },
         rules: { trivela: TRIVELA_SHOT, forwardPaddle: TWINS_FORWARD_PADDLE },
       },
     ],
