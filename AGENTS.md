@@ -54,6 +54,7 @@ docs/
 - Al indicar trabajo en un archivo: 1) nombre y tipo de archivo, 2) carpeta donde va, 3) contenido (código completo si es nuevo), 4) qué probar en el navegador como siguiente paso.
 - Si se corrige un script existente: aclarar si se pasa el archivo entero o solo un fragmento, y qué parte reemplaza a cuál.
 - Commit por sistema/feature terminado y funcionando. Mensajes cortos en español, en modo imperativo (ej. "agrega power-up de pala grande").
+- Tecla de prueba: durante una partida, la **G** ejecuta lo que se esté probando (por ejemplo, activar un power-up nuevo sobre la pelota en juego). Está en `src/systems/DebugKey.js` y solo funciona con `npm run dev` (en el build publicado no hace nada). Cada vez que el agente agrega algo nuevo que se pueda probar así, actualiza lo que hace la tecla y avisa qué prueba ahora.
 
 ## Comandos
 - Instalar dependencias: `npm install`

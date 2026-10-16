@@ -34,6 +34,7 @@ export const KEYS = {
   PARTIDA_A_7_PUNTOS: "Partida a 7 puntos",
   PAUSA: "PAUSA",
   PELOTA_CURVA: "Pelota curva",
+  PELOTA_GIGANTE: "Pelota gigante",
   PELOTA_ZIGZAGUEANTE: "Pelota zigzagueante",
   PELOTA_INVISIBLE: "Pelota invisible",
   PUNTO_DOBLE: "Punto doble",

@@ -47,6 +47,18 @@ export default class Ball {
     return this.circle.body.velocity.x;
   }
 
+  get radius() {
+    return this.circle.radius;
+  }
+
+  // Cambia el tamaño de la pelota (dibujo y choque) respecto del normal: 1 =
+  // normal, 3 = el triple (power-up de pelota gigante).
+  setSizeScale(scale) {
+    const radius = (BALL_SIZE / 2) * scale;
+    this.circle.setRadius(radius);
+    this.circle.body.setCircle(radius);
+  }
+
   launch(directionX = null) {
     this.speed = this.baseSpeed;
 

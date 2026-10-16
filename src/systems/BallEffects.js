@@ -1,4 +1,4 @@
-import { POWERUP_EFFECT_DURATION, BALL_INVISIBLE_BLINK_INTERVAL } from "../config.js";
+import { POWERUP_EFFECT_DURATION, BALL_INVISIBLE_BLINK_INTERVAL, BALL_GIANT_SCALE } from "../config.js";
 import ZigzagMotion from "./ZigzagMotion.js";
 import CurveMotion from "./CurveMotion.js";
 
@@ -11,7 +11,27 @@ export default class BallEffects {
   constructor(scene) {
     this.scene = scene;
     this.invisibleTimers = new Map();
+    this.giantTimers = new Map();
     this.motionTimers = { zigzag: new Map(), curve: new Map() };
+  }
+
+  // Pelota gigante: la pelota crece durante POWERUP_EFFECT_DURATION. Volver a
+  // agarrarlo reinicia el tiempo (no la agranda más).
+  applyGiant(ball) {
+    this.clearGiant(ball);
+
+    ball.setSizeScale(BALL_GIANT_SCALE);
+    const expireEvent = this.scene.time.delayedCall(POWERUP_EFFECT_DURATION, () => this.clearGiant(ball));
+    this.giantTimers.set(ball, expireEvent);
+  }
+
+  clearGiant(ball) {
+    const expireEvent = this.giantTimers.get(ball);
+    if (!expireEvent) return;
+
+    expireEvent.remove();
+    this.giantTimers.delete(ball);
+    if (ball.circle.body) ball.setSizeScale(1);
   }
 
   // Efectos que cambian la trayectoria de una pelota (zigzag, curva) durante
@@ -70,6 +90,7 @@ export default class BallEffects {
 
   clearAll() {
     Array.from(this.invisibleTimers.keys()).forEach((ball) => this.clearInvisible(ball));
+    Array.from(this.giantTimers.keys()).forEach((ball) => this.clearGiant(ball));
     for (const kind of Object.keys(this.motionTimers)) {
       Array.from(this.motionTimers[kind].keys()).forEach((ball) => this.clearMotion(ball, kind));
     }

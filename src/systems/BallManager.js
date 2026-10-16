@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import { BALL_SIZE } from "../config.js";
 import Ball from "../entities/Ball.js";
 import { playPaddleHit } from "./SoundEffects.js";
 
@@ -76,8 +75,6 @@ export default class BallManager {
   }
 
   update(delta) {
-    const radius = BALL_SIZE / 2;
-
     // onBallOut puede terminar el partido y vaciar this.balls (clearAll) o
     // arrancar una ronda nueva (addBall) en medio de este recorrido, así que
     // se itera sobre una copia y se revisa que la pelota siga en juego.
@@ -86,6 +83,8 @@ export default class BallManager {
 
       ball.update(delta);
 
+      // El punto cuenta cuando la pelota salió entera (su tamaño puede cambiar).
+      const radius = ball.radius;
       if (ball.x < -radius) {
         this.removeBall(ball);
         this.onBallOut("left");

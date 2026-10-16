@@ -94,12 +94,15 @@ export const POWERUP_LABELS = {
   turbo: "¡Turbo!",
   zigzag: "Pelota zigzagueante",
   curve: "Pelota curva",
+  giant: "Pelota gigante",
   invisible: "Pelota invisible",
   rain: "Lluvia de power-ups",
   centerPaddle: "Paleta central",
 };
 
 export const POWERUP_EFFECT_DURATION = 15000;
+// Pelota gigante: tamaño respecto del normal (14 px → 42 px de diámetro).
+export const BALL_GIANT_SCALE = 3;
 export const PADDLE_GROW_SCALE = 1.6;
 export const PADDLE_SHRINK_SCALE = 0.6;
 export const PADDLE_SPEED_UP_SCALE = 1.6;
@@ -130,7 +133,7 @@ export const BALL_INVISIBLE_BLINK_INTERVAL = 220;
 export const CENTER_PADDLE_HEIGHT = 60;
 export const CENTER_PADDLE_SPEED = 180;
 
-// 6 tipos de pala/puntaje (verde/roja) + 7 amarillos = 19 power-ups, según el GDD.
+// 6 tipos de pala/puntaje (verde/roja) + 8 amarillos = 20 power-ups, según el GDD.
 export const POWERUP_DEFINITIONS = [
   { id: "grow-green", kind: "grow", colorCategory: "green" },
   { id: "grow-red", kind: "grow", colorCategory: "red" },
@@ -148,6 +151,7 @@ export const POWERUP_DEFINITIONS = [
   { id: "turbo", kind: "turbo", colorCategory: "yellow" },
   { id: "zigzag-ball", kind: "zigzag", colorCategory: "yellow" },
   { id: "curve-ball", kind: "curve", colorCategory: "yellow" },
+  { id: "giant-ball", kind: "giant", colorCategory: "yellow" },
   { id: "invisible-ball", kind: "invisible", colorCategory: "yellow" },
   { id: "powerup-rain", kind: "rain", colorCategory: "yellow" },
   { id: "center-paddle", kind: "centerPaddle", colorCategory: "yellow" },
