@@ -8,6 +8,7 @@ import PauseScene from "./scenes/PauseScene.js";
 import LevelSelectScene from "./scenes/LevelSelectScene.js";
 import LevelIntroScene from "./scenes/LevelIntroScene.js";
 import LevelResultScene from "./scenes/LevelResultScene.js";
+import StoryEndScene from "./scenes/StoryEndScene.js";
 
 const config = {
   type: Phaser.AUTO,
@@ -21,7 +22,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MenuScene, DifficultyScene, TutorialScene, LevelSelectScene, LevelIntroScene, GameScene, PauseScene, LevelResultScene],
+  scene: [MenuScene, DifficultyScene, TutorialScene, LevelSelectScene, LevelIntroScene, GameScene, PauseScene, LevelResultScene, StoryEndScene],
 };
 
 new Phaser.Game(config);

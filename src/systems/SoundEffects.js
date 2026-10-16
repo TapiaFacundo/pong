@@ -44,6 +44,13 @@ export function playCannonShot() {
   playTone({ frequency: 70, duration: 0.35, type: "square", volume: 0.2, delay: 0.03 });
 }
 
+// Pequeña fanfarria ascendente para la pantalla final del Modo Historia.
+export function playVictoryFanfare() {
+  [523, 659, 784, 1047].forEach((frequency, index) => {
+    playTone({ frequency, duration: index === 3 ? 0.5 : 0.15, type: "square", volume: 0.15, delay: index * 0.15 });
+  });
+}
+
 export function playScore() {
   playTone({ frequency: 440, duration: 0.15, type: "sawtooth", volume: 0.22 });
   playTone({ frequency: 220, duration: 0.25, type: "sawtooth", volume: 0.18, delay: 0.1 });

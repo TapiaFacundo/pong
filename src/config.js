@@ -56,6 +56,8 @@ export const STORY_RESULT_DELAY = 1000;
 export const BOSS_COLOR = 0xb69cff;
 export const BOSS_TEXT_COLOR = "#b69cff";
 export const ANNOUNCEMENT_DURATION = 1800;
+// Créditos de la pantalla final (nombres propios: no se traducen).
+export const CREDITS = "Facundo Tapia · Valentino Batiston";
 
 export const COLORS = {
   BACKGROUND: 0x000000,

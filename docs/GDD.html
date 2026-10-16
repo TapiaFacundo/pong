@@ -307,7 +307,7 @@
   <tr><td>Tormenta</td><td>Dos pelotas por ronda y lluvia de power-ups.</td><td>“Espero que te guste el caos.”</td></tr>
   <tr><td>El Campeón</td><td>Suma trucos a medida que te acercás a ganarle.</td><td>“Llegaste lejos. Acá se termina.”</td></tr>
 </table>
-<p><b>Final:</b> al ganarle al Campeón aparece una pantalla con “¡Sos el nuevo campeón de Ponger-up!”, los 10 rivales derrotados y los créditos (Facundo Tapia y Valentino Batiston). Enter o clic vuelve a la selección de nivel.</p>
+<p><b>Final:</b> al ganarle al Campeón, “Continuar” lleva a una pantalla con “¡Sos el nuevo campeón de Ponger-up!”, los 10 rivales derrotados y los créditos (“Un juego de Facundo Tapia · Valentino Batiston”). Enter o clic vuelve a la selección de nivel.</p>
 
 <h3>Pantallas del modo</h3>
 <pre>Menú principal ──(Modo Historia)──► Selección de nivel ──► Presentación del rival ──► Partida ⇄ Pausa
@@ -321,12 +321,12 @@
   <tr><td>Selección de nivel</td><td>Los 10 niveles en una grilla de 5 × 2. Los superados llevan una marca, el siguiente disponible se resalta y los bloqueados se ven en gris con un candado. Se elige con flechas + Enter o con clic; Esc vuelve al menú. El cursor arranca en el nivel desbloqueado más alto y también puede pasar por los bloqueados, que muestran qué nivel hay que ganar para desbloquearlos. Debajo de la grilla se ven el nombre y la habilidad del rival elegido.</td></tr>
   <tr><td>Presentación del rival</td><td>Número de nivel, nombre del rival, su habilidad en una línea y su frase. Los jefes llevan la marca “Jefe” o “Jefe final”. Enter o clic empieza; Esc vuelve a la selección de nivel. Antes del nivel 1 se muestra además el tutorial.</td></tr>
   <tr><td>Partida y pausa</td><td>Igual que en casual, a 7 puntos y con la IA del nivel. En la pausa, la opción de salir dice “Selección de nivel” (tecla M) y lleva ahí.</td></tr>
-  <tr><td>Resultado</td><td>Aparece 1 s después del último punto, con el marcador final a la vista. Muestra “¡Ganaste!” o “Perdiste”, contra quién y el marcador. Si ganaste se guarda el nivel como superado; si eso desbloqueó el siguiente, lo avisa (“¡Nivel N desbloqueado!”). Opciones: si ganaste, “Siguiente nivel” (va a la presentación del próximo rival) o “Selección de nivel”; si perdiste, “Reintentar” (vuelve directo a la partida, sin la presentación) o “Selección de nivel”. Al ganar el nivel 10 solo queda “Selección de nivel” hasta que exista la pantalla final. Flechas + Enter o clic; Esc va a la selección de nivel.</td></tr>
-  <tr><td>Final <span class="tag pend">pendiente</span></td><td>Ver “Rivales: frases y final”.</td></tr>
+  <tr><td>Resultado</td><td>Aparece 1 s después del último punto, con el marcador final a la vista. Muestra “¡Ganaste!” o “Perdiste”, contra quién y el marcador. Si ganaste se guarda el nivel como superado; si eso desbloqueó el siguiente, lo avisa (“¡Nivel N desbloqueado!”). Opciones: si ganaste, “Siguiente nivel” (va a la presentación del próximo rival) o “Selección de nivel”; si perdiste, “Reintentar” (vuelve directo a la partida, sin la presentación) o “Selección de nivel”. Al ganar el nivel 10, en lugar de “Siguiente nivel” aparece “Continuar”, que lleva a la pantalla final. Flechas + Enter o clic; Esc va a la selección de nivel.</td></tr>
+  <tr><td>Final</td><td>Título “¡Sos el nuevo campeón de Ponger-up!” en violeta, los 10 rivales derrotados en dos columnas (cada uno con un ✓ verde; los jefes en violeta), los créditos y papelitos de los colores de los power-ups cayendo detrás del texto, con una pequeña fanfarria. Enter o clic vuelve a la selección de nivel.</td></tr>
 </table>
 
 <h3>Mecánicas nuevas que requiere</h3>
-<p>Hechas: configuración por nivel, progreso guardado, pantallas (salvo la final), la pala alta del nivel 3, la pelota rápida del nivel 4, el tiro con efecto de Trivela (nivel 6), la pala adelantada de Los Gemelos (nivel 5), la cancha de tamaño variable (niveles 5, 7 y 10), Tormenta (nivel 9), el Saboteador (nivel 8) y El Campeón (nivel 10). Falta la pantalla final.</p>
+<p>Hechas: configuración por nivel, progreso guardado, pantallas (salvo la final), la pala alta del nivel 3, la pelota rápida del nivel 4, el tiro con efecto de Trivela (nivel 6), la pala adelantada de Los Gemelos (nivel 5), la cancha de tamaño variable (niveles 5, 7 y 10), Tormenta (nivel 9), el Saboteador (nivel 8) El Campeón (nivel 10) y la pantalla final. El Modo Historia está completo.</p>
 <ul>
   <li><b>Configuración por nivel:</b> cada nivel se describe como datos (IA, cancha, reglas de pelota, power-ups, habilidades) y la partida se arma a partir de eso.</li>
   <li><b>Cancha de tamaño variable:</b> 1000 × 750 y 1200 × 900, con la cámara alejada para que entre en la pantalla (zoom 0,8 y 0,67), y palas más rápidas en proporción al alto, hecha. El marcador queda en el mismo lugar y tamaño de pantalla; la pelota, las palas y los power-ups se ven más chicos. La zona de aparición de power-ups crece en proporción a la cancha.</li>
@@ -335,7 +335,7 @@
   <li><b>Habilidades de rival:</b> tiro con efecto de Trivela (niveles 6 y 10) y sabotaje con efectos rojos (nivel 8), hechos.</li>
   <li><b>Reglas de partida por nivel:</b> pala más alta (3), velocidad y aceleración de la pelota (4), pelotas por ronda (9), lluvia permanente (9), probabilidad de cada color de power-up (8) y bola extra por partido largo (10), hechas.</li>
   <li><b>Fases de jefe</b> que cambian la IA y las habilidades según el marcador (10), hechas.</li>
-  <li><b>Progreso guardado</b> y las pantallas del modo (la pantalla final, <span class="tag pend">pendiente</span>).</li>
+  <li><b>Progreso guardado</b> y las pantallas del modo, incluida la pantalla final, hechas.</li>
 </ul>
 
 <h2>13. Arquitectura del código</h2>
@@ -344,7 +344,7 @@
 ├── config.js      constantes globales (cancha, velocidades, colores, teclas, power-ups, IA)
 ├── scenes/        una escena por archivo (MenuScene, DifficultyScene, TutorialScene,
 │                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene,
-│                  LevelResultScene)
+│                  LevelResultScene, StoryEndScene)
 ├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle, GoalBarrier)
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,

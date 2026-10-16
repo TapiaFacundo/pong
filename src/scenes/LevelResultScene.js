@@ -90,7 +90,8 @@ export default class LevelResultScene extends Phaser.Scene {
     if (this.level.id < LEVEL_COUNT) {
       return [{ labelKey: KEYS.SIGUIENTE_NIVEL, action: () => this.goToNextLevel() }, toLevelSelect];
     }
-    return [toLevelSelect];
+    // Ganarle al Campeón (último nivel) lleva a la pantalla final.
+    return [{ labelKey: KEYS.CONTINUAR, action: () => this.scene.start("StoryEndScene") }, toLevelSelect];
   }
 
   createOption(option, index) {
