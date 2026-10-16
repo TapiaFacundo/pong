@@ -91,6 +91,7 @@ export const POWERUP_LABELS = {
   invert: "Controles invertidos",
   doublePoint: "Punto doble",
   shield: "Escudo",
+  smallGoal: "Arco chico",
   extraBall: "¡Bola extra!",
   turbo: "¡Turbo!",
   zigzag: "Pelota zigzagueante",
@@ -111,11 +112,16 @@ export const SLOW_MOTION_DURATION = 5000;
 export const SLOW_MOTION_TIME_SCALE = 2;
 export const SLOW_MOTION_TINT = 0x3366ff;
 export const SLOW_MOTION_TINT_ALPHA = 0.15;
-// Escudo: barrera celeste a lo alto de todo el arco, centrada a
-// SHIELD_OFFSET_X px del borde (detrás de la pala, que está a 40).
+// Barreras sobre la línea del arco (escudo y arco chico): GOAL_BARRIER_WIDTH
+// de ancho, centradas a GOAL_BARRIER_OFFSET_X px del borde (detrás de la pala,
+// que está a 40).
+export const GOAL_BARRIER_WIDTH = 8;
+export const GOAL_BARRIER_OFFSET_X = 12;
+// Escudo: barrera celeste a lo alto de todo el arco.
 export const SHIELD_COLOR = 0x66ccff;
-export const SHIELD_WIDTH = 8;
-export const SHIELD_OFFSET_X = 12;
+// Arco chico: paredes grises en las puntas del arco, que tapan este alto cada una.
+export const SMALL_GOAL_COLOR = 0xaaaaaa;
+export const SMALL_GOAL_COVERAGE = 0.25;
 export const PADDLE_GROW_SCALE = 1.6;
 export const PADDLE_SHRINK_SCALE = 0.6;
 export const PADDLE_SPEED_UP_SCALE = 1.6;
@@ -146,7 +152,7 @@ export const BALL_INVISIBLE_BLINK_INTERVAL = 220;
 export const CENTER_PADDLE_HEIGHT = 60;
 export const CENTER_PADDLE_SPEED = 180;
 
-// 7 tipos de pala/puntaje/escudo (verde/roja) + 9 amarillos = 23 power-ups, según el GDD.
+// 8 tipos de pala/puntaje/arco (verde/roja) + 9 amarillos = 25 power-ups, según el GDD.
 export const POWERUP_DEFINITIONS = [
   { id: "grow-green", kind: "grow", colorCategory: "green" },
   { id: "grow-red", kind: "grow", colorCategory: "red" },
@@ -162,6 +168,8 @@ export const POWERUP_DEFINITIONS = [
   { id: "double-point-red", kind: "doublePoint", colorCategory: "red" },
   { id: "shield-green", kind: "shield", colorCategory: "green" },
   { id: "shield-red", kind: "shield", colorCategory: "red" },
+  { id: "small-goal-green", kind: "smallGoal", colorCategory: "green" },
+  { id: "small-goal-red", kind: "smallGoal", colorCategory: "red" },
   { id: "extra-ball", kind: "extraBall", colorCategory: "yellow" },
   { id: "turbo", kind: "turbo", colorCategory: "yellow" },
   { id: "zigzag-ball", kind: "zigzag", colorCategory: "yellow" },

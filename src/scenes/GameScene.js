@@ -35,6 +35,7 @@ import Sabotage from "../systems/Sabotage.js";
 import DebugKey from "../systems/DebugKey.js";
 import SlowMotionEffect from "../systems/SlowMotionEffect.js";
 import ShieldEffect from "../systems/ShieldEffect.js";
+import SmallGoalEffect from "../systems/SmallGoalEffect.js";
 import Field from "../systems/Field.js";
 import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
@@ -123,6 +124,7 @@ export default class GameScene extends Phaser.Scene {
     this.centerPaddleEffect = new CenterPaddleEffect(this, this.ballManager);
     this.slowMotion = new SlowMotionEffect(this, field);
     this.shieldEffect = new ShieldEffect(this, field, this.powerUpFeedback);
+    this.smallGoalEffect = new SmallGoalEffect(this, field);
 
     if (rules.forwardPaddle) this.addForwardPaddle(rules.forwardPaddle);
 
@@ -188,6 +190,8 @@ export default class GameScene extends Phaser.Scene {
     this.ballManager.update(delta / this.physics.world.timeScale);
     this.trivelaShot?.update(this.ballManager.balls);
     this.sabotage?.update(delta);
+    // Primero las paredes del arco chico: si la pelota pega en una, el escudo no se gasta.
+    this.smallGoalEffect.update(this.ballManager.balls);
     this.shieldEffect.update(this.ballManager.balls);
   }
 
@@ -232,6 +236,7 @@ export default class GameScene extends Phaser.Scene {
     this.centerPaddleEffect.clear();
     this.slowMotion.clear();
     this.shieldEffect.clearAll();
+    this.smallGoalEffect.clearAll();
 
     this.paddleLeft.recenter(PADDLE_RECENTER_DURATION);
     this.paddleRight.recenter(PADDLE_RECENTER_DURATION);
@@ -288,6 +293,12 @@ export default class GameScene extends Phaser.Scene {
 
     if (PADDLE_POWERUP_KINDS.includes(definition.kind)) {
       targetPaddle = this.powerUpEffects.applyPaddleEffect(definition.kind, definition.colorCategory, attackerSide);
+    } else if (definition.kind === "smallGoal") {
+      const targetSide = this.powerUpEffects.resolveTarget(definition.kind, definition.colorCategory, attackerSide);
+      if (targetSide) {
+        this.smallGoalEffect.activate(targetSide, POWERUP_EFFECT_DURATION);
+        targetPaddle = targetSide === "p1" ? this.paddleLeft : this.paddleRight;
+      }
     } else if (definition.kind === "shield") {
       const targetSide = this.powerUpEffects.resolveTarget(definition.kind, definition.colorCategory, attackerSide);
       if (targetSide) {
@@ -336,6 +347,7 @@ export default class GameScene extends Phaser.Scene {
     this.centerPaddleEffect.clear();
     this.slowMotion.clear();
     this.shieldEffect.clearAll();
+    this.smallGoalEffect.clearAll();
     this.ballManager.clearAll();
     this.trivelaShot?.clear();
 

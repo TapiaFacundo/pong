@@ -37,6 +37,7 @@ export const KEYS = {
   PELOTA_GIGANTE: "Pelota gigante",
   CAMARA_LENTA: "Cámara lenta",
   ESCUDO: "Escudo",
+  ARCO_CHICO: "Arco chico",
   PELOTA_ZIGZAGUEANTE: "Pelota zigzagueante",
   PELOTA_INVISIBLE: "Pelota invisible",
   PUNTO_DOBLE: "Punto doble",
