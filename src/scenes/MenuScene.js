@@ -1,10 +1,11 @@
 import Phaser from "phaser";
-import { GAME_TITLE, GAME_WIDTH, COLORS } from "../config.js";
+import { GAME_TITLE, GAME_WIDTH } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 import { getTranslations, getLanguageConfig } from "../services/translations.js";
 import LanguagePanel from "../ui/LanguagePanel.js";
 import MenuList from "../ui/MenuList.js";
 import IconButton from "../ui/IconButton.js";
+import { addTitle, menuTop } from "../ui/ScreenLayout.js";
 
 // Menú principal: Batalla (partidas casuales), Modo Historia o Arcade. En las esquinas,
 // "?" abre cómo jugar y "⚙" el panel de idioma.
@@ -27,7 +28,7 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   buildScene() {
-    this.add.text(GAME_WIDTH / 2, 150, GAME_TITLE, { fontSize: "48px", color: COLORS.TEXT }).setOrigin(0.5);
+    addTitle(this, GAME_TITLE, { y: 170, fontSize: "56px" });
 
     const helpIcon = new IconButton(this, 30, 28, "?", () => this.openTutorial(), { circle: true, fontSize: "20px" });
     const settingsIcon = new IconButton(this, GAME_WIDTH - 30, 28, "⚙", () => this.languagePanel.toggle(), {
@@ -40,8 +41,8 @@ export default class MenuScene extends Phaser.Scene {
 
     // Con el teclado, subiendo desde "Batalla" se llega a los íconos de las esquinas.
     this.menu = new MenuList(this, {
-      y: 300,
-      spacing: 52,
+      y: menuTop(3, { spacing: 54, centerY: 360 }),
+      spacing: 54,
       fontSize: "28px",
       initialIndex: this.initialIndex,
       topIcons: [helpIcon, fullscreenIcon, settingsIcon].filter(Boolean),

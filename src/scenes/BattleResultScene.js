@@ -3,6 +3,7 @@ import { GAME_WIDTH, GAME_HEIGHT, COLORS } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import MenuList from "../ui/MenuList.js";
+import { addOverlayPanel, MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
 
 // Resultado de una partida de la Batalla: "¡Gana {jugador}!" y "Volver al
 // menú" (también con Esc), encima de la cancha con el marcador final. Es una
@@ -19,8 +20,9 @@ export default class BattleResultScene extends Phaser.Scene {
   }
 
   create() {
+    addOverlayPanel(this, 200);
     this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 40, getPhrase(KEYS.GANA_LABEL).replace("{label}", this.winnerLabel), {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 35, getPhrase(KEYS.GANA_LABEL).replace("{label}", this.winnerLabel), {
         fontSize: "40px",
         color: COLORS.TEXT,
       })
@@ -32,6 +34,7 @@ export default class BattleResultScene extends Phaser.Scene {
     };
     new MenuList(this, {
       y: GAME_HEIGHT / 2 + 40,
+      fontSize: MENU_FONT_SIZE,
       items: [{ labelKey: KEYS.VOLVER_AL_MENU, action: backToMenu }],
     });
     this.input.keyboard.on("keydown-ESC", backToMenu);

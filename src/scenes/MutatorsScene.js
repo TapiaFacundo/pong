@@ -7,7 +7,7 @@ import { saveMutatorSelection } from "../services/MutatorStorage.js";
 import MenuList from "../ui/MenuList.js";
 import { addBackNavigation } from "../ui/IconButton.js";
 
-const ROWS_TOP = 92;
+const ROWS_TOP = 104;
 const ROW_SPACING = 32;
 const BUTTONS_GAP = 22;
 
@@ -30,7 +30,7 @@ export default class MutatorsScene extends Phaser.Scene {
 
   create() {
     this.add
-      .text(GAME_WIDTH / 2, 44, getPhrase(KEYS.MODIFICADORES), { fontSize: "32px", color: COLORS.TEXT })
+      .text(GAME_WIDTH / 2, 50, getPhrase(KEYS.MODIFICADORES), { fontSize: "32px", color: COLORS.TEXT })
       .setOrigin(0.5);
 
     this.menu = new MenuList(this, {

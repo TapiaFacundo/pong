@@ -1,8 +1,9 @@
 import Phaser from "phaser";
-import { GAME_WIDTH, GAME_HEIGHT, COLORS } from "../config.js";
+import { GAME_WIDTH, COLORS } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import MenuList from "../ui/MenuList.js";
+import { addOverlayPanel, MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
 
 const DETAIL_COLOR = "#888888";
 const RECORD_COLOR = "#ffdd33";
@@ -24,17 +25,17 @@ export default class ArcadeResultScene extends Phaser.Scene {
     const { score, level, record, isNew } = this.result;
     const centerX = GAME_WIDTH / 2;
 
-    this.add.rectangle(centerX, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.7);
+    addOverlayPanel(this, 360);
 
-    this.add.text(centerX, 150, getPhrase(KEYS.FIN_DEL_JUEGO), { fontSize: "40px", color: COLORS.TEXT }).setOrigin(0.5);
-    this.add.text(centerX, 225, String(score), { fontSize: "56px", color: COLORS.TEXT }).setOrigin(0.5);
+    this.add.text(centerX, 165, getPhrase(KEYS.FIN_DEL_JUEGO), { fontSize: "40px", color: COLORS.TEXT }).setOrigin(0.5);
+    this.add.text(centerX, 228, String(score), { fontSize: "56px", color: COLORS.TEXT }).setOrigin(0.5);
     this.add
-      .text(centerX, 280, getPhrase(KEYS.NIVEL_N).replace("{n}", level), { fontSize: "20px", color: DETAIL_COLOR })
+      .text(centerX, 278, getPhrase(KEYS.NIVEL_N).replace("{n}", level), { fontSize: "20px", color: DETAIL_COLOR })
       .setOrigin(0.5);
 
     const recordText = isNew ? getPhrase(KEYS.NUEVO_RECORD) : getPhrase(KEYS.RECORD_N).replace("{n}", record.score);
     this.add
-      .text(centerX, 318, recordText, { fontSize: "20px", color: isNew ? RECORD_COLOR : DETAIL_COLOR })
+      .text(centerX, 308, recordText, { fontSize: "20px", color: isNew ? RECORD_COLOR : DETAIL_COLOR })
       .setOrigin(0.5);
 
     const backToMenu = () => {
@@ -42,7 +43,8 @@ export default class ArcadeResultScene extends Phaser.Scene {
       this.scene.start("MenuScene", { mode: "arcade" });
     };
     new MenuList(this, {
-      y: 400,
+      y: 380,
+      fontSize: MENU_FONT_SIZE,
       spacing: 48,
       items: [
         {

@@ -1,11 +1,12 @@
 import Phaser from "phaser";
-import { GAME_WIDTH, COLORS, WIN_SCORE_SHORT, WIN_SCORE_MEDIUM, WIN_SCORE_LONG } from "../config.js";
+import { WIN_SCORE_SHORT, WIN_SCORE_MEDIUM, WIN_SCORE_LONG } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import { buildMutatorSetup, countActiveMutators } from "../data/mutators.js";
 import { loadMutatorSelection } from "../services/MutatorStorage.js";
 import MenuList from "../ui/MenuList.js";
 import { addBackNavigation } from "../ui/IconButton.js";
+import { addTitle, menuTop, MENU_SPACING, MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
 
 const WIN_SCORES = [WIN_SCORE_SHORT, WIN_SCORE_MEDIUM, WIN_SCORE_LONG];
 
@@ -27,7 +28,7 @@ export default class PointsScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.text(GAME_WIDTH / 2, 130, getPhrase(KEYS.PUNTOS), { fontSize: "36px", color: COLORS.TEXT }).setOrigin(0.5);
+    addTitle(this, getPhrase(KEYS.PUNTOS));
 
     const activeMutators = countActiveMutators(this.selection);
     const mutatorsLabel =
@@ -36,8 +37,9 @@ export default class PointsScene extends Phaser.Scene {
         : getPhrase(KEYS.MODIFICADORES);
 
     new MenuList(this, {
-      y: 250,
-      spacing: 52,
+      y: menuTop(WIN_SCORES.length + 1) - 8,
+      spacing: MENU_SPACING,
+      fontSize: MENU_FONT_SIZE,
       initialIndex: this.initialIndex,
       items: [
         ...WIN_SCORES.map((winScore) => ({
@@ -46,6 +48,7 @@ export default class PointsScene extends Phaser.Scene {
         })),
         {
           label: mutatorsLabel,
+          gapBefore: 16,
           action: () => this.scene.start("MutatorsScene", { ...this.gameData, selection: this.selection }),
         },
       ],

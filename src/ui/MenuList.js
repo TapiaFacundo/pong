@@ -4,11 +4,14 @@ import CarouselRow from "./CarouselRow.js";
 
 const SELECTED_COLOR = "#66ff66";
 const UNSELECTED_COLOR = "#888888";
+// Separación entre la marca "▶" y el texto de la opción marcada.
+const MARKER_GAP = 12;
 
 // Lista vertical de opciones que se usa en todos los menús. Se navega con
 // W / S o las flechas arriba / abajo y se confirma con Enter; con el mouse,
 // pasar por encima marca la opción y el clic la confirma. La opción marcada
-// se ve en verde con "▶" adelante.
+// se ve en verde con "▶" adelante. La marca es un texto aparte, a la izquierda:
+// así cada opción queda centrada igual, esté marcada o no.
 //
 // items: [{ labelKey, action }] (labelKey es una clave de texto; también se
 // puede pasar `label` con un texto que no se traduce).
@@ -25,6 +28,8 @@ export default class MenuList {
     this.enabled = true;
     this.topIcons = topIcons;
     this.iconIndex = null; // null: el foco está en la lista
+
+    this.marker = scene.add.text(0, 0, "▶", { fontSize, color: SELECTED_COLOR }).setOrigin(1, 0.5);
 
     let gaps = 0;
     this.items = items.map((item, index) => {
@@ -143,10 +148,19 @@ export default class MenuList {
         return;
       }
 
-      const label = item.labelKey ? getPhrase(item.labelKey) : item.label;
-      item.text.setText((isSelected ? "▶ " : "   ") + label);
+      item.text.setText(item.labelKey ? getPhrase(item.labelKey) : item.label);
       item.text.setColor(isSelected ? SELECTED_COLOR : UNSELECTED_COLOR);
     });
+    this.placeMarker();
+  }
+
+  // La marca va a la izquierda de la opción marcada (en los carruseles no:
+  // ahí lo marcado se ve en verde).
+  placeMarker() {
+    const item = this.iconIndex === null ? this.items[this.selectedIndex] : null;
+    const text = item?.text;
+    this.marker.setVisible(!!text);
+    if (text) this.marker.setPosition(text.x - text.displayWidth / 2 - MARKER_GAP, text.y);
   }
 
   // Mientras hay un panel encima (por ejemplo el de idioma), la lista no responde.

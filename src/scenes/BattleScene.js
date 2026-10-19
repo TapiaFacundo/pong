@@ -1,9 +1,9 @@
 import Phaser from "phaser";
-import { GAME_WIDTH, COLORS } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import MenuList from "../ui/MenuList.js";
 import { addBackNavigation } from "../ui/IconButton.js";
+import { addTitle, menuTop, MENU_SPACING, MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
 
 // Batalla (partida casual): contra la CPU o entre dos jugadores.
 // 1 jugador sigue a la dificultad; 2 jugadores, directo al puntaje.
@@ -18,12 +18,12 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.text(GAME_WIDTH / 2, 150, getPhrase(KEYS.BATALLA), { fontSize: "36px", color: COLORS.TEXT }).setOrigin(0.5);
+    addTitle(this, getPhrase(KEYS.BATALLA));
 
     new MenuList(this, {
-      y: 280,
-      spacing: 52,
-      fontSize: "28px",
+      y: menuTop(2),
+      spacing: MENU_SPACING,
+      fontSize: MENU_FONT_SIZE,
       initialIndex: this.initialIndex,
       items: [
         { labelKey: KEYS.TEXT_1_JUGADOR, action: () => this.scene.start("DifficultyScene") },

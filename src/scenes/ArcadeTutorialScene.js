@@ -15,11 +15,12 @@ import { getPhrase } from "../services/translations.js";
 import { addBackNavigation } from "../ui/IconButton.js";
 import PowerUpIcon from "../ui/PowerUpIcon.js";
 import { isTouchDevice } from "../ui/TouchControls.js";
+import { addTitle } from "../ui/ScreenLayout.js";
 
 const TEXT_X = 250;
 const PICTURE_X = 200;
-const FIRST_LINE_Y = 175;
-const LINE_SPACING = 58;
+const FIRST_LINE_Y = 195;
+const LINE_SPACING = 54;
 const BRICK_WIDTH = 10;
 const BRICK_HEIGHT = 22;
 
@@ -37,7 +38,7 @@ export default class ArcadeTutorialScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.text(GAME_WIDTH / 2, 80, getPhrase(KEYS.ARCADE), { fontSize: "34px", color: COLORS.TEXT }).setOrigin(0.5);
+    addTitle(this, getPhrase(KEYS.ARCADE));
 
     const lines = [
       [isTouchDevice() ? KEYS.MANTENE_APRETADAS_LAS_FLECHAS_DE_TU_LADO : KEYS.W_S_O_FLECHAS, (y) => this.drawPaddle(y)],

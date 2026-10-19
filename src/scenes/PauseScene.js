@@ -5,6 +5,7 @@ import { getPhrase } from "../services/translations.js";
 import LanguagePanel from "../ui/LanguagePanel.js";
 import MenuList from "../ui/MenuList.js";
 import IconButton from "../ui/IconButton.js";
+import { addOverlayPanel, TITLE_FONT_SIZE, MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
 
 // Pausa de cualquier partida, encima de ella: Reanudar, salir y Opciones (idioma).
 export default class PauseScene extends Phaser.Scene {
@@ -23,14 +24,15 @@ export default class PauseScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6);
+    addOverlayPanel(this, 300);
 
     this.titleText = this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 90, getPhrase(KEYS.PAUSA), { fontSize: "36px", color: COLORS.TEXT })
+      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 95, getPhrase(KEYS.PAUSA), { fontSize: TITLE_FONT_SIZE, color: COLORS.TEXT })
       .setOrigin(0.5);
 
     this.menu = new MenuList(this, {
-      y: GAME_HEIGHT / 2 - 10,
+      y: GAME_HEIGHT / 2 - 15,
+      fontSize: MENU_FONT_SIZE,
       spacing: 48,
       items: [
         { labelKey: KEYS.REANUDAR, action: () => this.resumeGame() },

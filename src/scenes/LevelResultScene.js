@@ -4,13 +4,14 @@ import { getLevel, LEVEL_COUNT } from "../data/levels.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import ProgressStorage from "../services/ProgressStorage.js";
+import { MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
 import MenuList from "../ui/MenuList.js";
 import { addBackNavigation } from "../ui/IconButton.js";
 
 const WIN_COLOR = "#33dd55";
 const LOSE_COLOR = "#dd3333";
-const OPTIONS_TOP = 380;
-const OPTION_SPACING = 40;
+const OPTIONS_TOP = 410;
+const OPTION_SPACING = 48;
 
 // Resultado de un nivel del Modo Historia. Si el jugador ganó, guarda el
 // nivel como superado (y avisa si desbloqueó el siguiente); después ofrece
@@ -32,7 +33,7 @@ export default class LevelResultScene extends Phaser.Scene {
     const rivalName = getPhrase(this.level.nameKey);
 
     this.add
-      .text(GAME_WIDTH / 2, 120, getPhrase(this.won ? KEYS.GANASTE : KEYS.PERDISTE), {
+      .text(GAME_WIDTH / 2, 145, getPhrase(this.won ? KEYS.GANASTE : KEYS.PERDISTE), {
         fontSize: "48px",
         color: this.won ? WIN_COLOR : LOSE_COLOR,
       })
@@ -40,23 +41,23 @@ export default class LevelResultScene extends Phaser.Scene {
 
     const summaryKey = this.won ? KEYS.LE_GANASTE_A_RIVAL : KEYS.RIVAL_TE_GANO;
     this.add
-      .text(GAME_WIDTH / 2, 185, getPhrase(summaryKey).replace("{rival}", rivalName), { fontSize: "20px", color: "#aaaaaa" })
+      .text(GAME_WIDTH / 2, 210, getPhrase(summaryKey).replace("{rival}", rivalName), { fontSize: "20px", color: "#aaaaaa" })
       .setOrigin(0.5);
 
     this.add
-      .text(GAME_WIDTH / 2, 245, `${this.scoreP1} - ${this.scoreP2}`, { fontSize: "44px", color: COLORS.TEXT })
+      .text(GAME_WIDTH / 2, 270, `${this.scoreP1} - ${this.scoreP2}`, { fontSize: "44px", color: COLORS.TEXT })
       .setOrigin(0.5);
 
     if (unlockedLevelId) {
       this.add
-        .text(GAME_WIDTH / 2, 310, getPhrase(KEYS.NIVEL_N_DESBLOQUEADO).replace("{n}", unlockedLevelId), {
+        .text(GAME_WIDTH / 2, 335, getPhrase(KEYS.NIVEL_N_DESBLOQUEADO).replace("{n}", unlockedLevelId), {
           fontSize: "20px",
           color: "#ffdd33",
         })
         .setOrigin(0.5);
     }
 
-    new MenuList(this, { y: OPTIONS_TOP, spacing: OPTION_SPACING, fontSize: "24px", items: this.buildOptions() });
+    new MenuList(this, { y: OPTIONS_TOP, spacing: OPTION_SPACING, fontSize: MENU_FONT_SIZE, items: this.buildOptions() });
     addBackNavigation(this, () => this.goToLevelSelect());
   }
 

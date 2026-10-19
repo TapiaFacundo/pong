@@ -5,6 +5,7 @@ import { getPhrase } from "../services/translations.js";
 import MenuList from "../ui/MenuList.js";
 import { addBackNavigation } from "../ui/IconButton.js";
 import { isTouchDevice } from "../ui/TouchControls.js";
+import { addTitle, MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
 
 const HINT_COLOR = "#888888";
 
@@ -25,22 +26,22 @@ export default class TutorialScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.text(GAME_WIDTH / 2, 80, getPhrase(KEYS.COMO_JUGAR), { fontSize: "34px", color: COLORS.TEXT }).setOrigin(0.5);
+    addTitle(this, getPhrase(KEYS.COMO_JUGAR));
 
     // Controles: teclas en la PC, botones de los costados en pantallas táctiles.
     if (isTouchDevice()) {
-      this.addLine(166, KEYS.MANTENE_APRETADAS_LAS_FLECHAS_DE_TU_LADO, COLORS.TEXT, "20px");
-      this.addLine(206, KEYS.PAUSA_ARRIBA_AL_CENTRO, HINT_COLOR, "16px");
+      this.addLine(196, KEYS.MANTENE_APRETADAS_LAS_FLECHAS_DE_TU_LADO, COLORS.TEXT, "20px");
+      this.addLine(236, KEYS.PAUSA_ARRIBA_AL_CENTRO, HINT_COLOR, "16px");
     } else {
-      this.addLine(150, KEYS.JUGADOR_1_W_S, COLORS.TEXT, "20px");
-      this.addLine(182, KEYS.JUGADOR_2_FLECHAS, COLORS.TEXT, "20px");
-      this.addLine(214, KEYS.ESC_PAUSA, HINT_COLOR, "16px");
+      this.addLine(180, KEYS.JUGADOR_1_W_S, COLORS.TEXT, "20px");
+      this.addLine(212, KEYS.JUGADOR_2_FLECHAS, COLORS.TEXT, "20px");
+      this.addLine(244, KEYS.ESC_PAUSA, HINT_COLOR, "16px");
     }
 
-    this.addLine(280, KEYS.TOCA_LOS_POWER_UPS_CON_LA_PELOTA, COLORS.TEXT, "20px");
-    this.addLine(318, KEYS.VERDE_A_TU_FAVOR, POWERUP_TEXT_COLORS.green);
-    this.addLine(350, KEYS.ROJO_EN_TU_CONTRA, POWERUP_TEXT_COLORS.red);
-    this.addLine(382, KEYS.AMARILLO_PARA_LOS_DOS, POWERUP_TEXT_COLORS.yellow);
+    this.addLine(310, KEYS.TOCA_LOS_POWER_UPS_CON_LA_PELOTA, COLORS.TEXT, "20px");
+    this.addLine(348, KEYS.VERDE_A_TU_FAVOR, POWERUP_TEXT_COLORS.green);
+    this.addLine(380, KEYS.ROJO_EN_TU_CONTRA, POWERUP_TEXT_COLORS.red);
+    this.addLine(412, KEYS.AMARILLO_PARA_LOS_DOS, POWERUP_TEXT_COLORS.yellow);
 
     // Antes del nivel 1 del Modo Historia: "Jugar". Desde el menú: la pantalla del Arcade.
     const item = this.next
@@ -49,7 +50,7 @@ export default class TutorialScene extends Phaser.Scene {
           labelKey: KEYS.ARCADE,
           action: () => this.scene.start("ArcadeTutorialScene", { returnTo: this.returnTo, returnData: this.returnData }),
         };
-    new MenuList(this, { y: 470, fontSize: "28px", items: [item] });
+    new MenuList(this, { y: 490, fontSize: MENU_FONT_SIZE, items: [item] });
 
     addBackNavigation(this, () => this.scene.start(this.returnTo, this.returnData));
   }

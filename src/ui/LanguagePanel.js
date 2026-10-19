@@ -2,6 +2,7 @@ import { GAME_WIDTH, GAME_HEIGHT } from "../config.js";
 import { EN, ES } from "../enums/languages.js";
 import { FETCHED, FETCHING, READY, TODO } from "../enums/status.js";
 import { getTranslations } from "../services/translations.js";
+import { PANEL_FILL_COLOR, PANEL_BORDER_COLOR } from "./ScreenLayout.js";
 
 const PANEL_WIDTH = 240;
 const PANEL_HEIGHT = 160;
@@ -52,8 +53,8 @@ export default class LanguagePanel {
       .on("pointerdown", () => this.close());
 
     this.box = this.scene.add
-      .rectangle(x, y, PANEL_WIDTH, PANEL_HEIGHT, 0x111111, 0.97)
-      .setStrokeStyle(2, 0xffffff)
+      .rectangle(x, y, PANEL_WIDTH, PANEL_HEIGHT, PANEL_FILL_COLOR, 0.97)
+      .setStrokeStyle(2, PANEL_BORDER_COLOR)
       .setInteractive()
       .on("pointerdown", () => {});
 
@@ -75,7 +76,12 @@ export default class LanguagePanel {
       .on("pointerover", () => this.setFocus(1))
       .on("pointerdown", () => this.selectLanguage(EN));
 
-    this.elements = [this.backdrop, this.box, this.title, this.optionEs, this.optionEn];
+    // Marca "▶" aparte, a la izquierda de la opción marcada: los nombres quedan centrados.
+    this.marker = this.scene.add
+      .text(0, 0, "▶", { fontSize: "22px", color: UNSELECTED_COLOR })
+      .setOrigin(1, 0.5);
+
+    this.elements = [this.backdrop, this.box, this.title, this.optionEs, this.optionEn, this.marker];
     this.updateHighlight();
   }
 
@@ -133,9 +139,12 @@ export default class LanguagePanel {
   updateHighlight() {
     [this.optionEs, this.optionEn].forEach((option, index) => {
       const language = LANGUAGES[index];
-      option.setText((index === this.focusIndex ? "▶ " : "   ") + (language === ES ? "Español" : "English"));
+      option.setText(language === ES ? "Español" : "English");
       option.setColor(this.language === language ? SELECTED_COLOR : UNSELECTED_COLOR);
     });
+
+    const focused = [this.optionEs, this.optionEn][this.focusIndex];
+    this.marker.setPosition(focused.x - focused.displayWidth / 2 - 10, focused.y).setColor(focused.style.color);
   }
 
   update() {

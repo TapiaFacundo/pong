@@ -25,22 +25,22 @@ export default class LevelIntroScene extends Phaser.Scene {
     const bossLabel = level.boss ? getPhrase(level.boss === "final" ? KEYS.JEFE_FINAL : KEYS.JEFE) : null;
 
     this.add
-      .text(GAME_WIDTH / 2, 140, bossLabel ? `${levelLabel} · ${bossLabel}` : levelLabel, {
+      .text(GAME_WIDTH / 2, 165, bossLabel ? `${levelLabel} · ${bossLabel}` : levelLabel, {
         fontSize: "20px",
         color: bossLabel ? BOSS_COLOR : "#888888",
       })
       .setOrigin(0.5);
 
     this.add
-      .text(GAME_WIDTH / 2, 200, getPhrase(level.nameKey), { fontSize: "48px", color: COLORS.TEXT })
+      .text(GAME_WIDTH / 2, 225, getPhrase(level.nameKey), { fontSize: "48px", color: COLORS.TEXT })
       .setOrigin(0.5);
 
     this.add
-      .text(GAME_WIDTH / 2, 268, getPhrase(level.abilityKey), { fontSize: "18px", color: "#aaaaaa" })
+      .text(GAME_WIDTH / 2, 293, getPhrase(level.abilityKey), { fontSize: "18px", color: "#aaaaaa" })
       .setOrigin(0.5);
 
     this.add
-      .text(GAME_WIDTH / 2, 335, `“${getPhrase(level.quoteKey)}”`, {
+      .text(GAME_WIDTH / 2, 360, `“${getPhrase(level.quoteKey)}”`, {
         fontSize: "20px",
         fontStyle: "italic",
         color: COLORS.TEXT,
@@ -50,7 +50,7 @@ export default class LevelIntroScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     new MenuList(this, {
-      y: 450,
+      y: 470,
       fontSize: "28px",
       items: [{ labelKey: KEYS.JUGAR, action: () => this.startLevel() }],
     });

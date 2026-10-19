@@ -6,6 +6,7 @@ import { getPhrase } from "../services/translations.js";
 import ProgressStorage from "../services/ProgressStorage.js";
 import LevelCell, { LEVEL_CELL_WIDTH, LEVEL_CELL_HEIGHT } from "../ui/LevelCell.js";
 import { addBackNavigation } from "../ui/IconButton.js";
+import { addTitle } from "../ui/ScreenLayout.js";
 
 const COLUMNS = 5;
 const CELL_GAP = 20;
@@ -22,9 +23,7 @@ export default class LevelSelectScene extends Phaser.Scene {
   create() {
     this.progress = new ProgressStorage();
 
-    this.add
-      .text(GAME_WIDTH / 2, 70, getPhrase(KEYS.MODO_HISTORIA), { fontSize: "36px", color: COLORS.TEXT })
-      .setOrigin(0.5);
+    addTitle(this, getPhrase(KEYS.MODO_HISTORIA));
 
     this.cells = LEVELS.map((level, index) => this.createCell(level, index));
 

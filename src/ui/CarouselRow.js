@@ -7,10 +7,12 @@ const VALUE_COLOR = "#ffffff";
 const CHANGED_VALUE_COLOR = "#ffdd33";
 const ARROW_COLOR = "#555555";
 
-const LABEL_RIGHT_X = 400;
-const LEFT_ARROW_X = 450;
-const VALUE_X = 580;
-const RIGHT_ARROW_X = 710;
+// Columnas: nombre (alineado a la derecha), ◀, valor y ▶. El conjunto queda
+// centrado en la pantalla.
+const LABEL_RIGHT_X = 368;
+const LEFT_ARROW_X = 418;
+const VALUE_X = 548;
+const RIGHT_ARROW_X = 678;
 // Zona de toque de cada flecha, más grande que el símbolo (para el dedo).
 const ARROW_HIT_WIDTH = 50;
 const ARROW_HIT_HEIGHT = 34;

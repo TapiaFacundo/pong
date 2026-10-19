@@ -1,9 +1,9 @@
 import Phaser from "phaser";
-import { GAME_WIDTH, COLORS } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import MenuList from "../ui/MenuList.js";
 import { addBackNavigation } from "../ui/IconButton.js";
+import { addTitle, menuTop, MENU_SPACING, MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
 
 const DIFFICULTIES = [
   { key: "easy", labelKey: KEYS.FACIL },
@@ -26,11 +26,12 @@ export default class DifficultyScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.text(GAME_WIDTH / 2, 120, getPhrase(KEYS.DIFICULTAD), { fontSize: "36px", color: COLORS.TEXT }).setOrigin(0.5);
+    addTitle(this, getPhrase(KEYS.DIFICULTAD));
 
     new MenuList(this, {
-      y: 240,
-      spacing: 50,
+      y: menuTop(DIFFICULTIES.length),
+      spacing: MENU_SPACING,
+      fontSize: MENU_FONT_SIZE,
       initialIndex: this.initialIndex,
       items: DIFFICULTIES.map(({ key, labelKey }) => ({
         labelKey,
