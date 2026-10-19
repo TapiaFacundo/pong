@@ -8,21 +8,23 @@ const MOTION_CLASSES = {
 };
 
 export default class BallEffects {
-  constructor(scene) {
+  // duration: cuánto duran los efectos (puede cambiarla un modificador de la Batalla).
+  constructor(scene, { duration = POWERUP_EFFECT_DURATION } = {}) {
     this.scene = scene;
+    this.duration = duration;
     this.invisibleTimers = new Map();
     this.giantTimers = new Map();
     this.motionTimers = { zigzag: new Map(), curve: new Map() };
   }
 
-  // Pelota gigante: la pelota crece durante POWERUP_EFFECT_DURATION. Volver a
+  // Pelota gigante: la pelota crece durante this.duration. Volver a
   // agarrarlo reinicia el tiempo (no la agranda más). Los apply* devuelven el
   // temporizador del efecto.
   applyGiant(ball) {
     this.clearGiant(ball);
 
     ball.setSizeScale(BALL_GIANT_SCALE);
-    const expireEvent = this.scene.time.delayedCall(POWERUP_EFFECT_DURATION, () => this.clearGiant(ball));
+    const expireEvent = this.scene.time.delayedCall(this.duration, () => this.clearGiant(ball));
     this.giantTimers.set(ball, expireEvent);
     return expireEvent;
   }
@@ -37,13 +39,13 @@ export default class BallEffects {
   }
 
   // Efectos que cambian la trayectoria de una pelota (zigzag, curva) durante
-  // POWERUP_EFFECT_DURATION. Volver a agarrar el mismo reinicia el tiempo.
+  // this.duration. Volver a agarrar el mismo reinicia el tiempo.
   applyMotion(ball, kind) {
     this.clearMotion(ball, kind);
 
     const motion = new MOTION_CLASSES[kind]();
     ball.addMotion(motion);
-    const expireEvent = this.scene.time.delayedCall(POWERUP_EFFECT_DURATION, () => this.clearMotion(ball, kind));
+    const expireEvent = this.scene.time.delayedCall(this.duration, () => this.clearMotion(ball, kind));
 
     this.motionTimers[kind].set(ball, { motion, expireEvent });
     return expireEvent;
@@ -72,7 +74,7 @@ export default class BallEffects {
         ball.circle.setVisible(!ball.circle.visible);
       },
     });
-    const expireEvent = this.scene.time.delayedCall(POWERUP_EFFECT_DURATION, () => this.clearInvisible(ball));
+    const expireEvent = this.scene.time.delayedCall(this.duration, () => this.clearInvisible(ball));
 
     this.invisibleTimers.set(ball, { blinkEvent, expireEvent });
     // La IA lo lee para errar más mientras dura el efecto.

@@ -12,6 +12,7 @@ import {
   STORY_RESULT_DELAY,
   PADDLE_POWERUP_KINDS,
   POWERUP_EFFECT_DURATION,
+  AI_DIFFICULTIES,
   SLOW_MOTION_DURATION,
   SERVE_DELAY_START,
   SERVE_DELAY_AFTER_POINT,
@@ -45,7 +46,6 @@ import EffectIndicators from "../systems/EffectIndicators.js";
 import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import { getLevel } from "../data/levels.js";
-import MenuList from "../ui/MenuList.js";
 import IconButton from "../ui/IconButton.js";
 import { touchControls } from "../ui/TouchControls.js";
 import { ROTATE_NOTICE_QUERY } from "../ui/RotateNotice.js";
@@ -62,6 +62,9 @@ export default class GameScene extends Phaser.Scene {
     this.mode = this.level ? "story" : data.mode ?? "1p";
     this.winScore = this.level ? STORY_WIN_SCORE : data.winScore ?? WIN_SCORE_SHORT;
     this.difficulty = this.level ? this.level.ai : data.difficulty ?? "normal";
+    // En la Batalla, los modificadores elegidos: { field, rules } con la misma
+    // forma que un nivel (ver data/mutators.js).
+    this.mutators = this.level ? null : data.mutators ?? null;
     this.matchOver = false;
     this.isPaused = false;
     // Phaser reutiliza la misma instancia de escena entre partidas: los
@@ -74,25 +77,36 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    // La cancha del nivel (en casual, la normal de 800 × 600).
-    this.field = new Field(this, this.level?.field);
+    // La cancha del nivel o de los modificadores (si no, la normal de 800 × 600).
+    this.field = new Field(this, this.level?.field ?? this.mutators?.field);
     const field = this.field;
 
     this.drawMidLine();
     this.scoreManager = new ScoreManager(this.winScore);
 
-    // Reglas especiales del nivel del Modo Historia (vacías en casual).
-    const rules = this.level?.rules ?? {};
+    // Reglas especiales del nivel del Modo Historia o de los modificadores de
+    // la Batalla (vacías en una partida normal).
+    const rules = this.level?.rules ?? this.mutators?.rules ?? {};
     this.levelRules = rules;
+    this.effectDuration = rules.powerUpDuration ?? POWERUP_EFFECT_DURATION;
 
-    const paddleOptions = { speedScale: field.paddleSpeedScale };
+    // La velocidad de las palas (también la de la CPU) sigue al alto de la cancha y a los modificadores.
+    const paddleOptions = { speedScale: field.paddleSpeedScale * (rules.paddleSpeedScale ?? 1) };
     this.paddleLeft = new Paddle(this, PADDLE_OFFSET_X, field.centerY, paddleOptions);
     this.paddleRight = new Paddle(this, field.width - PADDLE_OFFSET_X, field.centerY, paddleOptions);
+    if (rules.paddleHeightScale) {
+      this.paddleLeft.setBaseHeight(PADDLE_HEIGHT * rules.paddleHeightScale);
+      this.paddleRight.setBaseHeight(PADDLE_HEIGHT * rules.paddleHeightScale);
+    }
     if (rules.rivalPaddleHeightScale) {
       this.paddleRight.setBaseHeight(PADDLE_HEIGHT * rules.rivalPaddleHeightScale);
     }
 
-    const ballSettings = { baseSpeed: rules.ballSpeed, speedIncrement: rules.ballSpeedIncrement };
+    const ballSettings = {
+      baseSpeed: rules.ballSpeed,
+      speedIncrement: rules.ballSpeedIncrement,
+      sizeScale: rules.ballSizeScale,
+    };
     this.ballManager = new BallManager(
       this,
       this.paddleLeft,
@@ -109,7 +123,7 @@ export default class GameScene extends Phaser.Scene {
     this.controllerRight =
       this.mode === "2p"
         ? new PlayerController(this, this.paddleRight, { up: KEYS.P2_UP, down: KEYS.P2_DOWN }, "p2")
-        : new AI(this.paddleRight, this.ballManager, "right", this.difficulty);
+        : new AI(this.paddleRight, this.ballManager, "right", this.casualAiSettings());
 
     // El marcador va en coordenadas de pantalla: no se achica con la cámara alejada.
     this.scoreTextLeft = field.placeOnScreen(
@@ -123,10 +137,14 @@ export default class GameScene extends Phaser.Scene {
       30
     );
 
-    this.powerUpEffects = new PowerUpEffects(this, { p1: this.paddleLeft, p2: this.paddleRight });
+    this.powerUpEffects = new PowerUpEffects(
+      this,
+      { p1: this.paddleLeft, p2: this.paddleRight },
+      { duration: this.effectDuration }
+    );
     this.powerUpFeedback = new PowerUpFeedback(this);
     this.effectIndicators = new EffectIndicators(this, field);
-    this.ballEffects = new BallEffects(this);
+    this.ballEffects = new BallEffects(this, { duration: this.effectDuration });
     this.centerPaddleEffect = new CenterPaddleEffect(this, this.ballManager);
     this.slowMotion = new SlowMotionEffect(this, field);
     this.shieldEffect = new ShieldEffect(this, field, this.powerUpFeedback);
@@ -158,7 +176,11 @@ export default class GameScene extends Phaser.Scene {
       this,
       this.ballManager,
       (definition, ball) => this.onPowerUpActivated(definition, ball),
-      { spawnDelay: rules.powerUpSpawnDelay, colorWeights: rules.powerUpColorWeights }
+      {
+        enabled: !rules.powerUpsDisabled,
+        spawnDelay: rules.powerUpSpawnDelay,
+        colorWeights: rules.powerUpColorWeights,
+      }
     );
 
     if (this.level?.phases) {
@@ -174,6 +196,14 @@ export default class GameScene extends Phaser.Scene {
 
     // Tecla de prueba (solo con npm run dev).
     new DebugKey(this);
+  }
+
+  // IA de la Batalla: la dificultad elegida. Con varias pelotas por ronda
+  // (modificador), sigue a la que va a llegar antes, como en la Tormenta.
+  casualAiSettings() {
+    if (this.ballsPerRound <= 1 || typeof this.difficulty !== "string") return this.difficulty;
+
+    return { ...(AI_DIFFICULTIES[this.difficulty] ?? AI_DIFFICULTIES.normal), trackFirstArrival: true };
   }
 
   // Botones táctiles de los jugadores humanos: se ven durante la partida y se
@@ -382,7 +412,7 @@ export default class GameScene extends Phaser.Scene {
   // lo mismo que como power-up.
   applyEffectToSide(kind, side, duration) {
     if (kind === "cannon") {
-      this.effectIndicators.track(side, kind, this.cannonEffect.arm(side, POWERUP_EFFECT_DURATION));
+      this.effectIndicators.track(side, kind, this.cannonEffect.arm(side, this.effectDuration));
     } else if (kind === "doublePoint") {
       this.scoreManager.setDoublePoint(side);
       this.updateDoublePointIndicator();
@@ -406,9 +436,9 @@ export default class GameScene extends Phaser.Scene {
 
   // Cañón, arco chico y escudo: se aplican a un lado. Devuelven su temporizador.
   applyGoalSideEffect(kind, side) {
-    if (kind === "cannon") return this.cannonEffect.arm(side, POWERUP_EFFECT_DURATION);
-    if (kind === "smallGoal") return this.smallGoalEffect.activate(side, POWERUP_EFFECT_DURATION);
-    return this.shieldEffect.activate(side, POWERUP_EFFECT_DURATION);
+    if (kind === "cannon") return this.cannonEffect.arm(side, this.effectDuration);
+    if (kind === "smallGoal") return this.smallGoalEffect.activate(side, this.effectDuration);
+    return this.shieldEffect.activate(side, this.effectDuration);
   }
 
   // Amarillos con duración (afectan a los dos). Devuelven su temporizador.
@@ -418,15 +448,16 @@ export default class GameScene extends Phaser.Scene {
       case "curve":
         return this.ballEffects.applyMotion(ball, kind);
       case "slowMotion":
-        return this.slowMotion.activate(SLOW_MOTION_DURATION);
+        // Más corta que el resto porque frena todo; sigue la proporción si cambia la duración.
+        return this.slowMotion.activate((SLOW_MOTION_DURATION * this.effectDuration) / POWERUP_EFFECT_DURATION);
       case "giant":
         return this.ballEffects.applyGiant(ball);
       case "invisible":
         return this.ballEffects.applyInvisible(ball);
       case "rain":
-        return this.powerUpSpawner.startRain(POWERUP_EFFECT_DURATION);
+        return this.powerUpSpawner.startRain(this.effectDuration);
       case "centerPaddle":
-        return this.centerPaddleEffect.activate(POWERUP_EFFECT_DURATION);
+        return this.centerPaddleEffect.activate(this.effectDuration);
       default:
         return null;
     }
@@ -511,6 +542,7 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
+  // El resultado se muestra en su propia escena, encima de la cancha (BattleResultScene).
   showCasualWinner(winner) {
     const label =
       winner === "p1"
@@ -519,18 +551,6 @@ export default class GameScene extends Phaser.Scene {
           ? getPhrase(TRANSLATION_KEYS.JUGADOR_2)
           : getPhrase(TRANSLATION_KEYS.CPU);
 
-    this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 40, getPhrase(TRANSLATION_KEYS.GANA_LABEL).replace("{label}", label), {
-        fontSize: "40px",
-        color: COLORS.TEXT,
-      })
-      .setOrigin(0.5);
-
-    const backToMenu = () => this.scene.start("MenuScene");
-    new MenuList(this, {
-      y: GAME_HEIGHT / 2 + 40,
-      items: [{ labelKey: TRANSLATION_KEYS.VOLVER_AL_MENU, action: backToMenu }],
-    });
-    this.input.keyboard.on("keydown-ESC", backToMenu);
+    this.scene.launch("BattleResultScene", { winnerLabel: label });
   }
 }

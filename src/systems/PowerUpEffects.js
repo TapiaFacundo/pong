@@ -18,9 +18,11 @@ const SPEED_KINDS = ["speedUp", "slowDown"];
 export default class PowerUpEffects {
   // paddlesBySide: { p1: pala, p2: pala }. Un lado puede sumar más palas con
   // addPaddle (la pala adelantada de Los Gemelos): los efectos de pala de ese
-  // lado se aplican a todas.
-  constructor(scene, paddlesBySide) {
+  // lado se aplican a todas. duration: cuánto duran los de los power-ups
+  // (puede cambiarla un modificador de la Batalla).
+  constructor(scene, paddlesBySide, { duration = POWERUP_EFFECT_DURATION } = {}) {
     this.scene = scene;
+    this.duration = duration;
     this.paddlesBySide = { p1: [paddlesBySide.p1], p2: [paddlesBySide.p2] };
     this.timers = { p1: {}, p2: {} };
   }
@@ -46,7 +48,7 @@ export default class PowerUpEffects {
     const targetSide = this.resolveTarget(kind, colorCategory, attackerSide);
     if (!targetSide) return null;
 
-    return { side: targetSide, timer: this.applyToSide(targetSide, kind, POWERUP_EFFECT_DURATION) };
+    return { side: targetSide, timer: this.applyToSide(targetSide, kind, this.duration) };
   }
 
   // Aplica un efecto de pala a todas las palas de un lado durante `duration`

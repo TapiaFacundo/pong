@@ -61,7 +61,31 @@
   <tr><th style="width:24%">Modo</th><th>Descripción</th></tr>
   <tr><td>1 Jugador vs CPU (casual)</td><td>La IA controla la pala derecha. Antes de la partida se elige la dificultad: fácil, normal, difícil o imposible (sección 8).</td></tr>
   <tr><td>2 Jugadores (casual)</td><td>Mismo teclado, cada jugador con su pala.</td></tr>
+  <tr><td>Modificadores (casual)</td><td>Las dos Batallas (1 y 2 jugadores) se pueden jugar con modificadores que cambian las reglas de la partida (ver “Modificadores de la Batalla”, más abajo).</td></tr>
   <tr><td>Modo Historia</td><td>1 jugador vs CPU a lo largo de 10 niveles con dificultad y mecánicas crecientes, jefes y enemigos con habilidades. El progreso se guarda (sección 12). Ya se juega de punta a punta con la IA de cada nivel; las mecánicas especiales de los rivales están pendientes.</td></tr>
+</table>
+
+<h3>Modificadores de la Batalla</h3>
+<p>En la pantalla de puntos, debajo de 5 / 7 / 10 puntos, la opción “Modificadores” lleva a una pantalla con una fila por modificador: el nombre y un carrusel con sus opciones (por ejemplo, “Cancha ◀ Normal ▶”). Si hay alguno activo, la opción muestra cuántos: “Modificadores (3)”.</p>
+<ul>
+  <li>W / S o ↑ / ↓ (o el mouse) pasan de una fila a otra. A / D o ← / →, o las flechas ◀ ▶ de la fila, mueven el carrusel; tocar el nombre o el valor (o Enter) pasa a la opción siguiente. El carrusel da la vuelta: después de la última opción sigue la primera.</li>
+  <li>Las opciones distintas de la de por defecto se ven en amarillo.</li>
+  <li>“Guardar” confirma y vuelve a la pantalla de puntos, con el primer puntaje marcado: al elegirlo empieza la partida con los modificadores. Volver (Esc o ←) descarta los cambios.</li>
+  <li>“Restablecer”, arriba de “Guardar”, deja todos los modificadores como por defecto de una vez; hay que guardar para que valga.</li>
+  <li>Los modificadores guardados se recuerdan (en <code>localStorage</code>) para las próximas partidas, en las dos Batallas. No afectan al Modo Historia.</li>
+</ul>
+<table>
+  <tr><th style="width:30%">Modificador</th><th>Opciones (en negrita, la de por defecto)</th></tr>
+  <tr><td>Cancha</td><td><b>Normal</b> (800 × 600), Grande (1000 × 750), Enorme (1200 × 900). Como en el Modo Historia: la cámara se aleja y las palas se aceleran en proporción al alto.</td></tr>
+  <tr><td>Tamaño de pelota</td><td>Chica (× 0,6), <b>Normal</b>, Grande (× 1,6), Muy grande (× 2,4). La pelota gigante triplica el tamaño elegido.</td></tr>
+  <tr><td>Velocidad de pelota</td><td>Lenta (290 px/s), <b>Normal</b> (380), Rápida (470), Muy rápida (560).</td></tr>
+  <tr><td>Aceleración de pelota</td><td>Sin aceleración, <b>Normal</b> (× 1,025 por golpe), Alta (× 1,06 por golpe).</td></tr>
+  <tr><td>Pelotas por ronda</td><td><b>1</b>, 2 o 3 pelotas en cada saque, como en la Tormenta. Con más de una, la CPU sigue a la que va a llegar antes.</td></tr>
+  <tr><td>Tamaño de palas</td><td>Chicas (× 0,6), <b>Normales</b>, Grandes (× 1,5), para las dos palas. Los power-ups de tamaño se aplican sobre el tamaño elegido.</td></tr>
+  <tr><td>Velocidad de palas</td><td>Lentas (× 0,7), <b>Normales</b>, Rápidas (× 1,4), para todas las palas, también la de la CPU.</td></tr>
+  <tr><td>Aparición de power-ups</td><td>Ninguna, Pocos (cada 9 a 11 s), <b>Normal</b> (5 a 6,5 s), Muchos (2,5 a 3,5 s), Lluvia (cada 1,5 s).</td></tr>
+  <tr><td>Duración de power-ups</td><td>Cortos (8 s), <b>Normales</b> (15 s), Largos (25 s). La cámara lenta sigue la misma proporción (de 5 s pasa a 2,7 u 8,3 s).</td></tr>
+  <tr><td>Power-ups amarillos / rojos / verdes</td><td><b>Sí</b> o No: si es No, los de ese color no aparecen. Sin ningún color, no aparecen power-ups.</td></tr>
 </table>
 
 <h2>4. Controles</h2>
@@ -77,6 +101,7 @@
   <tr><td>Celular: mover la pala</td><td>Mantener apretados ▲ / ▼ en la franja de tu lado</td></tr>
   <tr><td>En pausa: reanudar</td><td>Esc, el ícono ← o la opción “Reanudar”</td></tr>
   <tr><td>Cómo jugar</td><td>Ícono ? (en un círculo, arriba a la izquierda del menú principal)</td></tr>
+  <tr><td>Modificadores: cambiar una opción</td><td>A / D o flechas izquierda / derecha, o clic en ◀ ▶ (Enter o clic en el valor pasa a la siguiente)</td></tr>
   <tr><td>Cambiar idioma</td><td>Ícono ⚙ del menú principal, u “Opciones” en la pausa. En el panel: W / S o flechas y Enter, o clic; Esc lo cierra</td></tr>
   <tr><td>Íconos del menú con el teclado</td><td>Desde la primera opción del menú, W / ↑ sube a los íconos; A / D o ← / → pasan de uno a otro, Enter lo abre y S / ↓ vuelve a la lista</td></tr>
 </table>
@@ -231,19 +256,20 @@
 
 <h2>9. Pantallas y flujo</h2>
 <pre>Menú principal ──(Batalla)──► 1 o 2 jugadores ──(1 Jugador)──► Dificultad ──► Puntos ──► Partida ⇄ Pausa
-      │                                  │                                     ▲             │
-      │                                  └──(2 Jugadores)──────────────────────┘             └──► Victoria ──► Menú principal
+      │                                  │                                     ▲   ⇅         │
+      │                                  └──(2 Jugadores)──────────────────────┘ Modificadores └──► Victoria ──► Menú principal
       └──(?)──► Cómo jugar</pre>
 <table>
   <tr><th style="width:22%">Pantalla</th><th>Contenido</th></tr>
   <tr><td>Menú principal</td><td>Título y dos opciones: “Batalla” (partida casual) y “Modo Historia”. En las esquinas, el ícono ? (cómo jugar) y el ⚙ (panel de idioma).</td></tr>
   <tr><td>Batalla</td><td>“1 Jugador” (contra la CPU) o “2 Jugadores”.</td></tr>
   <tr><td>Dificultad</td><td>Solo con 1 jugador: fácil, normal, difícil o imposible (arranca en normal).</td></tr>
-  <tr><td>Puntos</td><td>5, 7 o 10 puntos. Al elegir, empieza la partida.</td></tr>
+  <tr><td>Puntos</td><td>5, 7 o 10 puntos: al elegir, empieza la partida. Debajo, “Modificadores” (con la cantidad activa entre paréntesis, si hay).</td></tr>
+  <tr><td>Modificadores</td><td>Una fila con carrusel por modificador y, al final, “Restablecer” y “Guardar” (ver sección 3).</td></tr>
   <tr><td>Cómo jugar</td><td>Se abre con el ícono ? del menú (y antes del nivel 1 del Modo Historia). Texto corto: controles de cada jugador, Esc para pausar, y que los power-ups se tocan con la pelota: verde a tu favor, rojo en tu contra, amarillo para los dos.</td></tr>
   <tr><td>Partida</td><td>Cancha con línea central punteada, marcador de cada jugador arriba y los indicadores de duración de los efectos activos (ver sección de power-ups).</td></tr>
   <tr><td>Pausa</td><td>Se superpone a la partida congelada: Reanudar, Volver al menú y Opciones (panel de idioma). Esc o ← reanudan (o cierran el panel de idioma si está abierto).</td></tr>
-  <tr><td>Victoria</td><td>“¡Gana {jugador}!” (Jugador 1, Jugador 2 o CPU) y la opción “Volver al menú” (también con Esc).</td></tr>
+  <tr><td>Victoria</td><td>“¡Gana {jugador}!” (Jugador 1, Jugador 2 o CPU) y la opción “Volver al menú” (también con Esc). Como la pausa, se superpone a la cancha con el marcador final y se ve centrada y del mismo tamaño aunque la cancha sea más grande que la pantalla.</td></tr>
 </table>
 
 <h2>10. Idiomas</h2>
@@ -390,8 +416,8 @@
 <pre>src/
 ├── main.js        punto de entrada y configuración de Phaser
 ├── config.js      constantes globales (cancha, velocidades, colores, teclas, power-ups, IA)
-├── scenes/        una escena por archivo (MenuScene, BattleScene, DifficultyScene, PointsScene, TutorialScene,
-│                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene,
+├── scenes/        una escena por archivo (MenuScene, BattleScene, DifficultyScene, PointsScene, MutatorsScene, TutorialScene,
+│                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene,
 │                  LevelResultScene, StoryEndScene)
 ├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle, GoalBarrier)
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
@@ -400,11 +426,13 @@
 │                  Field, Sabotage, SlowMotionEffect, ShieldEffect, SmallGoalEffect, CannonEffect,
 │                  BossPhases, EffectIndicators,
 │                  DebugKey: tecla de prueba, solo en desarrollo)
-├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia)
+├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia;
+│                  mutators.js: los modificadores de la Batalla, que se arman igual que un nivel)
 ├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell, PowerUpIcon, TouchControls, RotateNotice,
-│                  MenuList: lista de opciones navegable; IconButton: íconos ← ? ⚙, pausa y pantalla completa, y el “volver” con Esc)
+│                  MenuList: lista de opciones navegable, también con filas de carrusel (CarouselRow); IconButton: íconos ← ? ⚙, pausa y pantalla completa, y el “volver” con Esc)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;
-│                  ProgressStorage: progreso del Modo Historia en localStorage)
+│                  ProgressStorage: progreso del Modo Historia en localStorage;
+│                  MutatorStorage: modificadores elegidos, en localStorage)
 └── enums/         constantes compartidas (claves de texto, idiomas, estados de carga)
 public/            assets estáticos servidos directo
 docs/

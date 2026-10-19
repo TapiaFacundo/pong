@@ -1,4 +1,4 @@
-import { AI_DIFFICULTIES, GAME_WIDTH, GAME_HEIGHT } from "../config.js";
+import { AI_DIFFICULTIES, FIELD_SIZES } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 
 // Los 10 niveles del Modo Historia (sección 12 del GDD), descritos como datos:
@@ -34,9 +34,9 @@ import { KEYS } from "../enums/keys.js";
 //   Desde que el jugador llega a `fromPlayerScore`, la fase reemplaza la `ai`
 //   (si trae una) y suma sus `rules` a las del nivel.
 
-const NORMAL_FIELD = { width: GAME_WIDTH, height: GAME_HEIGHT };
-const MEDIUM_FIELD = { width: 1000, height: 750 };
-const LARGE_FIELD = { width: 1200, height: 900 };
+const NORMAL_FIELD = FIELD_SIZES.normal;
+const MEDIUM_FIELD = FIELD_SIZES.medium;
+const LARGE_FIELD = FIELD_SIZES.large;
 
 const TRIVELA_SHOT = { chance: 0.5 };
 

@@ -3,6 +3,14 @@ export const GAME_TITLE = "Ponger-up";
 export const GAME_WIDTH = 800;
 export const GAME_HEIGHT = 600;
 
+// Tamaños de cancha (Modo Historia y modificadores de la Batalla). Las más
+// grandes que la pantalla se ven con la cámara alejada (ver systems/Field.js).
+export const FIELD_SIZES = {
+  normal: { width: GAME_WIDTH, height: GAME_HEIGHT },
+  medium: { width: 1000, height: 750 },
+  large: { width: 1200, height: 900 },
+};
+
 export const PADDLE_WIDTH = 16;
 export const PADDLE_HEIGHT = 100;
 export const PADDLE_OFFSET_X = 40;

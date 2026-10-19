@@ -12,14 +12,16 @@ import {
 
 export default class Ball {
   // baseSpeed / speedIncrement: velocidad de saque y aceleración por golpe de
-  // pala (un nivel del Modo Historia puede cambiarlas; si no, las normales).
-  constructor(scene, x, y, { baseSpeed = BALL_SPEED, speedIncrement = BALL_SPEED_INCREMENT } = {}) {
+  // pala. sizeScale: tamaño "normal" de esta pelota (× el de siempre). Un nivel
+  // del Modo Historia o un modificador de la Batalla pueden cambiarlos.
+  constructor(scene, x, y, { baseSpeed = BALL_SPEED, speedIncrement = BALL_SPEED_INCREMENT, sizeScale = 1 } = {}) {
     this.baseSpeed = baseSpeed;
     this.speedIncrement = speedIncrement;
+    this.baseRadius = (BALL_SIZE / 2) * sizeScale;
 
-    this.circle = scene.add.circle(x, y, BALL_SIZE / 2, COLORS.BALL);
+    this.circle = scene.add.circle(x, y, this.baseRadius, COLORS.BALL);
     scene.physics.add.existing(this.circle);
-    this.circle.body.setCircle(BALL_SIZE / 2);
+    this.circle.body.setCircle(this.baseRadius);
     this.circle.body.setCollideWorldBounds(true);
     this.circle.body.setBounce(1, 1);
 
@@ -53,10 +55,10 @@ export default class Ball {
     return this.circle.radius;
   }
 
-  // Cambia el tamaño de la pelota (dibujo y choque) respecto del normal: 1 =
-  // normal, 3 = el triple (power-up de pelota gigante).
+  // Cambia el tamaño de la pelota (dibujo y choque) respecto de su tamaño
+  // normal: 1 = normal, 3 = el triple (power-up de pelota gigante).
   setSizeScale(scale) {
-    const radius = (BALL_SIZE / 2) * scale;
+    const radius = this.baseRadius * scale;
     this.circle.setRadius(radius);
     this.circle.body.setCircle(radius);
   }

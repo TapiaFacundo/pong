@@ -1,5 +1,6 @@
 import { GAME_WIDTH } from "../config.js";
 import { getPhrase } from "../services/translations.js";
+import CarouselRow from "./CarouselRow.js";
 
 const SELECTED_COLOR = "#66ff66";
 const UNSELECTED_COLOR = "#888888";
@@ -11,6 +12,10 @@ const UNSELECTED_COLOR = "#888888";
 //
 // items: [{ labelKey, action }] (labelKey es una clave de texto; también se
 // puede pasar `label` con un texto que no se traduce).
+// Un item también puede ser un carrusel de opciones (ver CarouselRow):
+// { labelKey, options, index, defaultIndex, onChange }. En esa fila, A / D o
+// las flechas izquierda / derecha (y Enter) cambian la opción.
+// Cualquier item puede llevar `gapBefore`: espacio extra (px) antes de él.
 // topIcons: íconos de las esquinas de arriba (IconButton) a los que se llega
 // con el teclado subiendo desde la primera opción; entre ellos se pasa con
 // A / D o las flechas izquierda / derecha, y se vuelve a la lista bajando.
@@ -21,9 +26,27 @@ export default class MenuList {
     this.topIcons = topIcons;
     this.iconIndex = null; // null: el foco está en la lista
 
+    let gaps = 0;
     this.items = items.map((item, index) => {
+      gaps += item.gapBefore ?? 0;
+      const itemY = y + index * spacing + gaps;
+
+      if (item.options) {
+        const row = new CarouselRow(scene, {
+          ...item,
+          y: itemY,
+          fontSize,
+          onHover: () => this.enabled && this.select(index),
+          onChange: (optionIndex) => {
+            this.select(index);
+            item.onChange(optionIndex);
+          },
+        });
+        return { ...item, row };
+      }
+
       const text = scene.add
-        .text(x, y + index * spacing, "", { fontSize, color: UNSELECTED_COLOR })
+        .text(x, itemY, "", { fontSize, color: UNSELECTED_COLOR })
         .setOrigin(0.5)
         .setInteractive({ useHandCursor: true })
         .on("pointerover", () => this.enabled && this.select(index))
@@ -36,8 +59,8 @@ export default class MenuList {
     const keyboard = scene.input.keyboard;
     ["W", "UP"].forEach((key) => keyboard.on(`keydown-${key}`, () => this.moveUp()));
     ["S", "DOWN"].forEach((key) => keyboard.on(`keydown-${key}`, () => this.moveDown()));
-    ["A", "LEFT"].forEach((key) => keyboard.on(`keydown-${key}`, () => this.moveIcon(-1)));
-    ["D", "RIGHT"].forEach((key) => keyboard.on(`keydown-${key}`, () => this.moveIcon(1)));
+    ["A", "LEFT"].forEach((key) => keyboard.on(`keydown-${key}`, () => this.moveSideways(-1)));
+    ["D", "RIGHT"].forEach((key) => keyboard.on(`keydown-${key}`, () => this.moveSideways(1)));
     keyboard.on("keydown-ENTER", () => this.confirm());
   }
 
@@ -61,9 +84,16 @@ export default class MenuList {
     }
   }
 
-  moveIcon(step) {
-    if (!this.enabled || this.iconIndex === null) return;
-    this.focusIcon(Math.min(this.topIcons.length - 1, Math.max(0, this.iconIndex + step)));
+  // Izquierda / derecha: pasa de un ícono de arriba a otro, o cambia la
+  // opción del carrusel marcado.
+  moveSideways(step) {
+    if (!this.enabled) return;
+
+    if (this.iconIndex !== null) {
+      this.focusIcon(Math.min(this.topIcons.length - 1, Math.max(0, this.iconIndex + step)));
+    } else {
+      this.items[this.selectedIndex].row?.step(step);
+    }
   }
 
   confirm() {
@@ -96,15 +126,23 @@ export default class MenuList {
     }
   }
 
+  // En un carrusel, confirmar pasa a la opción siguiente.
   activate(index) {
     this.select(index);
-    this.items[index].action();
+    const item = this.items[index];
+    if (item.row) item.row.step(1);
+    else item.action();
   }
 
   // Vuelve a escribir los textos (por ejemplo, después de cambiar de idioma).
   refreshTexts() {
     this.items.forEach((item, index) => {
       const isSelected = this.iconIndex === null && index === this.selectedIndex;
+      if (item.row) {
+        item.row.setSelected(isSelected);
+        return;
+      }
+
       const label = item.labelKey ? getPhrase(item.labelKey) : item.label;
       item.text.setText((isSelected ? "▶ " : "   ") + label);
       item.text.setColor(isSelected ? SELECTED_COLOR : UNSELECTED_COLOR);
