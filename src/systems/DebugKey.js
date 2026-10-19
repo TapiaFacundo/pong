@@ -67,7 +67,7 @@ export default class DebugKey {
   }
 
   breakAllBricksButOne() {
-    const standing = this.scene.wall.bricks.filter((brick) => !brick.isBroken);
+    const standing = this.scene.wall.breakableBricks;
     standing.slice(1).forEach((brick) => {
       while (!brick.isBroken) brick.hit();
     });

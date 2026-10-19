@@ -12,6 +12,10 @@ export default class ArcadeRun {
     this.score += points;
   }
 
+  gainLife() {
+    this.lives += 1;
+  }
+
   // Devuelve las vidas que quedan.
   loseLife() {
     this.lives -= 1;

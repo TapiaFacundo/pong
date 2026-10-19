@@ -94,6 +94,22 @@ export const ARCADE_SERVE_OFFSET_X = 24;
 // ladrillo: evita que quede rebotando entre el techo y el piso sin avanzar.
 export const ARCADE_MAX_BALL_ANGLE = (70 * Math.PI) / 180;
 export const ARCADE_BRICK_COLORS = [0x4f8cff, 0x7a6cff, 0xb06cff, 0xff6cc8, 0x45d0d0, 0xff8a4f];
+// Ladrillos resistentes: el color muestra los golpes que les quedan (con 1, el de su columna).
+export const ARCADE_TOUGH_BRICK_COLORS = { 3: 0xe0b040, 2: 0xb8bcc8 };
+export const ARCADE_METAL_COLOR = 0x5a5f6a;
+export const ARCADE_METAL_BORDER_COLOR = 0x9aa0aa;
+// El muro avanza un paso (una columna) hacia el jugador cada cierto tiempo:
+// desde el nivel ARCADE_ADVANCE_FROM_LEVEL, cada ARCADE_ADVANCE_START_INTERVAL
+// ms, y en cada nivel siguiente 1,5 s antes, hasta ARCADE_ADVANCE_MIN_INTERVAL.
+// Si un ladrillo rompible cruza la línea de peligro, fin del juego.
+export const ARCADE_ADVANCE_FROM_LEVEL = 3;
+export const ARCADE_ADVANCE_START_INTERVAL = 20000;
+export const ARCADE_ADVANCE_INTERVAL_STEP = 1500;
+export const ARCADE_ADVANCE_MIN_INTERVAL = 8000;
+export const ARCADE_DANGER_X = 240;
+export const ARCADE_DANGER_COLOR = 0xdd3333;
+// Una vida extra al completar cada uno de estos niveles (5, 10, 15...).
+export const ARCADE_EXTRA_LIFE_EVERY = 5;
 
 export const COLORS = {
   BACKGROUND: 0x000000,

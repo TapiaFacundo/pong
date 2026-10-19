@@ -40,6 +40,16 @@ export function playBrickHit(broken) {
   playTone({ frequency: broken ? 520 : 330, duration: 0.06, type: "square", volume: 0.12 });
 }
 
+// Pelota contra un ladrillo de metal: un "clink" metálico.
+export function playMetalHit() {
+  playTone({ frequency: 1400, duration: 0.05, type: "triangle", volume: 0.15 });
+}
+
+// El muro del Arcade avanza un paso: un golpe grave.
+export function playWallAdvance() {
+  playTone({ frequency: 90, duration: 0.2, type: "sawtooth", volume: 0.15 });
+}
+
 export function playPaddleHit() {
   playTone({ frequency: 220, duration: 0.07, type: "sine", volume: 0.25 });
 }

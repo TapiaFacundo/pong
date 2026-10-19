@@ -8,6 +8,11 @@ import {
   ARCADE_SERVE_DELAY,
   ARCADE_SERVE_OFFSET_X,
   ARCADE_PLAY_TOP,
+  ARCADE_DANGER_X,
+  ARCADE_DANGER_COLOR,
+  ARCADE_EXTRA_LIFE_EVERY,
+  POWERUP_TEXT_COLORS,
+  GAME_HEIGHT,
 } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
@@ -23,13 +28,15 @@ import ArcadeHud from "../systems/ArcadeHud.js";
 import PowerUpFeedback from "../systems/PowerUpFeedback.js";
 import MatchPause from "../systems/MatchPause.js";
 import DebugKey from "../systems/DebugKey.js";
-import { playBrickHit, playScore } from "../systems/SoundEffects.js";
+import { playBrickHit, playMetalHit, playScore, playWallAdvance } from "../systems/SoundEffects.js";
 import { announce } from "../ui/Announcement.js";
 
 // Arcade: romper ladrillos, para 1 jugador. La pala va a la izquierda, como
 // en Pong, y el muro de ladrillos a la derecha (la pelota rebota en el borde
 // derecho). Si se te pasan todas las pelotas perdés una vida; al romper todo
-// el muro pasás al nivel siguiente, más difícil. Sin vidas, fin del juego.
+// el muro pasás al nivel siguiente, más difícil (ver data/arcade.js). Desde
+// el nivel 3 el muro avanza hacia vos: si un ladrillo cruza la línea de
+// peligro, o te quedás sin vidas, fin del juego.
 export default class ArcadeScene extends Phaser.Scene {
   constructor() {
     super("ArcadeScene");
@@ -40,6 +47,7 @@ export default class ArcadeScene extends Phaser.Scene {
     this.matchOver = false;
     this.heldBall = null;
     this.clearingLevel = false;
+    this.advanceTimer = null;
   }
 
   create() {
@@ -58,6 +66,7 @@ export default class ArcadeScene extends Phaser.Scene {
     this.feedback = new PowerUpFeedback(this);
     this.wall = new BrickWall(this, this.field, { onBrickHit: (brick, broken) => this.onBrickHit(brick, broken) });
     this.hud = new ArcadeHud(this);
+    this.dangerLine = this.drawDangerLine();
 
     this.matchPause = new MatchPause(this, {
       field: this.field,
@@ -73,6 +82,16 @@ export default class ArcadeScene extends Phaser.Scene {
     new DebugKey(this);
   }
 
+  // Línea punteada roja tenue: si un ladrillo rompible la cruza, fin del juego.
+  // Se ve solo en los niveles en los que el muro avanza.
+  drawDangerLine() {
+    const graphics = this.add.graphics().lineStyle(2, ARCADE_DANGER_COLOR, 0.4);
+    for (let y = ARCADE_PLAY_TOP; y < GAME_HEIGHT; y += 20) {
+      graphics.lineBetween(ARCADE_DANGER_X, y, ARCADE_DANGER_X, y + 10);
+    }
+    return graphics.setVisible(false);
+  }
+
   startLevel(level) {
     this.run.level = level;
     const levelData = getArcadeLevel(level);
@@ -80,8 +99,22 @@ export default class ArcadeScene extends Phaser.Scene {
     this.wall.build(levelData);
     this.hud.update(this.run);
 
+    this.advanceTimer?.remove();
+    this.advanceTimer = levelData.advanceInterval
+      ? this.time.addEvent({ delay: levelData.advanceInterval, loop: true, callback: () => this.advanceWall() })
+      : null;
+    this.dangerLine.setVisible(!!levelData.advanceInterval);
+
     announce(this, this.field, getPhrase(KEYS.NIVEL_N_ANUNCIO).replace("{n}", level), COLORS.TEXT);
     this.serve();
+  }
+
+  advanceWall() {
+    if (this.matchOver) return;
+
+    this.wall.advance();
+    playWallAdvance();
+    if (this.wall.frontX <= ARCADE_DANGER_X) this.gameOver();
   }
 
   // Una pelota nueva espera pegada a la pala (se mueve con ella) y después sale hacia el muro.
@@ -106,11 +139,17 @@ export default class ArcadeScene extends Phaser.Scene {
   }
 
   onBrickHit(brick, broken) {
+    if (brick.isMetal) {
+      playMetalHit();
+      return;
+    }
+
     playBrickHit(broken);
     if (!broken) return;
 
+    // Los resistentes valen más: 10 por cada golpe que aguantaban.
     this.feedback.spawnBurst(brick.x, brick.y, brick.color);
-    this.run.addPoints(ARCADE_BRICK_POINTS);
+    this.run.addPoints(ARCADE_BRICK_POINTS * brick.maxHits);
     this.hud.update(this.run);
 
     // El choque se está calculando: el muro nuevo se arma en el próximo frame.
@@ -120,12 +159,20 @@ export default class ArcadeScene extends Phaser.Scene {
     }
   }
 
+  // Al completar un nivel: bonus, y cada ARCADE_EXTRA_LIFE_EVERY niveles una vida extra.
   clearLevel() {
     this.clearingLevel = false;
-    this.run.addPoints(ARCADE_LEVEL_BONUS * this.run.level);
+    const completedLevel = this.run.level;
+    this.run.addPoints(ARCADE_LEVEL_BONUS * completedLevel);
     this.ballManager.clearAll();
     this.heldBall = null;
-    this.startLevel(this.run.level + 1);
+    this.startLevel(completedLevel + 1);
+
+    if (completedLevel % ARCADE_EXTRA_LIFE_EVERY === 0) {
+      this.run.gainLife();
+      this.hud.update(this.run);
+      announce(this, this.field, getPhrase(KEYS.VIDA_EXTRA_ANUNCIO), POWERUP_TEXT_COLORS.green, 56);
+    }
   }
 
   // Se pierde una vida cuando ya no queda ninguna pelota en juego.
@@ -147,6 +194,7 @@ export default class ArcadeScene extends Phaser.Scene {
   gameOver() {
     this.matchOver = true;
     this.matchPause.finish();
+    this.advanceTimer?.remove();
 
     const { record, isNew } = submitArcadeScore(this.run.score, this.run.level);
     this.scene.launch("ArcadeResultScene", { score: this.run.score, level: this.run.level, record, isNew });

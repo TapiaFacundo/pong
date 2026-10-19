@@ -423,7 +423,8 @@
   <li><b>Vidas:</b> 3. Se pierde una cuando ya no queda ninguna pelota en juego. Sin vidas, fin del juego.</li>
   <li><b>Muro:</b> ladrillos verticales de 22 × 44 px en 11 filas, con 60 px libres detrás para que la pelota pueda meterse. Cada columna tiene su color.</li>
   <li><b>Nivel:</b> al romper todos los ladrillos (los de metal no cuentan) se pasa al siguiente, con un anuncio “¡Nivel N!”, y la pelota vuelve a la pala.</li>
-  <li><b>Puntaje:</b> 10 por ladrillo roto y 100 × el número de nivel al completarlo.</li>
+  <li><b>Puntaje:</b> 10 por cada golpe que aguantaba el ladrillo roto (10, 20 o 30) y 100 × el número de nivel al completarlo.</li>
+  <li><b>Fin del juego:</b> al quedarte sin vidas, o si el muro (que avanza desde el nivel 3) llega a la línea de peligro.</li>
   <li><b>Pelota casi vertical:</b> si un rebote en la esquina de un ladrillo la deja a más de 70° de la horizontal, se endereza a 70° (sin cambiarle el sentido), para que no quede rebotando entre el techo y el piso sin avanzar.</li>
   <li><b>Pantallas:</b> durante la partida, arriba hay una franja de 56 px que no se juega (la pelota rebota y la pala se frena debajo de ella), separada de la cancha por una línea gris. Ahí se ven el puntaje y el nivel a los costados del ícono de pausa, y las vidas (pelotitas) a la derecha. Al terminar, sobre el muro: “Fin del juego”, el puntaje, el nivel al que se llegó y el récord (o “¡Nuevo récord!”), con “Reintentar” y “Volver al menú” (también Esc).</li>
   <li><b>Récord:</b> el mejor puntaje (y su nivel) se guarda en <code>localStorage</code>.</li>
@@ -434,11 +435,12 @@
 <ul>
   <li>El muro arranca con 3 columnas y suma una por nivel, hasta 9.</li>
   <li>La pelota sale un 4 % más rápido en cada nivel (desde 380 px/s), hasta 560 px/s.</li>
-  <li><span class="tag pend">pendiente</span> Patrones de muro que se van alternando (completo, ajedrez, pirámide, diamante, franjas).</li>
-  <li><span class="tag pend">pendiente</span> Ladrillos resistentes: desde el nivel 2, algunos aguantan 2 golpes, y desde el 4, 3 golpes; cambian de color a medida que se agrietan y dan más puntos.</li>
-  <li><span class="tag pend">pendiente</span> Ladrillos de metal (desde el nivel 6): no se rompen y no hace falta romperlos para pasar de nivel.</li>
-  <li><span class="tag pend">pendiente</span> El muro avanza: desde el nivel 3, se acerca un paso hacia el jugador cada 25 s (en niveles más altos, cada vez más seguido, hasta cada 12 s). Si llega a la línea del jugador, fin del juego.</li>
-  <li><span class="tag pend">pendiente</span> Una vida extra cada 5 niveles.</li>
+  <li><b>Patrones:</b> la forma del muro se alterna nivel a nivel: completo, ajedrez, pirámide (con la punta hacia el jugador), franjas (una fila vacía cada tres: túneles hacia el fondo) y diamante.</li>
+  <li><b>Ladrillos resistentes:</b> el fondo del muro es el más reforzado. Desde el nivel 2 hay columnas de 2 golpes (una, y una más cada 2 niveles, hasta 4) y desde el nivel 4, en el fondo, columnas de 3 golpes (una, y una más cada 3 niveles, hasta 3). El color muestra los golpes que le quedan: dorado (3), plateado (2) o el de su columna (1).</li>
+  <li><b>Metal</b> (desde el nivel 6): gris oscuro con borde, no se rompe (suena distinto) y no hace falta romperlo para pasar de nivel. Va solo en la última columna, en una de cada 3 filas (desde el nivel 10, una de cada 2): si estuviera más adelante, el muro que avanza lo traería hasta la línea de peligro sin que se pudiera romper.</li>
+  <li><b>El muro avanza:</b> desde el nivel 3, todo el muro da un paso (una columna, 26 px) hacia el jugador cada 20 s, con un golpe grave; en cada nivel siguiente, 1,5 s antes, hasta cada 8 s. Una línea punteada roja tenue (a 240 px del borde izquierdo, un 30 % de la cancha) marca el límite: si un ladrillo rompible la cruza, fin del juego. Al pasar de nivel el muro nuevo arranca desde atrás.</li>
+  <li><b>Vida extra:</b> al completar cada 5 niveles (5, 10, 15...), con el aviso “¡Vida extra!”.</li>
+  <li><b>Curva resultante:</b> nivel 1, muro completo de 3 columnas sin trucos; nivel 3, primer muro que avanza; nivel 6, primer metal; desde el nivel 9, 9 columnas; desde el 11, la pelota al tope (560 px/s) y el muro avanzando cada 8 s.</li>
 </ul>
 
 <h3>Power-ups <span class="tag pend">pendiente</span></h3>
