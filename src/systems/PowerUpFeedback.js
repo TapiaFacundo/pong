@@ -14,7 +14,8 @@ export default class PowerUpFeedback {
   playPickup(x, y, definition, targetPaddle) {
     const color = POWERUP_COLORS[definition.colorCategory];
     const textColor = POWERUP_TEXT_COLORS[definition.colorCategory];
-    const label = getPhrase(POWERUP_LABELS[definition.kind] ?? definition.id);
+    // Un power-up puede traer su propio texto (en el Arcade, "Puntos ×2").
+    const label = getPhrase(definition.labelKey ?? POWERUP_LABELS[definition.kind] ?? definition.id);
 
     this.spawnBurst(x, y, color);
     this.spawnLabel(x, y, label, textColor);

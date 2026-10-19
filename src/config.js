@@ -110,6 +110,12 @@ export const ARCADE_DANGER_X = 240;
 export const ARCADE_DANGER_COLOR = 0xdd3333;
 // Una vida extra al completar cada uno de estos niveles (5, 10, 15...).
 export const ARCADE_EXTRA_LIFE_EVERY = 5;
+// Cápsulas de power-up: chance de que un ladrillo roto suelte una (con la
+// lluvia de power-ups, más), su velocidad hacia el jugador y su tamaño.
+export const ARCADE_DROP_CHANCE = 0.12;
+export const ARCADE_RAIN_DROP_CHANCE = 0.5;
+export const ARCADE_CAPSULE_SPEED = 160;
+export const ARCADE_CAPSULE_RADIUS = 14;
 
 export const COLORS = {
   BACKGROUND: 0x000000,

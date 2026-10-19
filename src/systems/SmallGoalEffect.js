@@ -17,12 +17,14 @@ export default class SmallGoalEffect {
   activate(side, duration) {
     this.clear(side);
 
-    const wallHeight = this.field.height * SMALL_GOAL_COVERAGE;
+    // Sobre el alto jugable (en el Arcade, debajo de la franja del marcador).
+    const { top, bottom, height } = this.scene.physics.world.bounds;
+    const wallHeight = height * SMALL_GOAL_COVERAGE;
     const barriers = [
-      new GoalBarrier(this.scene, this.field, side, { top: 0, bottom: wallHeight, color: SMALL_GOAL_COLOR }),
+      new GoalBarrier(this.scene, this.field, side, { top, bottom: top + wallHeight, color: SMALL_GOAL_COLOR }),
       new GoalBarrier(this.scene, this.field, side, {
-        top: this.field.height - wallHeight,
-        bottom: this.field.height,
+        top: bottom - wallHeight,
+        bottom,
         color: SMALL_GOAL_COLOR,
       }),
     ];

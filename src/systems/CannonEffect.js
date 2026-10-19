@@ -27,8 +27,12 @@ const AI_TARGET_EDGE = 0.15;
 // Mientras el cañón está cargado, cada pala de ese lado muestra un caño
 // naranja adelante. Se engancha a BallManager como "atrapador" (tryCatch) y
 // necesita update() cada frame.
+//
+// powerShot: si el disparo sale más rápido (en el Arcade no: ahí la ronda no
+// se reinicia y la pelota quedaría así de rápida el resto del nivel).
 export default class CannonEffect {
-  constructor(scene, field, paddlesBySide, opponentBySide, feedback) {
+  constructor(scene, field, paddlesBySide, opponentBySide, feedback, { powerShot = true } = {}) {
+    this.powerShot = powerShot;
     this.scene = scene;
     this.field = field;
     this.paddlesBySide = paddlesBySide; // side -> [palas] (comparte la lista de PowerUpEffects)
@@ -185,7 +189,7 @@ export default class CannonEffect {
     const { ball, direction, angle } = this.loaded[side];
     this.release(side);
 
-    ball.speed = Math.max(ball.speed * CANNON_SPEED_MULTIPLIER, CANNON_MIN_SPEED);
+    if (this.powerShot) ball.speed = Math.max(ball.speed * CANNON_SPEED_MULTIPLIER, CANNON_MIN_SPEED);
     ball.setDirection(Math.cos(angle) * direction, Math.sin(angle));
     ball.lastTouchedBy = side;
 

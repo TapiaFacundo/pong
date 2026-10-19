@@ -1,4 +1,5 @@
 import { POWERUP_DEFINITIONS } from "../config.js";
+import { ARCADE_POWERUPS } from "../data/arcade.js";
 
 const ICON_GRID_COLUMNS = 9;
 const ICON_GRID_SPACING = 56;
@@ -10,9 +11,15 @@ const ICON_GRID_SPACING = 56;
 // Para probar otra cosa, se cambia DEBUG_ACTION (y DEBUG_POWERUP_ID si hace falta).
 
 const DEBUG_KEY = "G";
+const ARCADE_DEBUG_ACTION = "allCapsules";
+const CAPSULE_ROW_START_X = 260;
+const CAPSULE_ROW_SPACING = 60;
 
-// En el Arcade, la G siempre rompe todos los ladrillos menos uno (para probar
-// el paso de nivel sin jugarlo entero).
+// En el Arcade, lo que se prueba lo dice ARCADE_DEBUG_ACTION:
+// - "breakAllButOne": rompe todos los ladrillos menos uno (para probar el
+//   paso de nivel sin jugarlo entero).
+// - "allCapsules": suelta una cápsula de cada power-up del Arcade en fila,
+//   frente a la pala, para agarrarlas una detrás de otra sin moverse.
 //
 // Qué se prueba ahora (en la Batalla y el Modo Historia):
 // - "playerPoint": le suma un punto al jugador 1 (sirve para avanzar las fases
@@ -49,9 +56,9 @@ export default class DebugKey {
   run() {
     if (this.scene.matchOver) return;
 
-    // En el Arcade: rompe todos los ladrillos menos uno, para probar el paso de nivel.
     if (this.scene.wall) {
-      this.breakAllBricksButOne();
+      if (ARCADE_DEBUG_ACTION === "allCapsules") this.dropAllCapsules();
+      else this.breakAllBricksButOne();
       return;
     }
 
@@ -64,6 +71,12 @@ export default class DebugKey {
     } else {
       this.activatePowerUp(DEBUG_POWERUP_ID);
     }
+  }
+
+  dropAllCapsules() {
+    ARCADE_POWERUPS.forEach((definition, index) => {
+      this.scene.drops.drop(CAPSULE_ROW_START_X + index * CAPSULE_ROW_SPACING, this.scene.paddle.y, definition);
+    });
   }
 
   breakAllBricksButOne() {

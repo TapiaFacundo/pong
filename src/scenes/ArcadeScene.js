@@ -26,9 +26,12 @@ import BrickWall from "../systems/BrickWall.js";
 import ArcadeRun from "../systems/ArcadeRun.js";
 import ArcadeHud from "../systems/ArcadeHud.js";
 import PowerUpFeedback from "../systems/PowerUpFeedback.js";
+import EffectIndicators from "../systems/EffectIndicators.js";
+import CapsuleDrops from "../systems/CapsuleDrops.js";
+import ArcadePowerUps from "../systems/ArcadePowerUps.js";
 import MatchPause from "../systems/MatchPause.js";
 import DebugKey from "../systems/DebugKey.js";
-import { playBrickHit, playMetalHit, playScore, playWallAdvance } from "../systems/SoundEffects.js";
+import { playBrickHit, playMetalHit, playScore, playWallAdvance, playPowerUpPickup } from "../systems/SoundEffects.js";
 import { announce } from "../ui/Announcement.js";
 
 // Arcade: romper ladrillos, para 1 jugador. La pala va a la izquierda, como
@@ -36,7 +39,8 @@ import { announce } from "../ui/Announcement.js";
 // derecho). Si se te pasan todas las pelotas perdés una vida; al romper todo
 // el muro pasás al nivel siguiente, más difícil (ver data/arcade.js). Desde
 // el nivel 3 el muro avanza hacia vos: si un ladrillo cruza la línea de
-// peligro, o te quedás sin vidas, fin del juego.
+// peligro, o te quedás sin vidas, fin del juego. Los ladrillos rotos pueden
+// soltar cápsulas con power-ups que se agarran con la pala (ArcadePowerUps).
 export default class ArcadeScene extends Phaser.Scene {
   constructor() {
     super("ArcadeScene");
@@ -67,6 +71,21 @@ export default class ArcadeScene extends Phaser.Scene {
     this.wall = new BrickWall(this, this.field, { onBrickHit: (brick, broken) => this.onBrickHit(brick, broken) });
     this.hud = new ArcadeHud(this);
     this.dangerLine = this.drawDangerLine();
+
+    this.indicators = new EffectIndicators(this, this.field);
+    this.drops = new CapsuleDrops(this, this.paddle, {
+      onCatch: (definition, capsule) => this.onCapsuleCaught(definition, capsule),
+    });
+    this.powerUps = new ArcadePowerUps(this, {
+      field: this.field,
+      paddle: this.paddle,
+      ballManager: this.ballManager,
+      feedback: this.feedback,
+      indicators: this.indicators,
+      drops: this.drops,
+      run: this.run,
+      launchExtraBall: () => this.launchExtraBall(),
+    });
 
     this.matchPause = new MatchPause(this, {
       field: this.field,
@@ -117,6 +136,25 @@ export default class ArcadeScene extends Phaser.Scene {
     if (this.wall.frontX <= ARCADE_DANGER_X) this.gameOver();
   }
 
+  // Bola extra: una pelota nueva sale de la pala hacia el muro, sin esperar.
+  launchExtraBall() {
+    const ball = this.ballManager.addBall(this.paddle.x + ARCADE_SERVE_OFFSET_X, this.paddle.y);
+    this.wall.registerBall(ball);
+    ball.launch(1);
+  }
+
+  onCapsuleCaught(definition, capsule) {
+    this.powerUps.activate(definition.kind);
+    this.feedback.playPickup(capsule.x, capsule.y, definition, this.paddle);
+    playPowerUpPickup();
+  }
+
+  // Al perder una vida o pasar de nivel: sin efectos ni cápsulas en camino.
+  clearPowerUps() {
+    this.powerUps.clearAll();
+    this.drops.clearAll();
+  }
+
   // Una pelota nueva espera pegada a la pala (se mueve con ella) y después sale hacia el muro.
   serve() {
     const ball = this.ballManager.addBall(this.paddle.x + ARCADE_SERVE_OFFSET_X, this.paddle.y);
@@ -133,9 +171,13 @@ export default class ArcadeScene extends Phaser.Scene {
   update(time, delta) {
     if (this.matchOver) return;
 
+    this.indicators.update();
     this.controller.update(delta);
     this.heldBall?.circle.body.reset(this.paddle.x + ARCADE_SERVE_OFFSET_X, this.paddle.y);
     this.ballManager.update(delta);
+    // Las cápsulas van al ritmo de la física: en cámara lenta también se frenan.
+    this.drops.update(delta / this.physics.world.timeScale);
+    this.powerUps.update(delta, this.ballManager.balls);
   }
 
   onBrickHit(brick, broken) {
@@ -150,6 +192,7 @@ export default class ArcadeScene extends Phaser.Scene {
     // Los resistentes valen más: 10 por cada golpe que aguantaban.
     this.feedback.spawnBurst(brick.x, brick.y, brick.color);
     this.run.addPoints(ARCADE_BRICK_POINTS * brick.maxHits);
+    this.drops.maybeDrop(brick.x, brick.y);
     this.hud.update(this.run);
 
     // El choque se está calculando: el muro nuevo se arma en el próximo frame.
@@ -164,6 +207,7 @@ export default class ArcadeScene extends Phaser.Scene {
     this.clearingLevel = false;
     const completedLevel = this.run.level;
     this.run.addPoints(ARCADE_LEVEL_BONUS * completedLevel);
+    this.clearPowerUps();
     this.ballManager.clearAll();
     this.heldBall = null;
     this.startLevel(completedLevel + 1);
@@ -178,9 +222,11 @@ export default class ArcadeScene extends Phaser.Scene {
   // Se pierde una vida cuando ya no queda ninguna pelota en juego.
   onBallOut(ball) {
     this.wall.unregisterBall(ball);
+    this.powerUps.onBallLost(ball);
     if (this.ballManager.count > 0) return;
 
     playScore();
+    this.clearPowerUps();
     this.run.loseLife();
     this.hud.update(this.run);
 
@@ -195,6 +241,7 @@ export default class ArcadeScene extends Phaser.Scene {
     this.matchOver = true;
     this.matchPause.finish();
     this.advanceTimer?.remove();
+    this.clearPowerUps();
 
     const { record, isNew } = submitArcadeScore(this.run.score, this.run.level);
     this.scene.launch("ArcadeResultScene", { score: this.run.score, level: this.run.level, record, isNew });

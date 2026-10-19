@@ -23,7 +23,8 @@ export default class PowerUpEffects {
   constructor(scene, paddlesBySide, { duration = POWERUP_EFFECT_DURATION } = {}) {
     this.scene = scene;
     this.duration = duration;
-    this.paddlesBySide = { p1: [paddlesBySide.p1], p2: [paddlesBySide.p2] };
+    // En el Arcade no hay pala del lado p2: queda sin palas.
+    this.paddlesBySide = { p1: [paddlesBySide.p1], p2: paddlesBySide.p2 ? [paddlesBySide.p2] : [] };
     this.timers = { p1: {}, p2: {} };
   }
 

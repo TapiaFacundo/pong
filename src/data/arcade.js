@@ -1,3 +1,4 @@
+import { KEYS } from "../enums/keys.js";
 import {
   GAME_HEIGHT,
   BALL_SPEED,
@@ -61,6 +62,22 @@ function brickHits(level, fromBack, row) {
   if (fromBack < threeHitColumns + twoHitColumns) return 2;
   return 1;
 }
+
+// Power-ups que pueden salir en las cápsulas del Arcade: solo los que ayudan
+// al jugador, con el mismo dibujo que en la Batalla (todos en verde). El punto
+// doble acá es "Puntos ×2": los puntos valen el doble por un rato.
+export const ARCADE_POWERUPS = [
+  { kind: "grow" },
+  { kind: "speedUp" },
+  { kind: "shield" },
+  { kind: "smallGoal" },
+  { kind: "cannon" },
+  { kind: "extraBall" },
+  { kind: "giant" },
+  { kind: "slowMotion" },
+  { kind: "doublePoint", labelKey: KEYS.PUNTOS_X2 },
+  { kind: "rain" },
+].map((powerUp) => ({ ...powerUp, colorCategory: "green" }));
 
 // Cómo es cada nivel del Arcade:
 // - ballSpeed: la pelota sale un 4 % más rápido en cada nivel, con un tope.

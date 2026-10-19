@@ -33,10 +33,11 @@ export default class EffectIndicators {
 
   // side: "p1" / "p2", o null para los neutros. El color dice si al jugador le
   // conviene (verde) o lo perjudica (rojo); los neutros van en amarillo.
+  // colorCategory lo fija a mano (en el Arcade todos ayudan: van en verde).
   // Si ya había un ícono del mismo efecto en ese lugar, lo reemplaza.
-  track(side, kind, timer) {
+  track(side, kind, timer, colorCategory) {
     if (!timer) return;
-    this.show(side, kind, timer);
+    this.show(side, kind, timer, colorCategory);
   }
 
   // Efecto sin duración fija (punto doble: hasta el próximo punto). Se ve
@@ -49,11 +50,10 @@ export default class EffectIndicators {
     this.remove(this.keyFor(side, kind));
   }
 
-  show(side, kind, timer) {
+  show(side, kind, timer, colorCategory = this.defaultColor(side, kind)) {
     const key = this.keyFor(side, kind);
     this.remove(key, false);
 
-    const colorCategory = side ? (isBuffKind(kind) ? "green" : "red") : "yellow";
     const icon = new PowerUpIcon(this.scene, 0, 0, kind, colorCategory).setDepth(INDICATOR_DEPTH);
 
     let mask = null;
@@ -65,6 +65,11 @@ export default class EffectIndicators {
     this.entries.set(key, { side, icon, timer, mask });
     this.layout();
     this.update();
+  }
+
+  defaultColor(side, kind) {
+    if (!side) return "yellow";
+    return isBuffKind(kind) ? "green" : "red";
   }
 
   keyFor(side, kind) {

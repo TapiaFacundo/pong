@@ -94,6 +94,7 @@ export const KEYS = {
   RECORD_N: "Récord: {n}",
   NUEVO_RECORD: "¡Nuevo récord!",
   VIDA_EXTRA_ANUNCIO: "¡Vida extra!",
+  PUNTOS_X2: "Puntos ×2",
 
   // Celulares y tablets.
   GIRA_EL_CELULAR_PARA_JUGAR: "Girá el celular para jugar",

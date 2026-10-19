@@ -23,8 +23,9 @@ export default class ShieldEffect {
     this.clear(side);
 
     const barrier = new GoalBarrier(this.scene, this.field, side, {
-      top: 0,
-      bottom: this.field.height,
+      // Todo el alto jugable (en el Arcade, debajo de la franja del marcador).
+      top: this.scene.physics.world.bounds.top,
+      bottom: this.scene.physics.world.bounds.bottom,
       color: SHIELD_COLOR,
     });
     const expireTimer = this.scene.time.delayedCall(duration, () => this.clear(side));

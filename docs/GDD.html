@@ -426,7 +426,7 @@
   <li><b>Puntaje:</b> 10 por cada golpe que aguantaba el ladrillo roto (10, 20 o 30) y 100 × el número de nivel al completarlo.</li>
   <li><b>Fin del juego:</b> al quedarte sin vidas, o si el muro (que avanza desde el nivel 3) llega a la línea de peligro.</li>
   <li><b>Pelota casi vertical:</b> si un rebote en la esquina de un ladrillo la deja a más de 70° de la horizontal, se endereza a 70° (sin cambiarle el sentido), para que no quede rebotando entre el techo y el piso sin avanzar.</li>
-  <li><b>Pantallas:</b> durante la partida, arriba hay una franja de 56 px que no se juega (la pelota rebota y la pala se frena debajo de ella), separada de la cancha por una línea gris. Ahí se ven el puntaje y el nivel a los costados del ícono de pausa, y las vidas (pelotitas) a la derecha. Al terminar, sobre el muro: “Fin del juego”, el puntaje, el nivel al que se llegó y el récord (o “¡Nuevo récord!”), con “Reintentar” y “Volver al menú” (también Esc).</li>
+  <li><b>Pantallas:</b> durante la partida, arriba hay una franja de 56 px que no se juega (la pelota rebota y la pala se frena debajo de ella), separada de la cancha por una línea gris. A la izquierda del ícono de pausa van los indicadores de los power-ups activos; a la derecha, el puntaje y, pegado a las vidas (pelotitas, arriba a la derecha), el nivel. Al terminar, sobre el muro: “Fin del juego”, el puntaje, el nivel al que se llegó y el récord (o “¡Nuevo récord!”), con “Reintentar” y “Volver al menú” (también Esc).</li>
   <li><b>Récord:</b> el mejor puntaje (y su nivel) se guarda en <code>localStorage</code>.</li>
 </ul>
 
@@ -443,25 +443,33 @@
   <li><b>Curva resultante:</b> nivel 1, muro completo de 3 columnas sin trucos; nivel 3, primer muro que avanza; nivel 6, primer metal; desde el nivel 9, 9 columnas; desde el 11, la pelota al tope (560 px/s) y el muro avanzando cada 8 s.</li>
 </ul>
 
-<h3>Power-ups <span class="tag pend">pendiente</span></h3>
-<p>Los ladrillos tienen alrededor de un 12 % de chance de soltar una cápsula con el ícono de un power-up, que cae hacia el jugador; hay que agarrarla con la pala. Solo salen power-ups que ayudan.</p>
+<h3>Power-ups</h3>
+<p>Cada ladrillo roto tiene un 12 % de chance de soltar una cápsula: el ícono del power-up (en verde, radio 14), que viaja en línea recta hacia el jugador a 160 px/s (en cámara lenta, más despacio). Se agarra tocándola con la pala; si pasa de largo, se pierde. Solo salen power-ups que ayudan, todos con la misma chance.</p>
+<ul>
+  <li>Al agarrarla: destello, el nombre del power-up y el sonido de siempre. Los que duran se ven en los indicadores, arriba a la izquierda, todos en verde, con el barrido de reloj.</li>
+  <li>Duran 15 s (la cámara lenta, 5 s), como en la Batalla.</li>
+  <li>Al perder una vida o pasar de nivel se terminan todos los efectos y desaparecen las cápsulas en camino (como en Arkanoid).</li>
+</ul>
 <table>
   <tr><th style="width:26%">Power-up</th><th>En el Arcade</th></tr>
   <tr><td>Pala grande / Pala rápida</td><td>Como siempre, sobre tu pala.</td></tr>
-  <tr><td>Escudo</td><td>Barrera en tu línea que salva una pelota.</td></tr>
-  <tr><td>Arco chico</td><td>Tapa las puntas de tu línea: hay menos lugar por donde se te caiga la pelota.</td></tr>
-  <tr><td>Cañón</td><td>Tu pala agarra la pelota y la apuntás antes de que salga (como el “pegamento” de Arkanoid).</td></tr>
-  <tr><td>Bola extra</td><td>Suma una pelota; solo perdés una vida si se te caen todas.</td></tr>
-  <tr><td>Pelota gigante</td><td>Más grande: rompe más ladrillos por golpe.</td></tr>
-  <tr><td>Cámara lenta</td><td>Frena la pelota: da respiro.</td></tr>
-  <tr><td>Puntos ×2</td><td>(El punto doble del Pong.) Los ladrillos valen el doble durante 15 s.</td></tr>
-  <tr><td>Lluvia de power-ups</td><td>Durante 15 s los ladrillos sueltan cápsulas mucho más seguido.</td></tr>
+  <tr><td>Escudo</td><td>Barrera en tu línea, a lo alto de toda la zona jugable, que salva una pelota.</td></tr>
+  <tr><td>Arco chico</td><td>Tapa las puntas de tu línea (un 25 % del alto jugable cada una): hay menos lugar por donde se te caiga la pelota.</td></tr>
+  <tr><td>Cañón</td><td>Tu pala agarra la pelota y la apuntás durante la mecha (como el “pegamento” de Arkanoid). A diferencia de la Batalla, el disparo sale a la velocidad que traía la pelota: acá la ronda no se reinicia y quedaría así de rápida el resto del nivel.</td></tr>
+  <tr><td>Bola extra</td><td>Sale una pelota nueva desde tu pala hacia el muro; solo perdés una vida si se te caen todas.</td></tr>
+  <tr><td>Pelota gigante</td><td>Agranda todas las pelotas en juego: rompen más ladrillos por golpe.</td></tr>
+  <tr><td>Cámara lenta</td><td>Frena la pelota (y las cápsulas): da respiro.</td></tr>
+  <tr><td>Puntos ×2</td><td>(El punto doble del Pong.) Todo lo que sumes vale el doble durante 15 s.</td></tr>
+  <tr><td>Lluvia de power-ups</td><td>Durante 15 s cada ladrillo roto tiene un 50 % de chance de soltar una cápsula.</td></tr>
+  <tr><td colspan="2"><span class="tag pend">pendiente</span> Los cuatro nuevos:</td></tr>
   <tr><td>Pelota de fuego (nuevo)</td><td>Durante 8 s la pelota atraviesa los ladrillos rompiéndolos sin rebotar (los de metal la hacen rebotar).</td></tr>
   <tr><td>Láser (nuevo)</td><td>Durante 10 s tu pala dispara sola hacia el muro cada medio segundo; cada disparo le resta un golpe a un ladrillo.</td></tr>
   <tr><td>Vida extra (nuevo)</td><td>Suma una vida. Sale poco seguido.</td></tr>
   <tr><td>Pelota explosiva (nuevo)</td><td>Los próximos 3 ladrillos que toca la pelota explotan y rompen también a sus vecinos.</td></tr>
 </table>
 <p class="note">No salen en el Arcade: los rojos, Turbo, Pelota zigzagueante, Pelota curva, Pelota invisible y Paleta central (juegan en contra o estorban los tiros al muro).</p>
+
+<p class="note">Tecla de prueba en el Arcade (solo con <code>npm run dev</code>): la G suelta una cápsula de cada power-up en fila frente a la pala, o rompe todos los ladrillos menos uno, según lo que se esté probando (<code>systems/DebugKey.js</code>).</p>
 
 <h2>14. Arquitectura del código</h2>
 <pre>src/
@@ -470,13 +478,13 @@
 ├── scenes/        una escena por archivo (MenuScene, BattleScene, DifficultyScene, PointsScene, MutatorsScene, TutorialScene,
 │                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene, ArcadeScene, ArcadeResultScene,
 │                  LevelResultScene, StoryEndScene)
-├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle, GoalBarrier, Brick)
+├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle, GoalBarrier, Brick, Capsule)
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
 │                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrivelaShot,
 │                  Field, Sabotage, SlowMotionEffect, ShieldEffect, SmallGoalEffect, CannonEffect,
 │                  BossPhases, EffectIndicators, MatchPause (pausa y botones táctiles de cualquier partida),
-│                  BrickWall, ArcadeRun, ArcadeHud (Arcade),
+│                  BrickWall, ArcadeRun, ArcadeHud, CapsuleDrops, ArcadePowerUps (Arcade),
 │                  DebugKey: tecla de prueba, solo en desarrollo)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia;
 │                  mutators.js: los modificadores de la Batalla, que se arman igual que un nivel;
