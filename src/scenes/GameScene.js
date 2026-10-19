@@ -32,7 +32,7 @@ import { playPowerUpPickup, playScore } from "../systems/SoundEffects.js";
 import BallManager from "../systems/BallManager.js";
 import BallEffects from "../systems/BallEffects.js";
 import CenterPaddleEffect from "../systems/CenterPaddleEffect.js";
-import TrivelaShot from "../systems/TrivelaShot.js";
+import TrickShot from "../systems/TrickShot.js";
 import Sabotage from "../systems/Sabotage.js";
 import DebugKey from "../systems/DebugKey.js";
 import SlowMotionEffect from "../systems/SlowMotionEffect.js";
@@ -66,7 +66,7 @@ export default class GameScene extends Phaser.Scene {
     this.matchOver = false;
     // Phaser reutiliza la misma instancia de escena entre partidas: los
     // sistemas opcionales de un nivel no pueden quedar de la partida anterior.
-    this.trivelaShot = null;
+    this.trickShot = null;
     this.paddleForward = null;
     this.controllerForward = null;
     this.sabotage = null;
@@ -113,7 +113,7 @@ export default class GameScene extends Phaser.Scene {
     );
     this.ballsPerRound = rules.ballsPerRound ?? 1;
 
-    if (rules.trivela) this.enableTrivela(rules.trivela);
+    if (rules.trickShot) this.enableTrickShot(rules.trickShot);
 
     this.controllerLeft = new PlayerController(this, this.paddleLeft, { up: KEYS.P1_UP, down: KEYS.P1_DOWN }, "p1");
 
@@ -206,17 +206,17 @@ export default class GameScene extends Phaser.Scene {
     return { ...(AI_DIFFICULTIES[this.difficulty] ?? AI_DIFFICULTIES.normal), trackFirstArrival: true };
   }
 
-  // Tiro con efecto del rival (Trivela, y la fase 2 del jefe final).
-  enableTrivela(config) {
-    this.trivelaShot = new TrivelaShot(this, this.paddleRight, "p2", config);
-    this.ballManager.setShotModifier(this.trivelaShot);
+  // Tiros con efecto del rival (Palinho Jr., y la fase 2 del jefe final).
+  enableTrickShot(config) {
+    this.trickShot = new TrickShot(this, this.paddleRight, "p2", config);
+    this.ballManager.setShotModifier(this.trickShot);
   }
 
   // Fase nueva del jefe final: puede cambiar su IA y sumarle habilidades
   // (tiro con efecto, pala adelantada). Se anuncia en el centro de la pantalla.
   enterBossPhase(phase, number) {
     if (phase.ai) this.controllerRight.setDifficulty(phase.ai);
-    if (phase.rules?.trivela && !this.trivelaShot) this.enableTrivela(phase.rules.trivela);
+    if (phase.rules?.trickShot && !this.trickShot) this.enableTrickShot(phase.rules.trickShot);
     if (phase.rules?.forwardPaddle && !this.paddleForward) this.addForwardPaddle(phase.rules.forwardPaddle);
 
     this.announce(getPhrase(TRANSLATION_KEYS.FASE_N).replace("{n}", number));
@@ -250,7 +250,7 @@ export default class GameScene extends Phaser.Scene {
     // Los efectos de movimiento de las pelotas (zigzag, curva) van al ritmo de
     // la física: en cámara lenta también se frenan.
     this.ballManager.update(delta / this.physics.world.timeScale);
-    this.trivelaShot?.update(this.ballManager.balls);
+    this.trickShot?.update(this.ballManager.balls);
     this.sabotage?.update(delta);
     // Primero las paredes del arco chico: si la pelota pega en una, el escudo no se gasta.
     this.cannonEffect.update(delta);
@@ -474,7 +474,7 @@ export default class GameScene extends Phaser.Scene {
     this.cannonEffect.clearAll();
     this.ballManager.clearAll();
     this.effectIndicators.clearAll();
-    this.trivelaShot?.clear();
+    this.trickShot?.clear();
 
     if (this.level) {
       this.finishStoryLevel(winner);

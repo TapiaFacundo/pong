@@ -234,8 +234,10 @@ export const BALL_CURVE_MAX_TURN_RATE = (100 * Math.PI) / 180;
 export const BALL_CURVE_DELAY = 150;
 export const BALL_CURVE_DURATION = 900;
 
-// Aviso del tiro con efecto de Trivela: su pala parpadea en amarillo con este intervalo.
-export const TRIVELA_TELL_BLINK_INTERVAL = 120;
+// Aviso del tiro con efecto de Palinho Jr.: su pala parpadea con este
+// intervalo, en amarillo si viene curvo y en celeste si viene en zigzag.
+export const TRICK_SHOT_TELL_BLINK_INTERVAL = 120;
+export const TRICK_SHOT_TELL_COLORS = { curve: 0xffdd33, zigzag: 0x66ccff };
 export const BALL_INVISIBLE_BLINK_INTERVAL = 220;
 
 export const CENTER_PADDLE_HEIGHT = 60;

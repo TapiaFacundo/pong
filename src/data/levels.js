@@ -24,7 +24,8 @@ import { KEYS } from "../enums/keys.js";
 //     ballsPerRound: pelotas con las que arranca cada ronda.
 //     powerUpSpawnDelay: { min, max } del spawn para todo el partido (ms).
 //     powerUpColorWeights: probabilidad relativa de cada color de power-up.
-//     trivela: { chance } de que un tiro del rival salga con efecto curvo.
+//     trickShot: { weights } chance relativa de que cada tiro del rival salga
+//       recto, curvo o en zigzag ({ normal, curve, zigzag }).
 //     sabotage: cada `interval` ms elige al azar uno de `effects`
 //       ({ kind, target }: "player" lo sabotea, "self" refuerza al rival). Los
 //       efectos de pala duran `duration` ms.
@@ -38,7 +39,8 @@ const NORMAL_FIELD = FIELD_SIZES.normal;
 const MEDIUM_FIELD = FIELD_SIZES.medium;
 const LARGE_FIELD = FIELD_SIZES.large;
 
-const TRIVELA_SHOT = { chance: 0.5 };
+// Palinho Jr.: un tercio de sus tiros salen rectos, un tercio curvos y un tercio en zigzag.
+const TRICK_SHOT = { weights: { normal: 1, curve: 1, zigzag: 1 } };
 
 // Pala adelantada de Los Gemelos: más chica, con la IA Difícil de siempre, y
 // mientras la pelota va hacia el jugador patrulla de pared a pared en vez de
@@ -100,13 +102,13 @@ export const LEVELS = [
   },
   {
     id: 6,
-    nameKey: KEYS.TRIVELA,
-    abilityKey: KEYS.SUS_TIROS_CON_EFECTO_SE_CURVAN,
+    nameKey: KEYS.PALINHO_JR,
+    abilityKey: KEYS.ALTERNA_TIROS_RECTOS_CURVOS_Y_EN_ZIGZAG,
     quoteKey: KEYS.LE_PEGO_DE_AFUERA_DEL_PIE_SUERTE_ADIVINANDO,
     boss: null,
     ai: { ...AI_DIFFICULTIES.hard, trackFirstArrival: false },
     field: NORMAL_FIELD,
-    rules: { trivela: TRIVELA_SHOT },
+    rules: { trickShot: TRICK_SHOT },
   },
   {
     id: 7,
@@ -162,11 +164,11 @@ export const LEVELS = [
     field: LARGE_FIELD,
     rules: { extraBallAfterTotalScore: 10 },
     phases: [
-      { fromPlayerScore: 3, rules: { trivela: TRIVELA_SHOT } },
+      { fromPlayerScore: 3, rules: { trickShot: TRICK_SHOT } },
       {
         fromPlayerScore: 5,
         ai: { ...AI_DIFFICULTIES.impossible, trackFirstArrival: true },
-        rules: { trivela: TRIVELA_SHOT, forwardPaddle: TWINS_FORWARD_PADDLE },
+        rules: { trickShot: TRICK_SHOT, forwardPaddle: TWINS_FORWARD_PADDLE },
       },
     ],
   },

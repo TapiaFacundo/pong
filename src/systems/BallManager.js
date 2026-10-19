@@ -59,7 +59,7 @@ export default class BallManager {
   }
 
   // Un sistema que puede cambiar cómo sale un golpe de pala (por ejemplo, el
-  // tiro con efecto de Trivela): beforeBounce(ball, playerId, offset) devuelve
+  // tiro con efecto de Palinho Jr.): beforeBounce(ball, playerId, offset) devuelve
   // el offset a usar y afterBounce(ball, playerId, offset) corre después del rebote.
   setShotModifier(modifier) {
     this.shotModifier = modifier;

@@ -33,7 +33,7 @@
 <div class="legend"><span class="tag pend">pendiente</span> = decidido en diseño pero todavía no implementado en el juego. <span class="tag pend">borrador</span> = propuesta a confirmar.</div>
 
 <h2>1. Concepto</h2>
-<p><b>Ponger-up</b> es un Pong clásico con power-ups que aparecen en el centro de la cancha y le meten caos a las rondas. Se juega en el navegador, en PC o en celular, de forma local: 1 jugador contra la CPU, 2 jugadores en el mismo teclado (o el mismo celular), o un Modo Historia de 10 niveles contra rivales cada vez más difíciles.</p>
+<p><b>Ponger-up</b> es un Pong clásico con power-ups que aparecen en el centro de la cancha y le meten caos a las rondas. Se juega en el navegador, en PC o en celular, de forma local: 1 jugador contra la CPU, 2 jugadores en el mismo teclado (o el mismo celular), un Modo Historia de 10 niveles contra rivales cada vez más difíciles, o un Arcade de romper ladrillos. Las partidas casuales se pueden personalizar con modificadores.</p>
 
 <h2>2. Plataforma, stack y publicación</h2>
 <ul>
@@ -263,7 +263,8 @@
 <pre>Menú principal ──(Batalla)──► 1 o 2 jugadores ──(1 Jugador)──► Dificultad ──► Puntos ──► Partida ⇄ Pausa
       │                                  │                                     ▲   ⇅         │
       │                                  └──(2 Jugadores)──────────────────────┘ Modificadores └──► Victoria ──► Menú principal
-      └──(?)──► Cómo jugar</pre>
+      ├──(Arcade)──► Partida del Arcade ⇄ Pausa ──► Fin del juego ──► Reintentar / Menú principal
+      └──(?)──► Cómo jugar ──(Arcade)──► Cómo jugar: Arcade</pre>
 <table>
   <tr><th style="width:22%">Pantalla</th><th>Contenido</th></tr>
   <tr><td>Menú principal</td><td>Título y tres opciones: “Batalla” (partida casual), “Modo Historia” y “Arcade”. En las esquinas, el ícono ? (cómo jugar) y el ⚙ (panel de idioma).</td></tr>
@@ -272,6 +273,7 @@
   <tr><td>Puntos</td><td>5, 7 o 10 puntos: al elegir, empieza la partida. Debajo, “Modificadores” (con la cantidad activa entre paréntesis, si hay).</td></tr>
   <tr><td>Modificadores</td><td>Una fila con carrusel por modificador y, al final, “Restablecer” y “Guardar” (ver sección 3).</td></tr>
   <tr><td>Cómo jugar</td><td>Se abre con el ícono ? del menú (y antes del nivel 1 del Modo Historia). Texto corto: controles de cada jugador, Esc para pausar, y que los power-ups se tocan con la pelota: verde a tu favor, rojo en tu contra, amarillo para los dos. Desde el menú, abajo tiene la opción “Arcade”, que lleva a cómo jugar el Arcade (antes del nivel 1, en su lugar está “Jugar”).</td></tr>
+  <tr><td>Partida del Arcade / Fin del juego</td><td>Ver sección 13.</td></tr>
   <tr><td>Cómo jugar: Arcade</td><td>Una línea por regla, cada una con un dibujito al lado: controles, romper todos los ladrillos para pasar de nivel, perder una vida si se pasa la pelota, dorados y plateados aguantan más golpes, el metal no se rompe, el muro avanza (que no cruce la línea roja) y agarrar las cápsulas con la pala. Esc o ← vuelven a “Cómo jugar”.</td></tr>
   <tr><td>Partida</td><td>Cancha con línea central punteada, marcador de cada jugador arriba y los indicadores de duración de los efectos activos (ver sección de power-ups).</td></tr>
   <tr><td>Pausa</td><td>Se superpone a la partida congelada: Reanudar, Volver al menú y Opciones (panel de idioma). Esc o ← reanudan (o cierran el panel de idioma si está abierto).</td></tr>
@@ -324,7 +326,7 @@
   <tr><td>3</td><td>El Muro</td><td>Pala 60 % más alta todo el partido</td><td>Normal lenta</td><td>800 × 600</td></tr>
   <tr><td>4</td><td>Velocista</td><td>Pelota más rápida y que acelera más</td><td>Normal rápida</td><td>800 × 600</td></tr>
   <tr><td>5</td><td><b>Los Gemelos</b> (jefe)</td><td>Dos palas distintas: una en el arco y una adelantada más chica</td><td>Arco: rápida pero con más error; adelantada: Difícil</td><td>1000 × 750</td></tr>
-  <tr><td>6</td><td>Trivela</td><td>Tiros con efecto (curvos) intercalados con tiros rectos</td><td>Difícil</td><td>800 × 600</td></tr>
+  <tr><td>6</td><td>Palinho Jr.</td><td>Alterna tiros rectos, curvos y en zigzag</td><td>Difícil</td><td>800 × 600</td></tr>
   <tr><td>7</td><td>Estadio</td><td>Cancha grande y un rival más rápido que vos</td><td>Difícil rápida</td><td>1200 × 900</td></tr>
   <tr><td>8</td><td>Saboteador</td><td>Cada tanto te sabotea o se refuerza; más power-ups rojos</td><td>Difícil</td><td>800 × 600</td></tr>
   <tr><td>9</td><td>Tormenta</td><td>2 pelotas por ronda y lluvia permanente</td><td>Difícil</td><td>800 × 600</td></tr>
@@ -341,7 +343,7 @@
   <tr><td>4 · Velocista</td><td>380 px/s</td><td>100 ms</td><td>± 20 px</td><td>No</td></tr>
   <tr><td>5 · Los Gemelos (arco)</td><td>400 px/s (× 1,25)</td><td>40 ms</td><td>± 30 px</td><td>35 %</td></tr>
   <tr><td>5 · Los Gemelos (adelantada)</td><td>340 px/s (× 1,25)</td><td>40 ms</td><td>± 4 px</td><td>35 %</td></tr>
-  <tr><td>6 · Trivela</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 %</td></tr>
+  <tr><td>6 · Palinho Jr.</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 %</td></tr>
   <tr><td>7 · Estadio</td><td>450 px/s (× 1,5)</td><td>40 ms</td><td>± 4 px</td><td>35 %</td></tr>
   <tr><td>8 · Saboteador</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 %</td></tr>
   <tr><td>9 · Tormenta</td><td>340 px/s</td><td>40 ms</td><td>± 4 px</td><td>35 %</td></tr>
@@ -358,21 +360,21 @@
   <tr><td>3 · El Muro</td><td>Su pala es un 60 % más alta durante todo el partido (como una pala grande permanente); los power-ups de tamaño que le toquen se aplican sobre esa altura. Es lento, así que hay que buscar los ángulos y las puntas de la pala.</td></tr>
   <tr><td>4 · Velocista</td><td>La pelota sale a 440 px/s (en vez de 380) y acelera un 4 % por golpe (en vez de 2,5 %). Pone a prueba los reflejos.</td></tr>
   <tr><td>5 · Los Gemelos<br><span class="note">jefe</span></td><td>Cancha de 1000 × 750. Controla dos palas: una en su arco y otra adelantada, a mitad de su lado de la cancha. La adelantada rebota la pelota como una pala normal; si la pelota la pasa, todavía queda la del arco. Cuando la pelota vuelve desde la pala del arco, atraviesa la adelantada por detrás. Las dos palas son distintas para que no parezcan clones: la adelantada es más chica (60 % del alto), usa la IA Difícil y, mientras la pelota va hacia el jugador, patrulla subiendo y bajando de pared a pared en vez de quedarse quieta; la del arco es más rápida (400 px/s) pero erra más (± 30 px). Así cada una se ubica en un lugar distinto. Los power-ups de pala que le toquen al jefe afectan a las dos, y las dos vuelven al centro al terminar cada ronda.</td></tr>
-  <tr><td>6 · Trivela</td><td>Le pega de tres dedos. Cada vez que la pelota va hacia él, hay 50 % de chance de que su próximo tiro salga con efecto: sale como un golpe en la punta de la pala (abierto, hacia el lado donde pegó la pelota) y se curva de vuelta con la fuerza máxima de la pelota curva, aunque le pegue con el centro. El efecto dura solo ese tiro: el próximo golpe de cualquiera lo corta. El resto de los tiros salen normales, sin patrón fijo. Aviso: mientras la pelota va hacia él con un tiro con efecto preparado, su pala parpadea en amarillo. Si la pelota ya tiene el power-up de pelota curva, no se suma un segundo efecto.</td></tr>
+  <tr><td>6 · Palinho Jr.</td><td>Le pega de tres dedos. Cada vez que la pelota va hacia él se sortea cómo va a salir su próximo tiro: recto, curvo o en zigzag, con la misma chance (un tercio cada uno). Curvo: sale como un golpe en la punta de la pala (abierto, hacia el lado donde pegó la pelota) y se curva de vuelta con la fuerza máxima de la pelota curva, aunque le pegue con el centro. Zigzag: sale con el ángulo normal y ondula como la pelota zigzagueante. El efecto dura solo ese tiro: el próximo golpe de cualquiera lo corta. Aviso: mientras la pelota va hacia él con un tiro con efecto preparado, su pala parpadea en amarillo (curvo) o en celeste (zigzag); el recto no avisa. Si la pelota ya tiene ese efecto por un power-up, no se suma un segundo.</td></tr>
   <tr><td>7 · Estadio</td><td>Cancha de 1200 × 900 con la cámara alejada: todo se ve a 2/3 de su tamaño. El rival es más rápido que el jugador: 450 px/s contra 400 (675 contra 600 con el × 1,5 de la cancha grande). Los power-ups aparecen en una zona central proporcionalmente más grande.</td></tr>
   <tr><td>8 · Saboteador</td><td>Cada 10 s de juego elige al azar, con la misma chance, una de seis opciones: sabotearte con <b>controles invertidos</b>, <b>pala lenta</b> o <b>pala chica</b> (5 s), o reforzarse a sí mismo con <b>pala rápida</b> (5 s), <b>cañón</b> (hasta usarlo o 15 s, como el power-up) o <b>punto doble</b> (hasta el próximo punto). Antes solo saboteaba con controles invertidos o pala lenta, y los controles invertidos casi siempre terminaban en punto suyo; ahora salen 1 de cada 6 veces. El reloj solo corre con la pelota en movimiento (no durante la espera del saque) y no se reinicia entre rondas, para que actúe aunque las rondas sean cortas. Si te sabotea, su pala y la tuya destellan en rojo y aparece “¡Sabotaje!” con el efecto junto a tu pala; si se refuerza, su pala destella en verde y aparece “¡Refuerzo!” con el efecto junto a la suya. Si el afectado ya tenía un efecto de pala del mismo tipo, se reemplaza, igual que con un power-up. Cada power-up rojo sale con el doble de probabilidad: los rojos pasan de ~32 % a ~48 % del total.</td></tr>
   <tr><td>9 · Tormenta</td><td>Cada ronda empieza con 2 pelotas, separadas 80 px en altura, que salen una hacia cada jugador (después de un punto, la primera va hacia quien lo perdió). La ronda sigue hasta que salieron las dos. Lluvia de power-ups permanente: aparece uno cada 1,5 s durante todo el partido. La IA sigue a la pelota que va a llegar antes a su lado; si cambia de pelota, vuelve a tardar su tiempo de reacción.</td></tr>
   <tr><td>10 · El Campeón<br><span class="note">jefe final</span></td><td>Cancha de 1200 × 900. Tiene fases según tus puntos:
     <ul>
       <li><b>Fase 1</b> (desde el inicio): Difícil.</li>
-      <li><b>Fase 2</b> (cuando llegás a 3 puntos): suma el tiro con efecto de Trivela.</li>
+      <li><b>Fase 2</b> (cuando llegás a 3 puntos): suma los tiros con efecto de Palinho Jr. (rectos, curvos y en zigzag).</li>
       <li><b>Fase 3</b> (cuando llegás a 5 puntos): pasa a Imposible y suma la pala adelantada de Los Gemelos.</li>
     </ul>
     Cada cambio de fase se anuncia en el centro de la pantalla (“¡Fase 2!”, “¡Fase 3!”) y su pala destella en violeta. La fase cambia en el momento en que anotás el punto. Si un punto doble te hace saltar dos fases a la vez, se aplican las dos en orden.<br>
     <b>Bola extra por partido largo:</b> cuando entre los dos marcadores suman más de 10 puntos (por ejemplo 6-5 o 6-6) y el partido sigue, cada ronda empieza con 2 pelotas, una hacia cada jugador, como en Tormenta. La primera vez se anuncia en pantalla (“¡Partido largo: dos pelotas por ronda!”).</td></tr>
 </table>
 
-<h3>Rivales: frases y final <span class="tag pend">borrador</span></h3>
+<h3>Rivales: frases y final</h3>
 <p>Antes de cada nivel, una tarjeta presenta al rival con su nombre, su habilidad en una línea y una frase suya.</p>
 <table>
   <tr><th style="width:16%">Rival</th><th style="width:44%">Habilidad (en la tarjeta)</th><th>Frase</th></tr>
@@ -381,7 +383,7 @@
   <tr><td>El Muro</td><td>Su pala es enorme, pero lenta.</td><td>“Por acá no pasa nada.”</td></tr>
   <tr><td>Velocista</td><td>La pelota sale más rápido y acelera más.</td><td>“Pestañeá y te la perdiste.”</td></tr>
   <tr><td>Los Gemelos</td><td>Dos palas: una en el arco y otra adelantada.</td><td>“Dos contra uno no es trampa si somos gemelos.”</td></tr>
-  <tr><td>Trivela</td><td>Sus tiros con efecto se curvan.</td><td>“Le pego de afuera del pie. Suerte adivinando.”</td></tr>
+  <tr><td>Palinho Jr.</td><td>Alterna tiros rectos, curvos y en zigzag.</td><td>“Le pego de afuera del pie. Suerte adivinando.”</td></tr>
   <tr><td>Estadio</td><td>Cancha grande y un rival más rápido que vos.</td><td>“Bienvenido a la cancha grande.”</td></tr>
   <tr><td>Saboteador</td><td>Cada tanto te sabotea o se refuerza a sí mismo.</td><td>“¿Tus controles andan raro? Qué casualidad.”</td></tr>
   <tr><td>Tormenta</td><td>Dos pelotas por ronda y lluvia de power-ups.</td><td>“Espero que te guste el caos.”</td></tr>
@@ -406,13 +408,13 @@
 </table>
 
 <h3>Mecánicas nuevas que requiere</h3>
-<p>Hechas: configuración por nivel, progreso guardado, pantallas (salvo la final), la pala alta del nivel 3, la pelota rápida del nivel 4, el tiro con efecto de Trivela (nivel 6), la pala adelantada de Los Gemelos (nivel 5), la cancha de tamaño variable (niveles 5, 7 y 10), Tormenta (nivel 9), el Saboteador (nivel 8) El Campeón (nivel 10) y la pantalla final. El Modo Historia está completo.</p>
+<p>Hechas: configuración por nivel, progreso guardado, pantallas (salvo la final), la pala alta del nivel 3, la pelota rápida del nivel 4, los tiros con efecto de Palinho Jr. (nivel 6), la pala adelantada de Los Gemelos (nivel 5), la cancha de tamaño variable (niveles 5, 7 y 10), Tormenta (nivel 9), el Saboteador (nivel 8) El Campeón (nivel 10) y la pantalla final. El Modo Historia está completo.</p>
 <ul>
   <li><b>Configuración por nivel:</b> cada nivel se describe como datos (IA, cancha, reglas de pelota, power-ups, habilidades) y la partida se arma a partir de eso.</li>
   <li><b>Cancha de tamaño variable:</b> 1000 × 750 y 1200 × 900, con la cámara alejada para que entre en la pantalla (zoom 0,8 y 0,67), y palas más rápidas en proporción al alto, hecha. El marcador queda en el mismo lugar y tamaño de pantalla; la pelota, las palas y los power-ups se ven más chicos. La zona de aparición de power-ups crece en proporción a la cancha.</li>
   <li><b>Pala adelantada:</b> segunda pala de la IA a mitad de su lado (niveles 5 y 10), hecha.</li>
   <li><b>IA con varias pelotas:</b> sigue a la que va a llegar antes (niveles 9 y 10), hecha.</li>
-  <li><b>Habilidades de rival:</b> tiro con efecto de Trivela (niveles 6 y 10) y sabotaje con efectos rojos (nivel 8), hechos.</li>
+  <li><b>Habilidades de rival:</b> tiros con efecto de Palinho Jr. (niveles 6 y 10) y sabotaje con efectos rojos (nivel 8), hechos.</li>
   <li><b>Reglas de partida por nivel:</b> pala más alta (3), velocidad y aceleración de la pelota (4), pelotas por ronda (9), lluvia permanente (9), probabilidad de cada color de power-up (8) y bola extra por partido largo (10), hechas.</li>
   <li><b>Fases de jefe</b> que cambian la IA y las habilidades según el marcador (10), hechas.</li>
   <li><b>Progreso guardado</b> y las pantallas del modo, incluida la pantalla final, hechas.</li>
@@ -486,7 +488,7 @@
 ├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle, GoalBarrier, Brick, Capsule)
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
-│                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrivelaShot,
+│                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrickShot,
 │                  Field, Sabotage, SlowMotionEffect, ShieldEffect, SmallGoalEffect, CannonEffect,
 │                  BossPhases, EffectIndicators, MatchPause (pausa y botones táctiles de cualquier partida),
 │                  BrickWall, ArcadeRun, ArcadeHud, CapsuleDrops, ArcadePowerUps, ArcadeLaser (Arcade),
