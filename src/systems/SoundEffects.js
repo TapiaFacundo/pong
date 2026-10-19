@@ -45,6 +45,17 @@ export function playMetalHit() {
   playTone({ frequency: 1400, duration: 0.05, type: "triangle", volume: 0.15 });
 }
 
+// Rayos del láser del Arcade.
+export function playLaserShot() {
+  playTone({ frequency: 1200, duration: 0.05, type: "sawtooth", volume: 0.06 });
+}
+
+// Pelota explosiva del Arcade: un estallido grave.
+export function playExplosion() {
+  playTone({ frequency: 120, duration: 0.25, type: "sawtooth", volume: 0.2 });
+  playTone({ frequency: 70, duration: 0.3, type: "square", volume: 0.15, delay: 0.03 });
+}
+
 // El muro del Arcade avanza un paso: un golpe grave.
 export function playWallAdvance() {
   playTone({ frequency: 90, duration: 0.2, type: "sawtooth", volume: 0.15 });

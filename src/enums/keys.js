@@ -95,6 +95,10 @@ export const KEYS = {
   NUEVO_RECORD: "¡Nuevo récord!",
   VIDA_EXTRA_ANUNCIO: "¡Vida extra!",
   PUNTOS_X2: "Puntos ×2",
+  PELOTA_DE_FUEGO: "Pelota de fuego",
+  LASER: "Láser",
+  VIDA_EXTRA: "Vida extra",
+  PELOTA_EXPLOSIVA: "Pelota explosiva",
 
   // Celulares y tablets.
   GIRA_EL_CELULAR_PARA_JUGAR: "Girá el celular para jugar",

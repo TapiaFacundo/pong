@@ -15,11 +15,17 @@ import Brick from "../entities/Brick.js";
 // los niveles que lo piden, avanza hacia el jugador.
 //
 // onBrickHit(brick, broken): después de cada golpe (broken: si se rompió).
+// onBallHit(ball, brick, { piercing }): opcional, decide qué le hace la pelota
+//   al ladrillo (por defecto, un golpe). La usan los power-ups del Arcade.
+// isPiercing(ball): opcional; si devuelve true, la pelota atraviesa los
+//   ladrillos que no son de metal en vez de rebotar (pelota de fuego).
 export default class BrickWall {
-  constructor(scene, field, { onBrickHit }) {
+  constructor(scene, field, { onBrickHit, onBallHit, isPiercing }) {
     this.scene = scene;
     this.field = field;
     this.onBrickHit = onBrickHit;
+    this.onBallHit = onBallHit ?? ((_ball, brick) => this.damage(brick));
+    this.isPiercing = isPiercing ?? (() => false);
     this.group = scene.physics.add.staticGroup();
     this.bricks = [];
     this.colliders = new Map(); // pelota -> su choque con el muro
@@ -52,8 +58,11 @@ export default class BrickWall {
   }
 
   registerBall(ball) {
-    const collider = this.scene.physics.add.collider(ball.circle, this.group, (_ballCircle, rect) =>
-      this.handleHit(ball, rect.brick)
+    const collider = this.scene.physics.add.collider(
+      ball.circle,
+      this.group,
+      (_ballCircle, rect) => this.handleBounce(ball, rect.brick),
+      (_ballCircle, rect) => this.shouldBounce(ball, rect.brick)
     );
     this.colliders.set(ball, collider);
   }
@@ -63,10 +72,40 @@ export default class BrickWall {
     this.colliders.delete(ball);
   }
 
-  handleHit(ball, brick) {
-    const broken = brick.hit();
+  // Antes del choque: una pelota que atraviesa (fuego) golpea el ladrillo sin rebotar.
+  shouldBounce(ball, brick) {
+    if (brick.isMetal || !this.isPiercing(ball)) return true;
+
+    this.onBallHit(ball, brick, { piercing: true });
+    return false;
+  }
+
+  handleBounce(ball, brick) {
     this.keepAdvancing(ball);
-    this.onBrickHit(brick, broken);
+    this.onBallHit(ball, brick, { piercing: false });
+  }
+
+  // Le saca golpes a un ladrillo y avisa.
+  damage(brick, hits = 1) {
+    if (brick.isBroken) return;
+    this.onBrickHit(brick, brick.hit(hits));
+  }
+
+  // Lo rompe entero, sin importar cuántos golpes le quedaban (el metal no).
+  smash(brick) {
+    if (!brick.isMetal) this.damage(brick, brick.hits);
+  }
+
+  // El ladrillo y los 8 que lo rodean se rompen enteros (el metal no).
+  // Devuelve los ladrillos que explotaron.
+  explode(center) {
+    const columnStep = ARCADE_BRICK_WIDTH + ARCADE_BRICK_GAP;
+    const rowStep = ARCADE_BRICK_HEIGHT + ARCADE_BRICK_GAP;
+    const blasted = this.breakableBricks.filter(
+      (brick) => Math.abs(brick.x - center.x) <= columnStep + 1 && Math.abs(brick.y - center.y) <= rowStep + 1
+    );
+    blasted.forEach((brick) => this.smash(brick));
+    return blasted;
   }
 
   // Un rebote en la esquina de un ladrillo puede dejar la pelota casi

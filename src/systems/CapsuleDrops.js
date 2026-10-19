@@ -1,4 +1,3 @@
-import Phaser from "phaser";
 import { ARCADE_DROP_CHANCE, ARCADE_RAIN_DROP_CHANCE } from "../config.js";
 import { ARCADE_POWERUPS } from "../data/arcade.js";
 import Capsule from "../entities/Capsule.js";
@@ -21,7 +20,18 @@ export default class CapsuleDrops {
   }
 
   maybeDrop(x, y) {
-    if (Math.random() < this.dropChance) this.drop(x, y, Phaser.Utils.Array.GetRandom(ARCADE_POWERUPS));
+    if (Math.random() < this.dropChance) this.drop(x, y, this.pickPowerUp());
+  }
+
+  // Al azar según el peso de cada uno (la vida extra sale menos).
+  pickPowerUp() {
+    const totalWeight = ARCADE_POWERUPS.reduce((sum, powerUp) => sum + powerUp.weight, 0);
+    let roll = Math.random() * totalWeight;
+    for (const powerUp of ARCADE_POWERUPS) {
+      roll -= powerUp.weight;
+      if (roll < 0) return powerUp;
+    }
+    return ARCADE_POWERUPS[ARCADE_POWERUPS.length - 1];
   }
 
   drop(x, y, definition) {

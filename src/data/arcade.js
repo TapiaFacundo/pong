@@ -14,6 +14,7 @@ import {
   ARCADE_ADVANCE_START_INTERVAL,
   ARCADE_ADVANCE_INTERVAL_STEP,
   ARCADE_ADVANCE_MIN_INTERVAL,
+  ARCADE_EXTRA_LIFE_WEIGHT,
 } from "../config.js";
 
 // Filas de ladrillos que entran entre el marcador y el piso.
@@ -65,7 +66,8 @@ function brickHits(level, fromBack, row) {
 
 // Power-ups que pueden salir en las cápsulas del Arcade: solo los que ayudan
 // al jugador, con el mismo dibujo que en la Batalla (todos en verde). El punto
-// doble acá es "Puntos ×2": los puntos valen el doble por un rato.
+// doble acá es "Puntos ×2": los puntos valen el doble por un rato. Los cuatro
+// últimos son propios del Arcade. weight: chance relativa (la vida extra sale menos).
 export const ARCADE_POWERUPS = [
   { kind: "grow" },
   { kind: "speedUp" },
@@ -77,7 +79,11 @@ export const ARCADE_POWERUPS = [
   { kind: "slowMotion" },
   { kind: "doublePoint", labelKey: KEYS.PUNTOS_X2 },
   { kind: "rain" },
-].map((powerUp) => ({ ...powerUp, colorCategory: "green" }));
+  { kind: "fireBall", labelKey: KEYS.PELOTA_DE_FUEGO },
+  { kind: "laser", labelKey: KEYS.LASER },
+  { kind: "extraLife", labelKey: KEYS.VIDA_EXTRA, weight: ARCADE_EXTRA_LIFE_WEIGHT },
+  { kind: "explosive", labelKey: KEYS.PELOTA_EXPLOSIVA },
+].map((powerUp) => ({ weight: 1, ...powerUp, colorCategory: "green" }));
 
 // Cómo es cada nivel del Arcade:
 // - ballSpeed: la pelota sale un 4 % más rápido en cada nivel, con un tope.

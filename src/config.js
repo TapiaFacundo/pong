@@ -116,6 +116,20 @@ export const ARCADE_DROP_CHANCE = 0.12;
 export const ARCADE_RAIN_DROP_CHANCE = 0.5;
 export const ARCADE_CAPSULE_SPEED = 160;
 export const ARCADE_CAPSULE_RADIUS = 14;
+// Power-ups propios del Arcade.
+// Pelota de fuego: atraviesa los ladrillos (no el metal) rompiéndolos enteros.
+export const ARCADE_FIRE_DURATION = 8000;
+export const ARCADE_FIRE_COLOR = 0xff7a1a;
+// Láser: la pala dispara dos rayos (desde sus puntas) cada ARCADE_LASER_INTERVAL.
+export const ARCADE_LASER_DURATION = 10000;
+export const ARCADE_LASER_INTERVAL = 500;
+export const ARCADE_LASER_SPEED = 700;
+export const ARCADE_LASER_COLOR = 0xff4444;
+// Pelota explosiva: los próximos ladrillos que toca explotan y rompen a sus vecinos.
+export const ARCADE_EXPLOSIVE_CHARGES = 3;
+export const ARCADE_EXPLOSION_COLOR = 0xff8833;
+// Vida extra: sale con esta fracción de la chance de los demás power-ups.
+export const ARCADE_EXTRA_LIFE_WEIGHT = 0.3;
 
 export const COLORS = {
   BACKGROUND: 0x000000,

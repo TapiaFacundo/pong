@@ -164,6 +164,10 @@
   <tr><td>Pelota invisible</td><td>Un ojo tachado</td></tr>
   <tr><td>Lluvia de power-ups</td><td>Tres pelotitas cayendo</td></tr>
   <tr><td>Paleta central</td><td>Una pala sobre la línea central punteada</td></tr>
+  <tr><td>Pelota de fuego (Arcade)</td><td>Una pelota con llamas detrás</td></tr>
+  <tr><td>Láser (Arcade)</td><td>Una pala disparando dos rayos</td></tr>
+  <tr><td>Vida extra (Arcade)</td><td>Un corazón</td></tr>
+  <tr><td>Pelota explosiva (Arcade)</td><td>Una bomba con la mecha encendida</td></tr>
 </table>
 
 <h3>Power-ups de pala y puntaje (verde / rojo)</h3>
@@ -444,7 +448,7 @@
 </ul>
 
 <h3>Power-ups</h3>
-<p>Cada ladrillo roto tiene un 12 % de chance de soltar una cápsula: el ícono del power-up (en verde, radio 14), que viaja en línea recta hacia el jugador a 160 px/s (en cámara lenta, más despacio). Se agarra tocándola con la pala; si pasa de largo, se pierde. Solo salen power-ups que ayudan, todos con la misma chance.</p>
+<p>Cada ladrillo roto tiene un 12 % de chance de soltar una cápsula: el ícono del power-up (en verde, radio 14), que viaja en línea recta hacia el jugador a 160 px/s (en cámara lenta, más despacio). Se agarra tocándola con la pala; si pasa de largo, se pierde. Solo salen power-ups que ayudan, todos con la misma chance salvo la vida extra, que sale con un tercio de la chance de los demás.</p>
 <ul>
   <li>Al agarrarla: destello, el nombre del power-up y el sonido de siempre. Los que duran se ven en los indicadores, arriba a la izquierda, todos en verde, con el barrido de reloj.</li>
   <li>Duran 15 s (la cámara lenta, 5 s), como en la Batalla.</li>
@@ -461,11 +465,11 @@
   <tr><td>Cámara lenta</td><td>Frena la pelota (y las cápsulas): da respiro.</td></tr>
   <tr><td>Puntos ×2</td><td>(El punto doble del Pong.) Todo lo que sumes vale el doble durante 15 s.</td></tr>
   <tr><td>Lluvia de power-ups</td><td>Durante 15 s cada ladrillo roto tiene un 50 % de chance de soltar una cápsula.</td></tr>
-  <tr><td colspan="2"><span class="tag pend">pendiente</span> Los cuatro nuevos:</td></tr>
-  <tr><td>Pelota de fuego (nuevo)</td><td>Durante 8 s la pelota atraviesa los ladrillos rompiéndolos sin rebotar (los de metal la hacen rebotar).</td></tr>
-  <tr><td>Láser (nuevo)</td><td>Durante 10 s tu pala dispara sola hacia el muro cada medio segundo; cada disparo le resta un golpe a un ladrillo.</td></tr>
-  <tr><td>Vida extra (nuevo)</td><td>Suma una vida. Sale poco seguido.</td></tr>
-  <tr><td>Pelota explosiva (nuevo)</td><td>Los próximos 3 ladrillos que toca la pelota explotan y rompen también a sus vecinos.</td></tr>
+  <tr><td colspan="2">Propios del Arcade:</td></tr>
+  <tr><td>Pelota de fuego</td><td>Durante 8 s las pelotas se ven naranjas y atraviesan los ladrillos rompiéndolos enteros, sin rebotar, aunque aguanten 2 o 3 golpes. Los de metal las hacen rebotar.</td></tr>
+  <tr><td>Láser</td><td>Durante 10 s tu pala dispara sola, cada medio segundo, dos rayos rojos hacia el muro desde cerca de sus puntas (como en Arkanoid). Cada rayo le saca un golpe al primer ladrillo que toca y desaparece; el metal lo frena sin romperse.</td></tr>
+  <tr><td>Vida extra</td><td>Suma una vida al instante. Sale con un tercio de la chance de los demás.</td></tr>
+  <tr><td>Pelota explosiva</td><td>Carga 3 explosiones: cada ladrillo (no de metal) que toca una pelota explota y se rompe entero junto con los 8 que lo rodean, con un estallido naranja. El indicador se vacía de a un tercio con cada explosión. Con la pelota de fuego también explotan los que atraviesa.</td></tr>
 </table>
 <p class="note">No salen en el Arcade: los rojos, Turbo, Pelota zigzagueante, Pelota curva, Pelota invisible y Paleta central (juegan en contra o estorban los tiros al muro).</p>
 
@@ -484,7 +488,7 @@
 │                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrivelaShot,
 │                  Field, Sabotage, SlowMotionEffect, ShieldEffect, SmallGoalEffect, CannonEffect,
 │                  BossPhases, EffectIndicators, MatchPause (pausa y botones táctiles de cualquier partida),
-│                  BrickWall, ArcadeRun, ArcadeHud, CapsuleDrops, ArcadePowerUps (Arcade),
+│                  BrickWall, ArcadeRun, ArcadeHud, CapsuleDrops, ArcadePowerUps, ArcadeLaser (Arcade),
 │                  DebugKey: tecla de prueba, solo en desarrollo)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia;
 │                  mutators.js: los modificadores de la Batalla, que se arman igual que un nivel;

@@ -1,4 +1,15 @@
-import { POWERUP_EFFECT_DURATION, SLOW_MOTION_DURATION } from "../config.js";
+import {
+  POWERUP_EFFECT_DURATION,
+  SLOW_MOTION_DURATION,
+  COLORS,
+  ARCADE_FIRE_DURATION,
+  ARCADE_FIRE_COLOR,
+  ARCADE_LASER_DURATION,
+  ARCADE_EXPLOSIVE_CHARGES,
+  ARCADE_EXPLOSION_COLOR,
+} from "../config.js";
+import { playExplosion } from "./SoundEffects.js";
+import ArcadeLaser from "./ArcadeLaser.js";
 import PowerUpEffects from "./PowerUpEffects.js";
 import BallEffects from "./BallEffects.js";
 import ShieldEffect from "./ShieldEffect.js";
@@ -19,9 +30,17 @@ const INDICATOR_COLOR = "green";
 // - Cámara lenta: igual que en la Batalla.
 // - Puntos ×2 (el punto doble): los puntos valen el doble durante un rato.
 // - Lluvia de power-ups: los ladrillos sueltan cápsulas más seguido un rato.
+// Propios del Arcade:
+// - Pelota de fuego: las pelotas atraviesan los ladrillos (no el metal)
+//   rompiéndolos enteros, y se ven naranjas.
+// - Láser: la pala dispara sola (ver ArcadeLaser).
+// - Vida extra: una vida más.
+// - Pelota explosiva: los próximos ladrillos que toca una pelota explotan y
+//   rompen a sus vecinos (el indicador se vacía de a una carga).
 // Cada efecto con duración se muestra en los indicadores (arriba a la izquierda).
 //
-// deps: { field, paddle, ballManager, feedback, indicators, drops, run, launchExtraBall }
+// deps: { field, paddle, ballManager, wall, feedback, indicators, drops, run,
+//         launchExtraBall, refreshHud }
 export default class ArcadePowerUps {
   constructor(scene, deps) {
     this.scene = scene;
@@ -36,7 +55,14 @@ export default class ArcadePowerUps {
     });
     deps.ballManager.setBallCatcher(this.cannon);
     this.slowMotion = new SlowMotionEffect(scene, deps.field);
+    this.laser = new ArcadeLaser(scene, deps.paddle, deps.wall);
     this.doublePointsTimer = null;
+    this.fireTimer = null;
+    this.explosiveCharges = null;
+  }
+
+  get isFireActive() {
+    return this.fireTimer !== null;
   }
 
   activate(kind) {
@@ -67,8 +93,52 @@ export default class ArcadePowerUps {
         return this.startDoublePoints();
       case "rain":
         return this.drops.startRain(POWERUP_EFFECT_DURATION);
+      case "fireBall":
+        return this.startFire();
+      case "laser":
+        return this.laser.start(ARCADE_LASER_DURATION);
+      case "extraLife":
+        this.run.gainLife();
+        this.refreshHud();
+        return null;
+      case "explosive":
+        return this.loadExplosiveCharges();
       default:
         return null;
+    }
+  }
+
+  startFire() {
+    this.fireTimer?.remove();
+    this.fireTimer = this.scene.time.delayedCall(ARCADE_FIRE_DURATION, () => (this.fireTimer = null));
+    return this.fireTimer;
+  }
+
+  // Las cargas se muestran en el indicador como si fueran tiempo: se vacía de
+  // a un tercio con cada ladrillo que explota (mismo formato que un temporizador).
+  loadExplosiveCharges() {
+    this.explosiveCharges = {
+      delay: ARCADE_EXPLOSIVE_CHARGES,
+      remaining: ARCADE_EXPLOSIVE_CHARGES,
+      getRemaining() {
+        return this.remaining;
+      },
+    };
+    return this.explosiveCharges;
+  }
+
+  // Qué le hace una pelota a un ladrillo (lo llama el muro en cada choque).
+  // piercing: la pelota de fuego lo está atravesando.
+  onBallHitBrick(ball, brick, { piercing }) {
+    if (!brick.isMetal && this.explosiveCharges?.remaining > 0) {
+      this.explosiveCharges.remaining -= 1;
+      this.feedback.spawnBurst(brick.x, brick.y, ARCADE_EXPLOSION_COLOR);
+      playExplosion();
+      this.wall.explode(brick);
+    } else if (piercing) {
+      this.wall.smash(brick);
+    } else {
+      this.wall.damage(brick);
     }
   }
 
@@ -94,6 +164,9 @@ export default class ArcadePowerUps {
 
   update(delta, balls) {
     this.cannon.update(delta);
+    this.laser.update();
+    // Con la pelota de fuego, las pelotas se ven naranjas.
+    balls.forEach((ball) => ball.circle.setFillStyle(this.isFireActive ? ARCADE_FIRE_COLOR : COLORS.BALL));
     // Primero las paredes del arco chico: si la pelota pega en una, el escudo no se gasta.
     this.smallGoal.update(balls);
     this.shield.update(balls);
@@ -113,6 +186,10 @@ export default class ArcadePowerUps {
     this.cannon.clearAll();
     this.slowMotion.clear();
     this.stopDoublePoints();
+    this.laser.clearAll();
+    this.fireTimer?.remove();
+    this.fireTimer = null;
+    this.explosiveCharges = null;
     this.indicators.clearAll();
   }
 }

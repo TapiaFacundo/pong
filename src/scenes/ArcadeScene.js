@@ -68,7 +68,11 @@ export default class ArcadeScene extends Phaser.Scene {
     );
     this.ballManager = new BallManager(this, this.paddle, null, (_side, ball) => this.onBallOut(ball));
     this.feedback = new PowerUpFeedback(this);
-    this.wall = new BrickWall(this, this.field, { onBrickHit: (brick, broken) => this.onBrickHit(brick, broken) });
+    this.wall = new BrickWall(this, this.field, {
+      onBrickHit: (brick, broken) => this.onBrickHit(brick, broken),
+      onBallHit: (ball, brick, options) => this.powerUps.onBallHitBrick(ball, brick, options),
+      isPiercing: () => this.powerUps.isFireActive,
+    });
     this.hud = new ArcadeHud(this);
     this.dangerLine = this.drawDangerLine();
 
@@ -80,11 +84,13 @@ export default class ArcadeScene extends Phaser.Scene {
       field: this.field,
       paddle: this.paddle,
       ballManager: this.ballManager,
+      wall: this.wall,
       feedback: this.feedback,
       indicators: this.indicators,
       drops: this.drops,
       run: this.run,
       launchExtraBall: () => this.launchExtraBall(),
+      refreshHud: () => this.hud.update(this.run),
     });
 
     this.matchPause = new MatchPause(this, {

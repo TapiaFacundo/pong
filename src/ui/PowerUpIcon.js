@@ -108,6 +108,32 @@ const DRAWINGS = {
       g.fillCircle(x, y, 3);
     });
   },
+  // Arcade: pelota con llamas detrás.
+  fireBall(g) {
+    fillPolygon(g, [1, -7, -13, -10, -5, -4, -15, 1, -5, 4, -12, 11, 1, 7]);
+    g.fillCircle(5, 0, 7);
+  },
+  // Arcade: la pala disparando dos rayos.
+  laser(g) {
+    g.fillRect(-13, -10, 5, 20);
+    strokeLine(g, 2.5, -5, -6, 13, -6);
+    strokeLine(g, 2.5, -5, 6, 13, 6);
+  },
+  // Arcade: un corazón.
+  extraLife(g) {
+    g.fillCircle(-5, -3, 6);
+    g.fillCircle(5, -3, 6);
+    fillPolygon(g, [-10.5, 0, 10.5, 0, 0, 12]);
+  },
+  // Arcade: una bomba con la mecha encendida.
+  explosive(g) {
+    g.fillCircle(-2, 3, 9);
+    g.fillRect(2, -7, 5, 5);
+    strokeLine(g, 2, 5, -6, 10, -12);
+    strokeLine(g, 1.5, 11, -16, 11, -12);
+    strokeLine(g, 1.5, 13, -13, 16, -13);
+    strokeLine(g, 1.5, 13, -11, 15, -9);
+  },
   centerPaddle(g) {
     for (let y = -15; y < 15; y += 6) strokeLine(g, 2, 0, y, 0, y + 3);
     g.fillRect(-3, -7, 6, 14);

@@ -47,11 +47,11 @@ export default class Brick {
     this.rect.setFillStyle(this.color);
   }
 
-  // Le resta un golpe (al metal no le hace nada). Devuelve true si con eso se rompió.
-  hit() {
+  // Le resta golpes (al metal no le hace nada). Devuelve true si con eso se rompió.
+  hit(amount = 1) {
     if (this.isMetal) return false;
 
-    this.hits -= 1;
+    this.hits -= amount;
     if (this.isBroken) {
       // Se apaga en el momento (puede estar en medio del cálculo de choques);
       // BrickWall lo borra del todo al armar el próximo muro.
