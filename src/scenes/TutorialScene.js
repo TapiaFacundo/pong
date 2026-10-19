@@ -9,7 +9,8 @@ import { isTouchDevice } from "../ui/TouchControls.js";
 const HINT_COLOR = "#888888";
 
 // Cómo jugar: controles y colores de los power-ups. Se abre con el "?" del
-// menú y antes del nivel 1 del Modo Historia (ahí con la opción "Jugar").
+// menú (con la opción "Arcade", que lleva a cómo jugar el Arcade) y antes del
+// nivel 1 del Modo Historia (ahí con la opción "Jugar").
 export default class TutorialScene extends Phaser.Scene {
   constructor() {
     super("TutorialScene");
@@ -41,13 +42,14 @@ export default class TutorialScene extends Phaser.Scene {
     this.addLine(350, KEYS.ROJO_EN_TU_CONTRA, POWERUP_TEXT_COLORS.red);
     this.addLine(382, KEYS.AMARILLO_PARA_LOS_DOS, POWERUP_TEXT_COLORS.yellow);
 
-    if (this.next) {
-      new MenuList(this, {
-        y: 470,
-        fontSize: "28px",
-        items: [{ labelKey: KEYS.JUGAR, action: () => this.scene.start("GameScene", this.next) }],
-      });
-    }
+    // Antes del nivel 1 del Modo Historia: "Jugar". Desde el menú: la pantalla del Arcade.
+    const item = this.next
+      ? { labelKey: KEYS.JUGAR, action: () => this.scene.start("GameScene", this.next) }
+      : {
+          labelKey: KEYS.ARCADE,
+          action: () => this.scene.start("ArcadeTutorialScene", { returnTo: this.returnTo, returnData: this.returnData }),
+        };
+    new MenuList(this, { y: 470, fontSize: "28px", items: [item] });
 
     addBackNavigation(this, () => this.scene.start(this.returnTo, this.returnData));
   }

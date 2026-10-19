@@ -99,6 +99,13 @@ export const KEYS = {
   LASER: "Láser",
   VIDA_EXTRA: "Vida extra",
   PELOTA_EXPLOSIVA: "Pelota explosiva",
+  ROMPE_TODOS_LOS_LADRILLOS_PARA_PASAR_DE_NIVEL: "Rompé todos los ladrillos para pasar de nivel",
+  SI_SE_TE_PASA_LA_PELOTA_PERDES_UNA_VIDA: "Si se te pasa la pelota, perdés una vida",
+  DORADOS_Y_PLATEADOS_AGUANTAN_MAS_GOLPES: "Dorados y plateados aguantan más golpes",
+  EL_METAL_NO_SE_ROMPE: "El metal no se rompe",
+  EL_MURO_AVANZA_QUE_NO_CRUCE_LA_LINEA_ROJA: "El muro avanza: que no cruce la línea roja",
+  AGARRA_LAS_CAPSULAS_CON_LA_PALA: "Agarrá las cápsulas con la pala",
+  W_S_O_FLECHAS: "W / S o ↑ / ↓",
 
   // Celulares y tablets.
   GIRA_EL_CELULAR_PARA_JUGAR: "Girá el celular para jugar",

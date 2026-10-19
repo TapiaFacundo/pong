@@ -6,6 +6,7 @@ import DifficultyScene from "./scenes/DifficultyScene.js";
 import PointsScene from "./scenes/PointsScene.js";
 import MutatorsScene from "./scenes/MutatorsScene.js";
 import TutorialScene from "./scenes/TutorialScene.js";
+import ArcadeTutorialScene from "./scenes/ArcadeTutorialScene.js";
 import GameScene from "./scenes/GameScene.js";
 import PauseScene from "./scenes/PauseScene.js";
 import BattleResultScene from "./scenes/BattleResultScene.js";
@@ -41,7 +42,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MenuScene, BattleScene, DifficultyScene, PointsScene, MutatorsScene, TutorialScene, LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene, LevelResultScene, StoryEndScene, ArcadeScene, ArcadeResultScene],
+  scene: [MenuScene, BattleScene, DifficultyScene, PointsScene, MutatorsScene, TutorialScene, ArcadeTutorialScene, LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene, LevelResultScene, StoryEndScene, ArcadeScene, ArcadeResultScene],
 };
 
 const game = new Phaser.Game(config);

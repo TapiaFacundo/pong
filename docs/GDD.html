@@ -271,7 +271,8 @@
   <tr><td>Dificultad</td><td>Solo con 1 jugador: fácil, normal, difícil o imposible (arranca en normal).</td></tr>
   <tr><td>Puntos</td><td>5, 7 o 10 puntos: al elegir, empieza la partida. Debajo, “Modificadores” (con la cantidad activa entre paréntesis, si hay).</td></tr>
   <tr><td>Modificadores</td><td>Una fila con carrusel por modificador y, al final, “Restablecer” y “Guardar” (ver sección 3).</td></tr>
-  <tr><td>Cómo jugar</td><td>Se abre con el ícono ? del menú (y antes del nivel 1 del Modo Historia). Texto corto: controles de cada jugador, Esc para pausar, y que los power-ups se tocan con la pelota: verde a tu favor, rojo en tu contra, amarillo para los dos.</td></tr>
+  <tr><td>Cómo jugar</td><td>Se abre con el ícono ? del menú (y antes del nivel 1 del Modo Historia). Texto corto: controles de cada jugador, Esc para pausar, y que los power-ups se tocan con la pelota: verde a tu favor, rojo en tu contra, amarillo para los dos. Desde el menú, abajo tiene la opción “Arcade”, que lleva a cómo jugar el Arcade (antes del nivel 1, en su lugar está “Jugar”).</td></tr>
+  <tr><td>Cómo jugar: Arcade</td><td>Una línea por regla, cada una con un dibujito al lado: controles, romper todos los ladrillos para pasar de nivel, perder una vida si se pasa la pelota, dorados y plateados aguantan más golpes, el metal no se rompe, el muro avanza (que no cruce la línea roja) y agarrar las cápsulas con la pala. Esc o ← vuelven a “Cómo jugar”.</td></tr>
   <tr><td>Partida</td><td>Cancha con línea central punteada, marcador de cada jugador arriba y los indicadores de duración de los efectos activos (ver sección de power-ups).</td></tr>
   <tr><td>Pausa</td><td>Se superpone a la partida congelada: Reanudar, Volver al menú y Opciones (panel de idioma). Esc o ← reanudan (o cierran el panel de idioma si está abierto).</td></tr>
   <tr><td>Victoria</td><td>“¡Gana {jugador}!” (Jugador 1, Jugador 2 o CPU) y la opción “Volver al menú” (también con Esc). Como la pausa, se superpone a la cancha con el marcador final y se ve centrada y del mismo tamaño aunque la cancha sea más grande que la pantalla.</td></tr>
@@ -480,7 +481,7 @@
 ├── main.js        punto de entrada y configuración de Phaser
 ├── config.js      constantes globales (cancha, velocidades, colores, teclas, power-ups, IA)
 ├── scenes/        una escena por archivo (MenuScene, BattleScene, DifficultyScene, PointsScene, MutatorsScene, TutorialScene,
-│                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene, ArcadeScene, ArcadeResultScene,
+│                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene, ArcadeScene, ArcadeResultScene, ArcadeTutorialScene,
 │                  LevelResultScene, StoryEndScene)
 ├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle, GoalBarrier, Brick, Capsule)
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
