@@ -6,15 +6,23 @@ import LanguagePanel from "../ui/LanguagePanel.js";
 import MenuList from "../ui/MenuList.js";
 import IconButton from "../ui/IconButton.js";
 
+// Pausa de cualquier partida, encima de ella: Reanudar, salir y Opciones (idioma).
 export default class PauseScene extends Phaser.Scene {
   constructor() {
     super("PauseScene");
   }
 
-  create() {
-    // En el Modo Historia, salir de la pausa lleva a la selección de nivel.
-    this.isStory = this.scene.get("GameScene").mode === "story";
+  // data (lo arma MatchPause): gameSceneKey (la partida a reanudar o cerrar),
+  // exitTo / exitData / exitLabelKey (a dónde lleva la opción de salir, con
+  // qué datos y su texto: en el Modo Historia, la selección de nivel).
+  init(data) {
+    this.gameSceneKey = data.gameSceneKey;
+    this.exitTo = data.exitTo;
+    this.exitData = data.exitData;
+    this.exitLabelKey = data.exitLabelKey;
+  }
 
+  create() {
     this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6);
 
     this.titleText = this.add
@@ -26,7 +34,7 @@ export default class PauseScene extends Phaser.Scene {
       spacing: 48,
       items: [
         { labelKey: KEYS.REANUDAR, action: () => this.resumeGame() },
-        { labelKey: this.isStory ? KEYS.SELECCION_DE_NIVEL : KEYS.VOLVER_AL_MENU, action: () => this.exitToMenu() },
+        { labelKey: this.exitLabelKey, action: () => this.exitToMenu() },
         { labelKey: KEYS.OPCIONES, action: () => this.languagePanel.open() },
       ],
     });
@@ -58,14 +66,12 @@ export default class PauseScene extends Phaser.Scene {
   }
 
   resumeGame() {
-    const gameScene = this.scene.get("GameScene");
-    gameScene.isPaused = false;
     this.scene.stop();
-    this.scene.resume("GameScene");
+    this.scene.resume(this.gameSceneKey);
   }
 
   exitToMenu() {
-    this.scene.stop("GameScene");
-    this.scene.start(this.isStory ? "LevelSelectScene" : "MenuScene");
+    this.scene.stop(this.gameSceneKey);
+    this.scene.start(this.exitTo, this.exitData);
   }
 }

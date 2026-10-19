@@ -67,6 +67,34 @@ export const ANNOUNCEMENT_DURATION = 1800;
 // Créditos de la pantalla final (nombres propios: no se traducen).
 export const CREDITS = "Facundo Tapia · Valentino Batiston";
 
+// Arcade (romper ladrillos). El muro de ladrillos va del lado derecho, con
+// ARCADE_WALL_BACK_GAP de espacio detrás para que la pelota pueda meterse, y
+// entre ARCADE_WALL_TOP (debajo del marcador) y el piso.
+export const ARCADE_LIVES = 3;
+// Franja de arriba reservada para el marcador (no se juega): el techo de la cancha está debajo.
+export const ARCADE_PLAY_TOP = 56;
+export const ARCADE_BRICK_WIDTH = 22;
+export const ARCADE_BRICK_HEIGHT = 44;
+export const ARCADE_BRICK_GAP = 4;
+export const ARCADE_WALL_TOP = 62;
+export const ARCADE_WALL_BOTTOM_MARGIN = 14;
+export const ARCADE_WALL_BACK_GAP = 60;
+// Columnas de ladrillos del nivel 1; cada nivel suma una, hasta el máximo.
+export const ARCADE_START_COLUMNS = 3;
+export const ARCADE_MAX_COLUMNS = 9;
+// La pelota sale un 4 % más rápido en cada nivel, con un tope.
+export const ARCADE_BALL_SPEED_STEP = 1.04;
+export const ARCADE_MAX_BALL_SPEED = 560;
+export const ARCADE_BRICK_POINTS = 10;
+export const ARCADE_LEVEL_BONUS = 100;
+// La pelota espera pegada a la pala antes de salir (al empezar y después de perder una vida).
+export const ARCADE_SERVE_DELAY = 1200;
+export const ARCADE_SERVE_OFFSET_X = 24;
+// Ángulo máximo de la pelota respecto de la horizontal después de pegarle a un
+// ladrillo: evita que quede rebotando entre el techo y el piso sin avanzar.
+export const ARCADE_MAX_BALL_ANGLE = (70 * Math.PI) / 180;
+export const ARCADE_BRICK_COLORS = [0x4f8cff, 0x7a6cff, 0xb06cff, 0xff6cc8, 0x45d0d0, 0xff8a4f];
+
 export const COLORS = {
   BACKGROUND: 0x000000,
   PADDLE: 0xffffff,

@@ -20,7 +20,6 @@ import {
   PADDLE_RECENTER_DURATION,
   BOSS_COLOR,
   BOSS_TEXT_COLOR,
-  ANNOUNCEMENT_DURATION,
 } from "../config.js";
 import Paddle from "../entities/Paddle.js";
 import PlayerController from "../systems/PlayerController.js";
@@ -46,9 +45,8 @@ import EffectIndicators from "../systems/EffectIndicators.js";
 import { KEYS as TRANSLATION_KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import { getLevel } from "../data/levels.js";
-import IconButton from "../ui/IconButton.js";
-import { touchControls } from "../ui/TouchControls.js";
-import { ROTATE_NOTICE_QUERY } from "../ui/RotateNotice.js";
+import MatchPause from "../systems/MatchPause.js";
+import { announce } from "../ui/Announcement.js";
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -66,7 +64,6 @@ export default class GameScene extends Phaser.Scene {
     // forma que un nivel (ver data/mutators.js).
     this.mutators = this.level ? null : data.mutators ?? null;
     this.matchOver = false;
-    this.isPaused = false;
     // Phaser reutiliza la misma instancia de escena entre partidas: los
     // sistemas opcionales de un nivel no pueden quedar de la partida anterior.
     this.trivelaShot = null;
@@ -189,10 +186,13 @@ export default class GameScene extends Phaser.Scene {
 
     this.startRound(null, SERVE_DELAY_START);
 
-    this.input.keyboard.on("keydown-ESC", () => this.pauseGame());
-    // Pausa con el mouse o un toque (en el celular no hay Esc): arriba al centro, entre los marcadores.
-    this.pauseButton = new IconButton(this, 0, 0, "pause", () => this.pauseGame()).placeOnScreen(field, GAME_WIDTH / 2, 30);
-    this.setUpTouchControls();
+    // Esc, el ícono de pausa (arriba al centro, entre los marcadores) y los botones táctiles.
+    this.matchPause = new MatchPause(this, {
+      field,
+      touchSides: this.mode === "2p" ? ["p1", "p2"] : ["p1"],
+      exitTo: this.level ? "LevelSelectScene" : "MenuScene",
+      exitLabelKey: this.level ? TRANSLATION_KEYS.SELECCION_DE_NIVEL : TRANSLATION_KEYS.VOLVER_AL_MENU,
+    });
 
     // Tecla de prueba (solo con npm run dev).
     new DebugKey(this);
@@ -204,39 +204,6 @@ export default class GameScene extends Phaser.Scene {
     if (this.ballsPerRound <= 1 || typeof this.difficulty !== "string") return this.difficulty;
 
     return { ...(AI_DIFFICULTIES[this.difficulty] ?? AI_DIFFICULTIES.normal), trackFirstArrival: true };
-  }
-
-  // Botones táctiles de los jugadores humanos: se ven durante la partida y se
-  // esconden en la pausa y al terminar. Si el celular se pone vertical, la
-  // partida se pausa sola (se tapa con el aviso de girarlo).
-  setUpTouchControls() {
-    const showControls = () => touchControls.show(this.mode === "2p" ? ["p1", "p2"] : ["p1"]);
-    const hideControls = () => touchControls.hide();
-    const portrait = window.matchMedia(ROTATE_NOTICE_QUERY);
-    const onOrientationChange = () => {
-      if (portrait.matches) this.pauseGame();
-    };
-
-    showControls();
-    this.events.on("pause", hideControls);
-    this.events.on("resume", showControls);
-    portrait.addEventListener("change", onOrientationChange);
-
-    // Los eventos de la escena y del escalado sobreviven a la escena: se sacan al salir.
-    this.events.once("shutdown", () => {
-      hideControls();
-      this.events.off("pause", hideControls);
-      this.events.off("resume", showControls);
-      portrait.removeEventListener("change", onOrientationChange);
-    });
-  }
-
-  pauseGame() {
-    if (this.isPaused || this.matchOver) return;
-
-    this.isPaused = true;
-    this.scene.launch("PauseScene");
-    this.scene.pause();
   }
 
   // Tiro con efecto del rival (Trivela, y la fase 2 del jefe final).
@@ -256,21 +223,9 @@ export default class GameScene extends Phaser.Scene {
     this.powerUpFeedback.flashPaddle(this.paddleRight, BOSS_COLOR);
   }
 
-  // Texto grande en el centro de la pantalla que se desvanece.
+  // Anuncio grande (fase del jefe, partido largo), en el color de los jefes.
   announce(message) {
-    const text = this.field.placeOnScreen(
-      this.add.text(0, 0, message, { fontSize: "40px", color: BOSS_TEXT_COLOR }).setOrigin(0.5).setDepth(20),
-      GAME_WIDTH / 2,
-      GAME_HEIGHT / 2 - 60
-    );
-
-    this.tweens.add({
-      targets: text,
-      alpha: 0,
-      delay: ANNOUNCEMENT_DURATION / 2,
-      duration: ANNOUNCEMENT_DURATION / 2,
-      onComplete: () => text.destroy(),
-    });
+    announce(this, this.field, message, BOSS_TEXT_COLOR);
   }
 
   // Segunda pala del rival, a mitad de su lado (Los Gemelos), con su propio
@@ -508,8 +463,7 @@ export default class GameScene extends Phaser.Scene {
 
   showWinner(winner) {
     this.matchOver = true;
-    touchControls.hide();
-    this.pauseButton.setVisible(false);
+    this.matchPause.finish();
     this.powerUpSpawner.stop();
     this.powerUpEffects.clearAll();
     this.ballEffects.clearAll();

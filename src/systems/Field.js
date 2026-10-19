@@ -8,14 +8,19 @@ import { GAME_WIDTH, GAME_HEIGHT } from "../config.js";
 // y otros textos fijos se ubican con placeOnScreen para que queden en el
 // mismo lugar y tamaño de pantalla aunque la cámara esté alejada.
 export default class Field {
-  constructor(scene, { width = GAME_WIDTH, height = GAME_HEIGHT } = {}) {
+  // rightWall: la pelota rebota en el borde derecho en vez de salir (Arcade:
+  // del lado derecho está el muro de ladrillos y no hay arco).
+  // playTop: dónde empieza la zona de juego (Arcade: arriba queda una franja
+  // para el marcador); pelotas y palas no pasan de ahí.
+  constructor(scene, { width = GAME_WIDTH, height = GAME_HEIGHT, rightWall = false, playTop = 0 } = {}) {
     this.scene = scene;
     this.width = width;
     this.height = height;
     this.zoom = Math.min(GAME_WIDTH / width, GAME_HEIGHT / height);
 
-    // Solo rebota en el techo y el piso: por los costados la pelota sale y es punto.
-    scene.physics.world.setBounds(0, 0, width, height, false, false, true, true);
+    // Rebota en el techo y el piso: por los costados la pelota sale y es punto
+    // (salvo que el derecho sea una pared).
+    scene.physics.world.setBounds(0, playTop, width, height - playTop, false, rightWall, true, true);
     scene.cameras.main.setZoom(this.zoom).centerOn(width / 2, height / 2);
   }
 

@@ -6,16 +6,19 @@ import LanguagePanel from "../ui/LanguagePanel.js";
 import MenuList from "../ui/MenuList.js";
 import IconButton from "../ui/IconButton.js";
 
-// Menú principal: Batalla (partidas casuales) o Modo Historia. En las esquinas,
+// Menú principal: Batalla (partidas casuales), Modo Historia o Arcade. En las esquinas,
 // "?" abre cómo jugar y "⚙" el panel de idioma.
+// Modos que, al volver, quedan marcados en el menú (después de "Batalla").
+const MENU_MODES = ["story", "arcade"];
+
 export default class MenuScene extends Phaser.Scene {
   constructor() {
     super("MenuScene");
   }
 
-  // data.mode: "story" deja marcado el Modo Historia al volver desde ahí.
+  // data.mode: "story" o "arcade" deja marcado ese modo al volver desde ahí.
   init(data) {
-    this.initialIndex = data?.mode === "story" ? 1 : 0;
+    this.initialIndex = MENU_MODES.indexOf(data?.mode) + 1;
   }
 
   create() {
@@ -45,6 +48,7 @@ export default class MenuScene extends Phaser.Scene {
       items: [
         { labelKey: KEYS.BATALLA, action: () => this.scene.start("BattleScene") },
         { labelKey: KEYS.MODO_HISTORIA, action: () => this.scene.start("LevelSelectScene") },
+        { labelKey: KEYS.ARCADE, action: () => this.scene.start("ArcadeScene") },
       ],
     });
 

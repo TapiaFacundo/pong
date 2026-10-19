@@ -44,6 +44,7 @@ Ganar el punto llevando la pelota más allá de la pala rival. Gana la partida q
 
 - Pong de 1 jugador (vs CPU, con 4 niveles de dificultad) o 2 jugadores en el mismo teclado o celular.
 - Jugable en PC y en celular (acostado), con botones táctiles a los costados de la cancha.
+- Modo Arcade: romper ladrillos para 1 jugador, sin fin y por puntaje (con récord guardado), con la pala a la izquierda como en Pong y el muro de ladrillos a la derecha.
 - Modificadores para la Batalla (1 y 2 jugadores): tamaño de cancha, pelota y palas, velocidades, pelotas por ronda, y cuántos power-ups, de qué colores y cuánto duran.
 - 27 power-ups (amarillo/verde/rojo) que aparecen en el centro de la cancha y se activan al tocarlos con la pelota: agrandar/achicar pala, acelerarla/frenarla, invertir controles, punto doble, escudo, arco chico, cañón, pelota extra, turbo, pelota zigzagueante, curva, gigante o invisible, cámara lenta, paleta central, entre otros.
 - IA con velocidad, tiempo de reacción, margen de error y anticipación configurables por dificultad.
@@ -69,6 +70,7 @@ Ganar el punto llevando la pelota más allá de la pala rival. Gana la partida q
 
 ```
 MenuScene → BattleScene → DifficultyScene (solo 1 jugador) → PointsScene (⇄ MutatorsScene) → GameScene → PauseScene / pantalla de victoria → MenuScene
+MenuScene → ArcadeScene ⇄ PauseScene → ArcadeResultScene (Reintentar / Volver al menú)
 
 GameScene
  ├── BallManager

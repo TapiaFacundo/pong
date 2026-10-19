@@ -13,6 +13,8 @@ import LevelSelectScene from "./scenes/LevelSelectScene.js";
 import LevelIntroScene from "./scenes/LevelIntroScene.js";
 import LevelResultScene from "./scenes/LevelResultScene.js";
 import StoryEndScene from "./scenes/StoryEndScene.js";
+import ArcadeScene from "./scenes/ArcadeScene.js";
+import ArcadeResultScene from "./scenes/ArcadeResultScene.js";
 import { touchControls } from "./ui/TouchControls.js";
 import { mountRotateNotice } from "./ui/RotateNotice.js";
 
@@ -39,7 +41,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MenuScene, BattleScene, DifficultyScene, PointsScene, MutatorsScene, TutorialScene, LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene, LevelResultScene, StoryEndScene],
+  scene: [MenuScene, BattleScene, DifficultyScene, PointsScene, MutatorsScene, TutorialScene, LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene, LevelResultScene, StoryEndScene, ArcadeScene, ArcadeResultScene],
 };
 
 const game = new Phaser.Game(config);

@@ -11,7 +11,10 @@ const ICON_GRID_SPACING = 56;
 
 const DEBUG_KEY = "G";
 
-// Qué se prueba ahora:
+// En el Arcade, la G siempre rompe todos los ladrillos menos uno (para probar
+// el paso de nivel sin jugarlo entero).
+//
+// Qué se prueba ahora (en la Batalla y el Modo Historia):
 // - "playerPoint": le suma un punto al jugador 1 (sirve para avanzar las fases
 //   del jefe final sin jugar cada punto).
 // - "allPowerUps": pone en la cancha los 27 power-ups juntos (9 × 3), para
@@ -46,6 +49,12 @@ export default class DebugKey {
   run() {
     if (this.scene.matchOver) return;
 
+    // En el Arcade: rompe todos los ladrillos menos uno, para probar el paso de nivel.
+    if (this.scene.wall) {
+      this.breakAllBricksButOne();
+      return;
+    }
+
     if (DEBUG_ACTION === "playerPoint") {
       this.scene.awardPoint("p1");
     } else if (DEBUG_ACTION === "allPowerUps") {
@@ -55,6 +64,13 @@ export default class DebugKey {
     } else {
       this.activatePowerUp(DEBUG_POWERUP_ID);
     }
+  }
+
+  breakAllBricksButOne() {
+    const standing = this.scene.wall.bricks.filter((brick) => !brick.isBroken);
+    standing.slice(1).forEach((brick) => {
+      while (!brick.isBroken) brick.hit();
+    });
   }
 
   spawnAllPowerUps() {

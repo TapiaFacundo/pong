@@ -3,7 +3,8 @@ import Ball from "../entities/Ball.js";
 import { playPaddleHit } from "./SoundEffects.js";
 
 export default class BallManager {
-  // ballSettings: opciones para cada pelota nueva ({ baseSpeed, speedIncrement }).
+  // ballSettings: opciones para cada pelota nueva ({ baseSpeed, speedIncrement, sizeScale }).
+  // paddleRight puede ser null (Arcade: del otro lado no hay pala).
   constructor(scene, paddleLeft, paddleRight, onBallOut, ballSettings = {}) {
     this.scene = scene;
     this.ballSettings = ballSettings;
@@ -16,7 +17,7 @@ export default class BallManager {
     this.paddles = [];
 
     this.addPaddle(paddleLeft, "p1", 1);
-    this.addPaddle(paddleRight, "p2", -1);
+    if (paddleRight) this.addPaddle(paddleRight, "p2", -1);
   }
 
   // Suma una pala que rebota pelotas. directionX: hacia dónde sale la pelota

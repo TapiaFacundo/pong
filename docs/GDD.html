@@ -62,7 +62,8 @@
   <tr><td>1 Jugador vs CPU (casual)</td><td>La IA controla la pala derecha. Antes de la partida se elige la dificultad: fácil, normal, difícil o imposible (sección 8).</td></tr>
   <tr><td>2 Jugadores (casual)</td><td>Mismo teclado, cada jugador con su pala.</td></tr>
   <tr><td>Modificadores (casual)</td><td>Las dos Batallas (1 y 2 jugadores) se pueden jugar con modificadores que cambian las reglas de la partida (ver “Modificadores de la Batalla”, más abajo).</td></tr>
-  <tr><td>Modo Historia</td><td>1 jugador vs CPU a lo largo de 10 niveles con dificultad y mecánicas crecientes, jefes y enemigos con habilidades. El progreso se guarda (sección 12). Ya se juega de punta a punta con la IA de cada nivel; las mecánicas especiales de los rivales están pendientes.</td></tr>
+  <tr><td>Modo Historia</td><td>1 jugador vs CPU a lo largo de 10 niveles con dificultad y mecánicas crecientes, jefes y enemigos con habilidades. El progreso se guarda (sección 12).</td></tr>
+  <tr><td>Arcade</td><td>Romper ladrillos para 1 jugador, sin fin y por puntaje: tu pala a la izquierda y un muro de ladrillos a la derecha que se vuelve más difícil en cada nivel (sección 13).</td></tr>
 </table>
 
 <h3>Modificadores de la Batalla</h3>
@@ -261,7 +262,7 @@
       └──(?)──► Cómo jugar</pre>
 <table>
   <tr><th style="width:22%">Pantalla</th><th>Contenido</th></tr>
-  <tr><td>Menú principal</td><td>Título y dos opciones: “Batalla” (partida casual) y “Modo Historia”. En las esquinas, el ícono ? (cómo jugar) y el ⚙ (panel de idioma).</td></tr>
+  <tr><td>Menú principal</td><td>Título y tres opciones: “Batalla” (partida casual), “Modo Historia” y “Arcade”. En las esquinas, el ícono ? (cómo jugar) y el ⚙ (panel de idioma).</td></tr>
   <tr><td>Batalla</td><td>“1 Jugador” (contra la CPU) o “2 Jugadores”.</td></tr>
   <tr><td>Dificultad</td><td>Solo con 1 jugador: fácil, normal, difícil o imposible (arranca en normal).</td></tr>
   <tr><td>Puntos</td><td>5, 7 o 10 puntos: al elegir, empieza la partida. Debajo, “Modificadores” (con la cantidad activa entre paréntesis, si hay).</td></tr>
@@ -412,27 +413,77 @@
   <li><b>Progreso guardado</b> y las pantallas del modo, incluida la pantalla final, hechas.</li>
 </ul>
 
-<h2>13. Arquitectura del código</h2>
+<h2>13. Modo Arcade</h2>
+<p>Romper ladrillos (al estilo Arkanoid o Brick Breaker) con la cancha de Ponger-up: la pala del jugador a la izquierda, como en Pong, y un muro de ladrillos del lado derecho. La pelota rebota en el techo, el piso y el borde derecho; si se va por la izquierda, “se cae”. Es para 1 jugador, sin fin: se juega por puntaje y el récord queda guardado.</p>
+
+<h3>Reglas</h3>
+<ul>
+  <li><b>Controles:</b> los de siempre: W / S o las flechas ↑ / ↓ (juega uno solo), y los botones ▲ ▼ en el celular. Esc o el ícono de pausa pausan.</li>
+  <li><b>Saque:</b> la pelota espera 1,2 s pegada adelante de la pala (se mueve con ella) y sale hacia el muro con un ángulo al azar. Pasa al empezar cada nivel y después de perder una vida.</li>
+  <li><b>Vidas:</b> 3. Se pierde una cuando ya no queda ninguna pelota en juego. Sin vidas, fin del juego.</li>
+  <li><b>Muro:</b> ladrillos verticales de 22 × 44 px en 11 filas, con 60 px libres detrás para que la pelota pueda meterse. Cada columna tiene su color.</li>
+  <li><b>Nivel:</b> al romper todos los ladrillos (los de metal no cuentan) se pasa al siguiente, con un anuncio “¡Nivel N!”, y la pelota vuelve a la pala.</li>
+  <li><b>Puntaje:</b> 10 por ladrillo roto y 100 × el número de nivel al completarlo.</li>
+  <li><b>Pelota casi vertical:</b> si un rebote en la esquina de un ladrillo la deja a más de 70° de la horizontal, se endereza a 70° (sin cambiarle el sentido), para que no quede rebotando entre el techo y el piso sin avanzar.</li>
+  <li><b>Pantallas:</b> durante la partida, arriba hay una franja de 56 px que no se juega (la pelota rebota y la pala se frena debajo de ella), separada de la cancha por una línea gris. Ahí se ven el puntaje y el nivel a los costados del ícono de pausa, y las vidas (pelotitas) a la derecha. Al terminar, sobre el muro: “Fin del juego”, el puntaje, el nivel al que se llegó y el récord (o “¡Nuevo récord!”), con “Reintentar” y “Volver al menú” (también Esc).</li>
+  <li><b>Récord:</b> el mejor puntaje (y su nivel) se guarda en <code>localStorage</code>.</li>
+</ul>
+
+<h3>Dificultad</h3>
+<p>Crece con el muro, que es lo central del juego:</p>
+<ul>
+  <li>El muro arranca con 3 columnas y suma una por nivel, hasta 9.</li>
+  <li>La pelota sale un 4 % más rápido en cada nivel (desde 380 px/s), hasta 560 px/s.</li>
+  <li><span class="tag pend">pendiente</span> Patrones de muro que se van alternando (completo, ajedrez, pirámide, diamante, franjas).</li>
+  <li><span class="tag pend">pendiente</span> Ladrillos resistentes: desde el nivel 2, algunos aguantan 2 golpes, y desde el 4, 3 golpes; cambian de color a medida que se agrietan y dan más puntos.</li>
+  <li><span class="tag pend">pendiente</span> Ladrillos de metal (desde el nivel 6): no se rompen y no hace falta romperlos para pasar de nivel.</li>
+  <li><span class="tag pend">pendiente</span> El muro avanza: desde el nivel 3, se acerca un paso hacia el jugador cada 25 s (en niveles más altos, cada vez más seguido, hasta cada 12 s). Si llega a la línea del jugador, fin del juego.</li>
+  <li><span class="tag pend">pendiente</span> Una vida extra cada 5 niveles.</li>
+</ul>
+
+<h3>Power-ups <span class="tag pend">pendiente</span></h3>
+<p>Los ladrillos tienen alrededor de un 12 % de chance de soltar una cápsula con el ícono de un power-up, que cae hacia el jugador; hay que agarrarla con la pala. Solo salen power-ups que ayudan.</p>
+<table>
+  <tr><th style="width:26%">Power-up</th><th>En el Arcade</th></tr>
+  <tr><td>Pala grande / Pala rápida</td><td>Como siempre, sobre tu pala.</td></tr>
+  <tr><td>Escudo</td><td>Barrera en tu línea que salva una pelota.</td></tr>
+  <tr><td>Arco chico</td><td>Tapa las puntas de tu línea: hay menos lugar por donde se te caiga la pelota.</td></tr>
+  <tr><td>Cañón</td><td>Tu pala agarra la pelota y la apuntás antes de que salga (como el “pegamento” de Arkanoid).</td></tr>
+  <tr><td>Bola extra</td><td>Suma una pelota; solo perdés una vida si se te caen todas.</td></tr>
+  <tr><td>Pelota gigante</td><td>Más grande: rompe más ladrillos por golpe.</td></tr>
+  <tr><td>Cámara lenta</td><td>Frena la pelota: da respiro.</td></tr>
+  <tr><td>Puntos ×2</td><td>(El punto doble del Pong.) Los ladrillos valen el doble durante 15 s.</td></tr>
+  <tr><td>Lluvia de power-ups</td><td>Durante 15 s los ladrillos sueltan cápsulas mucho más seguido.</td></tr>
+  <tr><td>Pelota de fuego (nuevo)</td><td>Durante 8 s la pelota atraviesa los ladrillos rompiéndolos sin rebotar (los de metal la hacen rebotar).</td></tr>
+  <tr><td>Láser (nuevo)</td><td>Durante 10 s tu pala dispara sola hacia el muro cada medio segundo; cada disparo le resta un golpe a un ladrillo.</td></tr>
+  <tr><td>Vida extra (nuevo)</td><td>Suma una vida. Sale poco seguido.</td></tr>
+  <tr><td>Pelota explosiva (nuevo)</td><td>Los próximos 3 ladrillos que toca la pelota explotan y rompen también a sus vecinos.</td></tr>
+</table>
+<p class="note">No salen en el Arcade: los rojos, Turbo, Pelota zigzagueante, Pelota curva, Pelota invisible y Paleta central (juegan en contra o estorban los tiros al muro).</p>
+
+<h2>14. Arquitectura del código</h2>
 <pre>src/
 ├── main.js        punto de entrada y configuración de Phaser
 ├── config.js      constantes globales (cancha, velocidades, colores, teclas, power-ups, IA)
 ├── scenes/        una escena por archivo (MenuScene, BattleScene, DifficultyScene, PointsScene, MutatorsScene, TutorialScene,
-│                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene,
+│                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene, ArcadeScene, ArcadeResultScene,
 │                  LevelResultScene, StoryEndScene)
-├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle, GoalBarrier)
+├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle, GoalBarrier, Brick)
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
 │                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrivelaShot,
 │                  Field, Sabotage, SlowMotionEffect, ShieldEffect, SmallGoalEffect, CannonEffect,
-│                  BossPhases, EffectIndicators,
+│                  BossPhases, EffectIndicators, MatchPause (pausa y botones táctiles de cualquier partida),
+│                  BrickWall, ArcadeRun, ArcadeHud (Arcade),
 │                  DebugKey: tecla de prueba, solo en desarrollo)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia;
-│                  mutators.js: los modificadores de la Batalla, que se arman igual que un nivel)
-├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell, PowerUpIcon, TouchControls, RotateNotice,
+│                  mutators.js: los modificadores de la Batalla, que se arman igual que un nivel;
+│                  arcade.js: cómo es cada nivel del Arcade)
+├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell, PowerUpIcon, TouchControls, RotateNotice, Announcement,
 │                  MenuList: lista de opciones navegable, también con filas de carrusel (CarouselRow); IconButton: íconos ← ? ⚙, pausa y pantalla completa, y el “volver” con Esc)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;
 │                  ProgressStorage: progreso del Modo Historia en localStorage;
-│                  MutatorStorage: modificadores elegidos, en localStorage)
+│                  MutatorStorage: modificadores elegidos; ArcadeStorage: récord del Arcade; los dos en localStorage)
 └── enums/         constantes compartidas (claves de texto, idiomas, estados de carga)
 public/            assets estáticos servidos directo
 docs/

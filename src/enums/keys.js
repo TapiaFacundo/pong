@@ -87,6 +87,13 @@ export const KEYS = {
   SI: "Sí",
   NO: "No",
 
+  // Arcade.
+  ARCADE: "Arcade",
+  NIVEL_N_ANUNCIO: "¡Nivel {n}!",
+  FIN_DEL_JUEGO: "Fin del juego",
+  RECORD_N: "Récord: {n}",
+  NUEVO_RECORD: "¡Nuevo récord!",
+
   // Celulares y tablets.
   GIRA_EL_CELULAR_PARA_JUGAR: "Girá el celular para jugar",
   MANTENE_APRETADAS_LAS_FLECHAS_DE_TU_LADO: "Mantené apretadas las flechas de tu lado",
