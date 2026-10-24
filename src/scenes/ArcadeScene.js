@@ -31,9 +31,16 @@ import CapsuleDrops from "../systems/CapsuleDrops.js";
 import ArcadePowerUps from "../systems/ArcadePowerUps.js";
 import MatchPause from "../systems/MatchPause.js";
 import DebugKey from "../systems/DebugKey.js";
-import { playConcede, playWallAdvance, playPowerUpPickup } from "../systems/SoundEffects.js";
+import {
+  playConcede,
+  playWallAdvance,
+  playPowerUpPickup,
+  playMatchWin,
+  playMatchLose,
+} from "../systems/SoundEffects.js";
 import GameFeel from "../systems/GameFeel.js";
 import ArcadeFeel from "../systems/ArcadeFeel.js";
+import PaddleFeel from "../systems/PaddleFeel.js";
 import { announce } from "../ui/Announcement.js";
 
 // Arcade: romper ladrillos, para 1 jugador. La pala va a la izquierda, como
@@ -70,6 +77,7 @@ export default class ArcadeScene extends Phaser.Scene {
     );
     this.ballManager = new BallManager(this, this.paddle, null, (_side, ball) => this.onBallOut(ball));
     new GameFeel(this, this.ballManager, { goalFlashColor: ARCADE_DANGER_COLOR });
+    new PaddleFeel(this, this.ballManager);
     this.feedback = new PowerUpFeedback(this);
     this.wall = new BrickWall(this, this.field, {
       onBrickHit: (brick, broken) => this.onBrickHit(brick, broken),
@@ -259,6 +267,9 @@ export default class ArcadeScene extends Phaser.Scene {
     this.clearPowerUps();
 
     const { record, isNew } = submitArcadeScore(this.run.score, this.run.level);
+    // Con récord nuevo, fin del juego suena a festejo (y en el resultado caen papelitos).
+    if (isNew) playMatchWin();
+    else playMatchLose();
     this.scene.launch("ArcadeResultScene", { score: this.run.score, level: this.run.level, record, isNew });
   }
 }

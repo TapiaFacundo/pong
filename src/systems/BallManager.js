@@ -75,7 +75,7 @@ export default class BallManager {
     ball.lastTouchedBy = playerId;
     if (this.ballCatcher?.tryCatch(ball, paddle, playerId, directionX)) return;
 
-    let offset = Phaser.Math.Clamp((ball.y - paddle.y) / (paddle.rect.height / 2), -1, 1);
+    let offset = Phaser.Math.Clamp((ball.y - paddle.y) / (paddle.height / 2), -1, 1);
     if (this.shotModifier) offset = this.shotModifier.beforeBounce(ball, playerId, offset);
 
     ball.bounceOffPaddle(offset, directionX);

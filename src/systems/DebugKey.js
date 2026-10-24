@@ -26,7 +26,8 @@ const CAPSULE_ROW_SPACING = 60;
 //
 // Qué se prueba ahora (en la Batalla y el Modo Historia):
 // - "playerPoint": le suma un punto al jugador 1 (sirve para avanzar las fases
-//   del jefe final sin jugar cada punto).
+//   del jefe final sin jugar cada punto, y para ver el punto de partido y el
+//   final de la partida: melodía y papelitos).
 // - "allPowerUps": pone en la cancha los 27 power-ups juntos (9 × 3), para
 //   ver sus íconos; se pueden agarrar con la pelota como cualquier otro.
 // - "effectsDemo": activa juntos varios power-ups (los de DEMO_POWERUP_IDS),
@@ -38,7 +39,7 @@ const CAPSULE_ROW_SPACING = 60;
 // - "powerUp": activa DEBUG_POWERUP_ID sobre la pelota en juego, como si la
 //   pelota lo hubiera agarrado. En los verdes y rojos cuenta siempre como si la
 //   hubiera mandado el jugador 1 (el verde es para él; el rojo, para el rival).
-const DEBUG_ACTION = "maxSpeed";
+const DEBUG_ACTION = "playerPoint";
 const DEBUG_POWERUP_ID = "cannon-green";
 const DEMO_POWERUP_IDS = [
   "grow-green",

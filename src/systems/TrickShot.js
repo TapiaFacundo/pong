@@ -1,6 +1,7 @@
 import { COLORS, TRICK_SHOT_TELL_BLINK_INTERVAL, TRICK_SHOT_TELL_COLORS } from "../config.js";
 import CurveMotion from "./CurveMotion.js";
 import ZigzagMotion from "./ZigzagMotion.js";
+import { playTrickShotTell } from "./SoundEffects.js";
 
 const SHOT_MOTIONS = { curve: CurveMotion, zigzag: ZigzagMotion };
 
@@ -8,7 +9,8 @@ const SHOT_MOTIONS = { curve: CurveMotion, zigzag: ZigzagMotion };
 // tiros rectos, curvos y en zigzag. Cada vez que una pelota empieza a ir hacia
 // el rival se sortea (según `weights`) cómo va a salir su próximo golpe, y
 // mientras la pelota se acerca su pala parpadea como aviso: en amarillo si
-// viene curvo y en celeste si viene en zigzag (el recto no avisa).
+// viene curvo y en celeste si viene en zigzag, y suena un aviso distinto para
+// cada uno (el recto no avisa).
 //
 // - Curvo: como un golpe en la punta de la pala: sale abierto hacia el lado
 //   donde pegó la pelota y se curva de vuelta con la fuerza máxima de la bola curva.
@@ -50,7 +52,10 @@ export default class TrickShot {
       if (towardRival && !this.approaching.has(ball)) {
         this.approaching.add(ball);
         const kind = this.pickShot();
-        if (kind !== "normal") this.armedBalls.set(ball, kind);
+        if (kind !== "normal") {
+          this.armedBalls.set(ball, kind);
+          playTrickShotTell(kind);
+        }
       } else if (!towardRival) {
         this.approaching.delete(ball);
         this.armedBalls.delete(ball);

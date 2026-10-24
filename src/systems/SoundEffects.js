@@ -87,6 +87,55 @@ export function playCannonShot() {
   playTone({ frequency: 70, duration: 0.35, type: "square", volume: 0.2, delay: 0.03 });
 }
 
+// Fase nueva del jefe: un golpe grave y una nota que sube.
+export function playBossPhase() {
+  playTone({ frequency: 70, duration: 0.4, type: "sawtooth", volume: 0.25 });
+  [196, 262, 392].forEach((frequency, index) => {
+    playTone({ frequency, duration: 0.18, type: "square", volume: 0.12, delay: 0.1 + index * 0.09 });
+  });
+}
+
+// Aviso del tiro con efecto del rival: el curvo, una nota aguda que sube; el
+// zigzag, dos notas que van y vienen.
+export function playTrickShotTell(kind) {
+  if (kind === "curve") {
+    playTone({ frequency: 880, duration: 0.08, type: "triangle", volume: 0.12 });
+    playTone({ frequency: 1175, duration: 0.1, type: "triangle", volume: 0.12, delay: 0.07 });
+  } else {
+    [740, 988, 740].forEach((frequency, index) => {
+      playTone({ frequency, duration: 0.06, type: "triangle", volume: 0.12, delay: index * 0.06 });
+    });
+  }
+}
+
+// Fin de la partida: tres notas que suben al ganar y tres que bajan al perder.
+// Arrancan un poco después, para no taparse con el sonido del último punto.
+const MATCH_END_DELAY = 0.35;
+
+export function playMatchWin() {
+  [523, 659, 784].forEach((frequency, index) => {
+    playTone({
+      frequency,
+      duration: index === 2 ? 0.35 : 0.12,
+      type: "square",
+      volume: 0.14,
+      delay: MATCH_END_DELAY + index * 0.12,
+    });
+  });
+}
+
+export function playMatchLose() {
+  [392, 330, 262].forEach((frequency, index) => {
+    playTone({
+      frequency,
+      duration: index === 2 ? 0.45 : 0.16,
+      type: "triangle",
+      volume: 0.2,
+      delay: MATCH_END_DELAY + index * 0.16,
+    });
+  });
+}
+
 // Pequeña fanfarria ascendente para la pantalla final del Modo Historia.
 export function playVictoryFanfare() {
   [523, 659, 784, 1047].forEach((frequency, index) => {

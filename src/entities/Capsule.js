@@ -37,7 +37,7 @@ export default class Capsule {
   touches(paddle) {
     const rect = paddle.rect;
     const closestX = Math.max(rect.x - rect.width / 2, Math.min(this.x, rect.x + rect.width / 2));
-    const closestY = Math.max(rect.y - rect.height / 2, Math.min(this.y, rect.y + rect.height / 2));
+    const closestY = Math.max(rect.y - paddle.height / 2, Math.min(this.y, rect.y + paddle.height / 2));
     return (this.x - closestX) ** 2 + (this.y - closestY) ** 2 <= ARCADE_CAPSULE_RADIUS ** 2;
   }
 

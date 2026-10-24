@@ -28,9 +28,10 @@ import ScoreBoard from "../systems/ScoreBoard.js";
 import PowerUpSpawner from "../systems/PowerUpSpawner.js";
 import PowerUpEffects from "../systems/PowerUpEffects.js";
 import PowerUpFeedback from "../systems/PowerUpFeedback.js";
-import { playPowerUpPickup, playScore, playConcede } from "../systems/SoundEffects.js";
+import { playPowerUpPickup, playScore, playConcede, playMatchWin, playMatchLose } from "../systems/SoundEffects.js";
 import BallManager from "../systems/BallManager.js";
 import GameFeel from "../systems/GameFeel.js";
+import PaddleFeel from "../systems/PaddleFeel.js";
 import BallEffects from "../systems/BallEffects.js";
 import CenterPaddleEffect from "../systems/CenterPaddleEffect.js";
 import TrickShot from "../systems/TrickShot.js";
@@ -114,6 +115,7 @@ export default class GameScene extends Phaser.Scene {
     );
     this.ballsPerRound = rules.ballsPerRound ?? 1;
     new GameFeel(this, this.ballManager);
+    new PaddleFeel(this, this.ballManager);
 
     if (rules.trickShot) this.enableTrickShot(rules.trickShot);
 
@@ -213,6 +215,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.announce(getPhrase(TRANSLATION_KEYS.FASE_N).replace("{n}", number));
     this.powerUpFeedback.flashPaddle(this.paddleRight, BOSS_COLOR);
+    this.events.emit("bossPhase");
   }
 
   // Anuncio grande (fase del jefe, partido largo), en el color de los jefes.
@@ -474,10 +477,15 @@ export default class GameScene extends Phaser.Scene {
     this.effectIndicators.clearAll();
     this.trickShot?.clear();
 
+    // Ganó una persona (el jugador 1, o cualquiera de los dos con 2 jugadores) o la CPU.
+    const humanWon = winner === "p1" || this.mode === "2p";
+    if (humanWon) playMatchWin();
+    else playMatchLose();
+
     if (this.level) {
       this.finishStoryLevel(winner);
     } else {
-      this.showCasualWinner(winner);
+      this.showCasualWinner(winner, humanWon);
     }
   }
 
@@ -495,7 +503,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   // El resultado se muestra en su propia escena, encima de la cancha (BattleResultScene).
-  showCasualWinner(winner) {
+  // celebrate: festeja con papelitos (si no ganó la CPU).
+  showCasualWinner(winner, celebrate) {
     const label =
       winner === "p1"
         ? getPhrase(TRANSLATION_KEYS.JUGADOR_1)
@@ -503,6 +512,6 @@ export default class GameScene extends Phaser.Scene {
           ? getPhrase(TRANSLATION_KEYS.JUGADOR_2)
           : getPhrase(TRANSLATION_KEYS.CPU);
 
-    this.scene.launch("BattleResultScene", { winnerLabel: label });
+    this.scene.launch("BattleResultScene", { winnerLabel: label, celebrate });
   }
 }

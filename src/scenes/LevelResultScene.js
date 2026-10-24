@@ -8,11 +8,14 @@ import { MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
 import MenuList from "../ui/MenuList.js";
 import { addBackNavigation } from "../ui/IconButton.js";
 import { pop } from "../ui/Pop.js";
+import { spawnConfetti } from "../ui/Confetti.js";
 
 const WIN_COLOR = "#33dd55";
 const LOSE_COLOR = "#dd3333";
 const OPTIONS_TOP = 410;
 const OPTION_SPACING = 48;
+const CONFETTI_COUNT = 40;
+const CONFETTI_MAX_DELAY = 800;
 
 // Resultado de un nivel del Modo Historia. Si el jugador ganó, guarda el
 // nivel como superado (y avisa si desbloqueó el siguiente); después ofrece
@@ -31,6 +34,8 @@ export default class LevelResultScene extends Phaser.Scene {
 
   create() {
     const unlockedLevelId = this.won ? this.saveProgress() : null;
+    // Al ganar caen papelitos, por detrás del texto.
+    if (this.won) spawnConfetti(this, { count: CONFETTI_COUNT, maxDelay: CONFETTI_MAX_DELAY });
     const rivalName = getPhrase(this.level.nameKey);
 
     const title = this.add

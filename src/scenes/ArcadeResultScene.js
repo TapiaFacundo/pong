@@ -4,10 +4,14 @@ import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import MenuList from "../ui/MenuList.js";
 import { pop } from "../ui/Pop.js";
+import { spawnConfetti } from "../ui/Confetti.js";
 import { addOverlayPanel, MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
 
 const DETAIL_COLOR = "#888888";
 const RECORD_COLOR = "#ffdd33";
+// Con récord nuevo caen papelitos.
+const CONFETTI_COUNT = 40;
+const CONFETTI_MAX_DELAY = 800;
 
 // Fin de una partida del Arcade, encima del muro: puntaje, nivel al que se
 // llegó y el récord (o "¡Nuevo récord!"). Reintentar arranca otra partida;
@@ -60,5 +64,7 @@ export default class ArcadeResultScene extends Phaser.Scene {
       ],
     });
     this.input.keyboard.on("keydown-ESC", backToMenu);
+
+    if (isNew) spawnConfetti(this, { count: CONFETTI_COUNT, maxDelay: CONFETTI_MAX_DELAY });
   }
 }

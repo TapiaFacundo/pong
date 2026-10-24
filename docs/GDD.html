@@ -304,6 +304,10 @@
   <li><b>Rebote en el techo, el piso o la pared del Arcade:</b> un “tic” más grave que el de la pala y un poco de polvo gris contra el borde.</li>
   <li><b>Gol:</b> la pelota explota contra el borde por donde salió: una media luna de luz y una onda curva que se abren desde ese punto hacia la cancha (en rojo en el Arcade, donde es una vida perdida), con partículas, y la pantalla se sacude un instante. Contra la CPU y en el Arcade, el punto en contra suena distinto: tres notas que bajan.</li>
   <li><b>Saque:</b> mientras la pelota espera, parpadea, la rodea un anillo que late y una flechita muestra hacia dónde va a salir. Al salir, un pequeño estallido.</li>
+  <li><b>Palas:</b> al crecer o achicarse por un power-up, el dibujo llega a su tamaño nuevo con un pequeño rebote (el choque cambia al instante, como siempre). La pala rápida deja un rastro de copias que se apagan mientras se mueve, y la lenta se ve apagada.</li>
+  <li><b>Punto de partido:</b> el puntaje de quien está a un punto de ganar late.</li>
+  <li><b>Modo Historia:</b> cuando el jefe pasa a una fase nueva, toda la cancha destella en violeta, tiembla y suena un golpe grave con notas que suben. El aviso del tiro con efecto (Palinho Jr. y la fase 2 del Campeón), además del parpadeo de la pala, suena distinto si viene curvo o en zigzag.</li>
+  <li><b>Fin de la partida:</b> tres notas que suben si ganó una persona y tres que bajan si ganó la CPU. Al ganar (en la Batalla contra la CPU o con 2 jugadores, y en el Modo Historia) caen papelitos en la pantalla de resultado. En el Arcade, el fin del juego suena a festejo y caen papelitos solo si hay récord nuevo.</li>
   <li><b>Arcade:</b>
     <ul>
       <li>Ladrillo golpeado sin romperse: destella en blanco (el metal, más suave). Al romperse, sus pedazos salen girando y los puntos que dio (“+10”, “+30”…) suben flotando.</li>
@@ -510,14 +514,14 @@
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
 │                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrickShot,
 │                  Field, Sabotage, SlowMotionEffect, ShieldEffect, SmallGoalEffect, CannonEffect,
-│                  BossPhases, EffectIndicators, ScoreBoard (marcador), GameFeel (efectos de golpe, estela, gol y saque), ArcadeFeel (efectos de ladrillos, racha, muro y cápsulas), FeelEffects (partículas y pulsos que usan los dos), MatchPause (pausa y botones táctiles de cualquier partida),
+│                  BossPhases, EffectIndicators, ScoreBoard (marcador), GameFeel (efectos de golpe, estela, gol y saque), ArcadeFeel (efectos de ladrillos, racha, muro y cápsulas), FeelEffects (partículas y pulsos que usan los dos), PaddleFeel (rastro de la pala rápida y la lenta apagada), MatchPause (pausa y botones táctiles de cualquier partida),
 │                  BrickWall, ArcadeRun, ArcadeHud, CapsuleDrops, ArcadePowerUps, ArcadeLaser (Arcade),
 │                  DebugKey: tecla de prueba, solo en desarrollo)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia;
 │                  mutators.js: los modificadores de la Batalla, que se arman igual que un nivel;
 │                  arcade.js: cómo es cada nivel del Arcade)
 ├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell, PowerUpIcon, TouchControls, RotateNotice, Announcement,
-│                  Pop: salto de un texto que cambia y aparición fundida de los paneles; BackgroundRally: peloteo de fondo del menú,
+│                  Pop: salto de un texto que cambia y aparición fundida de los paneles; BackgroundRally: peloteo de fondo del menú; Confetti: papelitos de festejo,
 │                  ScreenLayout: medidas comunes de las pantallas y panel de las que se superponen a la partida,
 │                  MenuList: lista de opciones navegable, también con filas de carrusel (CarouselRow); IconButton: íconos ← ? ⚙, pausa y pantalla completa, y el “volver” con Esc)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;

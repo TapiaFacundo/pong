@@ -1,6 +1,6 @@
 import Phaser from "phaser";
-import { COLORS } from "../config.js";
-import { playWallBounce } from "./SoundEffects.js";
+import { COLORS, BOSS_COLOR } from "../config.js";
+import { playWallBounce, playBossPhase } from "./SoundEffects.js";
 import { burst, pulse } from "./FeelEffects.js";
 
 // Estela: cuánto tiempo de recorrido deja ver detrás de la pelota (más larga
@@ -34,6 +34,11 @@ const SERVE_RING_PERIOD = 500;
 const SERVE_ARROW_GAP = 14;
 const SERVE_ARROW_SIZE = 7;
 const SERVE_ARROW_ALPHA = 0.6;
+// Fase nueva del jefe: toda la cancha destella en violeta y tiembla.
+const BOSS_FLASH_ALPHA = 0.35;
+const BOSS_FLASH_DURATION = 600;
+const BOSS_SHAKE_DURATION = 300;
+const BOSS_SHAKE_INTENSITY = 0.01;
 
 // "Game feel" de cualquier partida (Batalla, Modo Historia y Arcade): solo
 // imagen y sonido, no cambia nada del juego. Escucha eventos de la escena:
@@ -41,6 +46,7 @@ const SERVE_ARROW_ALPHA = 0.6;
 // - "ballOut" { ball, x, y, exitSide }: lo emite BallManager.
 // - "serveWait" { ball, directionX } / "serve" { ball }: los emite la escena
 //   al poner la pelota a esperar el saque y al sacarla.
+// - "bossPhase": lo emite GameScene cuando el jefe pasa a una fase nueva.
 // y el rebote de las pelotas contra los bordes de la cancha (worldbounds de Phaser).
 //
 // options.goalFlashColor: color del destello del gol (en el Arcade, rojo:
@@ -61,6 +67,7 @@ export default class GameFeel {
     events.on("ballOut", this.onBallOut, this);
     events.on("serveWait", this.onServeWait, this);
     events.on("serve", this.onServe, this);
+    events.on("bossPhase", this.onBossPhase, this);
     // Después de la física: la pelota ya está en su lugar de este frame.
     events.on("postupdate", this.update, this);
     world.on("worldbounds", onWorldBounds);
@@ -71,6 +78,7 @@ export default class GameFeel {
       events.off("ballOut", this.onBallOut, this);
       events.off("serveWait", this.onServeWait, this);
       events.off("serve", this.onServe, this);
+      events.off("bossPhase", this.onBossPhase, this);
       events.off("postupdate", this.update, this);
       world.off("worldbounds", onWorldBounds);
     });
@@ -208,6 +216,23 @@ export default class GameFeel {
     });
 
     this.scene.cameras.main.shake(GOAL_SHAKE_DURATION, GOAL_SHAKE_INTENSITY);
+  }
+
+  onBossPhase() {
+    const bounds = this.scene.physics.world.bounds;
+    const flash = this.scene.add
+      .rectangle(bounds.centerX, bounds.centerY, bounds.width, bounds.height, BOSS_COLOR, BOSS_FLASH_ALPHA)
+      .setDepth(15);
+
+    this.scene.tweens.add({
+      targets: flash,
+      alpha: 0,
+      duration: BOSS_FLASH_DURATION,
+      ease: "Quad.easeIn",
+      onComplete: () => flash.destroy(),
+    });
+    this.scene.cameras.main.shake(BOSS_SHAKE_DURATION, BOSS_SHAKE_INTENSITY);
+    playBossPhase();
   }
 
   onServeWait({ ball, directionX }) {

@@ -1,11 +1,12 @@
 import Phaser from "phaser";
-import { GAME_TITLE, GAME_WIDTH, GAME_HEIGHT, COLORS, POWERUP_COLORS, BOSS_TEXT_COLOR, CREDITS } from "../config.js";
+import { GAME_TITLE, GAME_WIDTH, COLORS, BOSS_TEXT_COLOR, CREDITS } from "../config.js";
 import { LEVELS } from "../data/levels.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import { playVictoryFanfare } from "../systems/SoundEffects.js";
 import MenuList from "../ui/MenuList.js";
 import { addBackNavigation } from "../ui/IconButton.js";
+import { spawnConfetti } from "../ui/Confetti.js";
 
 const RIVALS_TOP = 205;
 const RIVAL_ROW_SPACING = 30;
@@ -21,7 +22,8 @@ export default class StoryEndScene extends Phaser.Scene {
   }
 
   create() {
-    this.spawnConfetti();
+    // Papelitos que caen sin fin por detrás del texto.
+    spawnConfetti(this, { count: CONFETTI_COUNT, loop: true });
 
     this.add
       .text(GAME_WIDTH / 2, 80, getPhrase(KEYS.SOS_EL_NUEVO_CAMPEON_DE_GAME).replace("{game}", GAME_TITLE), {
@@ -72,34 +74,6 @@ export default class StoryEndScene extends Phaser.Scene {
         })
         .setOrigin(0, 0.5);
     });
-  }
-
-  // Papelitos de los colores de los power-ups que caen en loop por detrás del texto.
-  spawnConfetti() {
-    const colors = Object.values(POWERUP_COLORS);
-
-    for (let i = 0; i < CONFETTI_COUNT; i++) {
-      const piece = this.add
-        .rectangle(
-          Phaser.Math.Between(0, GAME_WIDTH),
-          Phaser.Math.Between(-GAME_HEIGHT, 0),
-          6,
-          10,
-          Phaser.Utils.Array.GetRandom(colors),
-          0.8
-        )
-        .setAngle(Phaser.Math.Between(0, 360));
-
-      this.tweens.add({
-        targets: piece,
-        y: GAME_HEIGHT + 20,
-        angle: piece.angle + Phaser.Math.Between(180, 540),
-        duration: Phaser.Math.Between(3000, 6000),
-        delay: Phaser.Math.Between(0, 3000),
-        repeat: -1,
-        onRepeat: () => piece.setX(Phaser.Math.Between(0, GAME_WIDTH)),
-      });
-    }
   }
 
   goToLevelSelect() {

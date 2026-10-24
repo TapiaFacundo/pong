@@ -9,10 +9,15 @@ const PIPS_Y = 62;
 const PIP_RADIUS = 3;
 const PIP_SPACING = 11;
 const PIP_EMPTY_COLOR = 0x444444;
+// Punto de partido: al que le falta un punto para ganar, su puntaje late.
+const MATCH_POINT_SCALE = 1.15;
+const MATCH_POINT_PERIOD = 380;
+const POP_DURATION = 220;
 
 // Marcador de la Batalla y el Modo Historia: el puntaje de cada jugador
 // arriba al centro (a los lados del ícono de pausa) y los puntos que le
-// faltan para ganar. El puntaje que cambia da un salto.
+// faltan para ganar. El puntaje que cambia da un salto, y el de quien está a
+// un punto de ganar late.
 //
 // Va en coordenadas de pantalla: no se achica con la cámara alejada (ver Field).
 export default class ScoreBoard {
@@ -42,9 +47,23 @@ export default class ScoreBoard {
 
       entry.score = score;
       entry.text.setText(String(score));
-      pop(this.scene, entry.text, { baseScale: entry.baseScale });
+      pop(this.scene, entry.text, { baseScale: entry.baseScale, duration: POP_DURATION });
       this.drawPips(entry);
+      if (score === this.winScore - 1) this.startMatchPointPulse(entry);
     }
+  }
+
+  // Empieza cuando termina el salto del punto.
+  startMatchPointPulse({ text, baseScale }) {
+    this.scene.tweens.add({
+      targets: text,
+      scale: baseScale * MATCH_POINT_SCALE,
+      delay: POP_DURATION,
+      duration: MATCH_POINT_PERIOD,
+      ease: "Sine.easeInOut",
+      yoyo: true,
+      repeat: -1,
+    });
   }
 
   drawPips({ pips, score }) {
