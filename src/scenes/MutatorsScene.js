@@ -30,7 +30,7 @@ export default class MutatorsScene extends Phaser.Scene {
 
   create() {
     this.add
-      .text(GAME_WIDTH / 2, 50, getPhrase(KEYS.MODIFICADORES), { fontSize: "32px", color: COLORS.TEXT })
+      .text(GAME_WIDTH / 2, 50, getPhrase(KEYS.MODIFICADORES), { fontSize: "32px", fontStyle: "bold", color: COLORS.TEXT })
       .setOrigin(0.5);
 
     this.menu = new MenuList(this, {

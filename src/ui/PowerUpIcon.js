@@ -179,7 +179,7 @@ export default class PowerUpIcon extends Phaser.GameObjects.Container {
     if (kind === "doublePoint") {
       this.add(
         scene.add
-          .text(0, 1, "×2", { fontFamily: "monospace", fontSize: "17px", fontStyle: "bold", color: "#111111" })
+          .text(0, 1, "×2", { fontSize: "17px", fontStyle: "bold", color: "#111111" })
           .setOrigin(0.5)
       );
     }

@@ -32,8 +32,10 @@ export default class ArcadeResultScene extends Phaser.Scene {
 
     addOverlayPanel(this, 360);
 
-    this.add.text(centerX, 165, getPhrase(KEYS.FIN_DEL_JUEGO), { fontSize: "40px", color: COLORS.TEXT }).setOrigin(0.5);
-    const scoreText = this.add.text(centerX, 228, String(score), { fontSize: "56px", color: COLORS.TEXT }).setOrigin(0.5);
+    this.add.text(centerX, 165, getPhrase(KEYS.FIN_DEL_JUEGO), { fontSize: "40px", fontStyle: "bold", color: COLORS.TEXT })
+      .setOrigin(0.5);
+    const scoreText = this.add.text(centerX, 228, String(score), { fontSize: "56px", fontStyle: "bold", color: COLORS.TEXT })
+      .setOrigin(0.5);
     pop(this, scoreText, { from: 0.6, duration: 320 });
     this.add
       .text(centerX, 278, getPhrase(KEYS.NIVEL_N).replace("{n}", level), { fontSize: "20px", color: DETAIL_COLOR })

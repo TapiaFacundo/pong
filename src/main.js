@@ -18,6 +18,7 @@ import ArcadeScene from "./scenes/ArcadeScene.js";
 import ArcadeResultScene from "./scenes/ArcadeResultScene.js";
 import { touchControls } from "./ui/TouchControls.js";
 import { mountRotateNotice } from "./ui/RotateNotice.js";
+import { useGameFont, loadGameFont } from "./ui/GameFont.js";
 
 const config = {
   type: Phaser.AUTO,
@@ -45,10 +46,14 @@ const config = {
   scene: [MenuScene, BattleScene, DifficultyScene, PointsScene, MutatorsScene, TutorialScene, ArcadeTutorialScene, LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene, LevelResultScene, StoryEndScene, ArcadeScene, ArcadeResultScene],
 };
 
-const game = new Phaser.Game(config);
+// El juego arranca recién cuando la letra está cargada (ver ui/GameFont.js).
+useGameFont();
+loadGameFont().then(() => {
+  const game = new Phaser.Game(config);
 
-game.events.once("ready", () => {
-  const container = document.getElementById("game");
-  touchControls.mount(game, container);
-  mountRotateNotice(container);
+  game.events.once("ready", () => {
+    const container = document.getElementById("game");
+    touchControls.mount(game, container);
+    mountRotateNotice(container);
+  });
 });

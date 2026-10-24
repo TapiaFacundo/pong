@@ -32,7 +32,7 @@ export default class LevelIntroScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(GAME_WIDTH / 2, 225, getPhrase(level.nameKey), { fontSize: "48px", color: COLORS.TEXT })
+      .text(GAME_WIDTH / 2, 225, getPhrase(level.nameKey), { fontSize: "48px", fontStyle: "bold", color: COLORS.TEXT })
       .setOrigin(0.5);
 
     this.add

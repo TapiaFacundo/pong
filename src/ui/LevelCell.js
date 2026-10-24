@@ -38,7 +38,11 @@ export default class LevelCell {
       .setInteractive({ useHandCursor: unlocked });
 
     scene.add
-      .text(x, y - 22, String(level.id), { fontSize: "34px", color: unlocked ? COLORS.number : COLORS.lockedNumber })
+      .text(x, y - 22, String(level.id), {
+        fontSize: "34px",
+        fontStyle: "bold",
+        color: unlocked ? COLORS.number : COLORS.lockedNumber,
+      })
       .setOrigin(0.5);
 
     if (unlocked) {

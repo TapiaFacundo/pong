@@ -31,6 +31,7 @@ export default class BattleResultScene extends Phaser.Scene {
     const title = this.add
       .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 35, getPhrase(KEYS.GANA_LABEL).replace("{label}", this.winnerLabel), {
         fontSize: "40px",
+        fontStyle: "bold",
         color: COLORS.TEXT,
       })
       .setOrigin(0.5);

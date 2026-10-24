@@ -5,6 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Ponger-up</title>
     <style>
+      /* Letra del juego (src/ui/GameFont.js): Space Mono, licencia SIL OFL (public/fonts/OFL.txt). */
+      @font-face {
+        font-family: "Space Mono";
+        font-style: normal;
+        font-weight: 400;
+        font-display: block;
+        src: url("/fonts/space-mono-regular.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Space Mono";
+        font-style: normal;
+        font-weight: 700;
+        font-display: block;
+        src: url("/fonts/space-mono-bold.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Space Mono";
+        font-style: italic;
+        font-weight: 400;
+        font-display: block;
+        src: url("/fonts/space-mono-italic.woff2") format("woff2");
+      }
+
       html, body {
         margin: 0;
         padding: 0;
@@ -68,7 +91,7 @@
         gap: 24px;
         background: #000;
         color: #fff;
-        font-family: monospace;
+        font-family: "Space Mono", monospace;
         font-size: 20px;
         text-align: center;
         z-index: 20;

@@ -2,7 +2,7 @@ import { GAME_WIDTH, GAME_HEIGHT, COLORS } from "../config.js";
 import { fadeIn } from "./Pop.js";
 
 // Medidas comunes de las pantallas, para que todas se vean iguales: el título
-// siempre a la misma altura y del mismo tamaño, y las listas de opciones
+// siempre a la misma altura, del mismo tamaño y en negrita, y las listas de opciones
 // centradas a lo alto de la pantalla, con el mismo tamaño de letra.
 export const TITLE_Y = 110;
 export const TITLE_FONT_SIZE = "36px";
@@ -21,7 +21,7 @@ const BACKDROP_ALPHA = 0.6;
 const PANEL_WIDTH = 440;
 
 export function addTitle(scene, text, { y = TITLE_Y, color = COLORS.TEXT, fontSize = TITLE_FONT_SIZE } = {}) {
-  return scene.add.text(GAME_WIDTH / 2, y, text, { fontSize, color }).setOrigin(0.5);
+  return scene.add.text(GAME_WIDTH / 2, y, text, { fontSize, fontStyle: "bold", color }).setOrigin(0.5);
 }
 
 // Dónde empieza una lista de `count` opciones para quedar centrada en `centerY`.

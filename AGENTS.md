@@ -23,10 +23,10 @@ src/
 ├── entities/     # clases jugables/objetos (Paddle.js, Ball.js, PowerUp.js)
 ├── systems/      # lógica que no es una entidad (PowerUpSpawner.js, ScoreManager.js, AI.js; GameFeel.js: efectos de imagen y sonido de golpes, estela, gol y saque, que escuchan eventos de la escena; ArcadeFeel.js: lo mismo para ladrillos, racha, muro y cápsulas del Arcade; FeelEffects.js: partículas y pulsos que usan los dos; PaddleFeel.js: rastro de la pala rápida y la lenta apagada)
 ├── data/         # contenido del juego descrito como datos (levels.js: niveles del Modo Historia; mutators.js: modificadores de la Batalla; arcade.js: niveles del Arcade)
-├── ui/           # componentes de interfaz reutilizables entre escenas (LanguagePanel.js; MenuList.js: lista de opciones navegable, con filas de carrusel de CarouselRow.js; IconButton.js: íconos y "volver" con Esc; PowerUpIcon.js: ícono dibujado de cada power-up; TouchControls.js y RotateNotice.js: botones táctiles y aviso de girar el celular, en HTML; ScreenLayout.js: medidas comunes de las pantallas; Pop.js: animaciones de salto y aparición; BackgroundRally.js: peloteo decorativo de fondo del menú; Confetti.js: papelitos de festejo)
+├── ui/           # componentes de interfaz reutilizables entre escenas (LanguagePanel.js; MenuList.js: lista de opciones navegable, con filas de carrusel de CarouselRow.js; IconButton.js: íconos y "volver" con Esc; PowerUpIcon.js: ícono dibujado de cada power-up; TouchControls.js y RotateNotice.js: botones táctiles y aviso de girar el celular, en HTML; ScreenLayout.js: medidas comunes de las pantallas; Pop.js: animaciones de salto y aparición; BackgroundRally.js: peloteo decorativo de fondo del menú; Confetti.js: papelitos de festejo; GameFont.js: carga la letra del juego y la pone por defecto en todos los textos)
 ├── services/     # acceso a servicios externos y al navegador (translations.js, ProgressStorage.js, MutatorStorage.js, ArcadeStorage.js)
 └── enums/        # constantes compartidas (claves de texto, idiomas, estados)
-public/           # assets estáticos servidos directo
+public/           # assets estáticos servidos directo (fonts/: Space Mono, la letra del juego, con su licencia OFL)
 docs/
 ├── GDD.html      # fuente editable del GDD
 └── GDD.pdf       # generado desde GDD.html
@@ -50,6 +50,7 @@ docs/
 - Todo botón, opción o ícono con el que se pueda interactuar tiene que poder usarse con el teclado y con el mouse (y con un tap cuando haya versión para celulares).
 - Pantallas: título, listas de opciones y paneles superpuestos usan las medidas de `ui/ScreenLayout.js` (`addTitle`, `menuTop`, `addOverlayPanel`) para que todas se vean iguales.
 - Menús: toda lista de opciones usa `MenuList` (W/S o flechas + Enter, o mouse) y toda pantalla que no sea el menú principal tiene "volver" con Esc y el ícono ← (`addBackNavigation`). Sin atajos con números ni textos de ayuda con teclas en pantalla.
+- Letra: todos los textos usan Space Mono sin indicarlo (`ui/GameFont.js` la pone por defecto en `scene.add.text`); no poner `fontFamily` en los estilos. Títulos, marcadores y resultados van en negrita (`fontStyle: "bold"`).
 - Todo texto nuevo de la interfaz va como clave en `src/enums/keys.js` y se muestra con `getPhrase()`; las traducciones al inglés no se cargan en el momento: se juntan todas las claves nuevas y se cargan juntas en Traducila al final. El nombre del juego ("Ponger-up", `GAME_TITLE` en `config.js`) no se traduce y no lleva clave.
 
 ## Flujo de trabajo

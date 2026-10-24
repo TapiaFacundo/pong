@@ -27,7 +27,11 @@ export default class PauseScene extends Phaser.Scene {
     addOverlayPanel(this, 300);
 
     this.titleText = this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 95, getPhrase(KEYS.PAUSA), { fontSize: TITLE_FONT_SIZE, color: COLORS.TEXT })
+      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 95, getPhrase(KEYS.PAUSA), {
+        fontSize: TITLE_FONT_SIZE,
+        fontStyle: "bold",
+        color: COLORS.TEXT,
+      })
       .setOrigin(0.5);
 
     this.menu = new MenuList(this, {

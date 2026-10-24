@@ -28,7 +28,7 @@ export default class ScoreBoard {
     this.sides = ["p1", "p2"].map((side, index) => {
       const x = GAME_WIDTH / 2 + (index === 0 ? -SCORE_OFFSET_X : SCORE_OFFSET_X);
       const text = field.placeOnScreen(
-        scene.add.text(0, 0, "0", { fontSize: "48px", color: COLORS.TEXT }).setOrigin(0.5),
+        scene.add.text(0, 0, "0", { fontSize: "48px", fontStyle: "bold", color: COLORS.TEXT }).setOrigin(0.5),
         x,
         SCORE_Y
       );

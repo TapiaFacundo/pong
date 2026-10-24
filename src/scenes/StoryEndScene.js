@@ -28,6 +28,7 @@ export default class StoryEndScene extends Phaser.Scene {
     this.add
       .text(GAME_WIDTH / 2, 80, getPhrase(KEYS.SOS_EL_NUEVO_CAMPEON_DE_GAME).replace("{game}", GAME_TITLE), {
         fontSize: "34px",
+        fontStyle: "bold",
         color: BOSS_TEXT_COLOR,
         align: "center",
         wordWrap: { width: GAME_WIDTH - 80 },

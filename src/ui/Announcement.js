@@ -1,6 +1,10 @@
 import { GAME_WIDTH, GAME_HEIGHT, ANNOUNCEMENT_DURATION } from "../config.js";
 import { pop } from "./Pop.js";
 
+// Ancho máximo antes de pasar a una segunda línea (los anuncios largos, como
+// el del partido largo, no entran en una sola).
+const MAX_WIDTH = GAME_WIDTH - 80;
+
 // Texto grande en el centro de la pantalla que entra con un salto y se
 // desvanece ("¡Fase 2!", "¡Nivel 3!"). Lleva un borde negro para que se lea
 // encima de la pelota o los ladrillos. Se ubica en pantalla con la cancha
@@ -9,7 +13,15 @@ import { pop } from "./Pop.js";
 export function announce(scene, field, message, color, offsetY = 0) {
   const text = field.placeOnScreen(
     scene.add
-      .text(0, 0, message, { fontSize: "40px", color, stroke: "#000000", strokeThickness: 6 })
+      .text(0, 0, message, {
+        fontSize: "40px",
+        fontStyle: "bold",
+        color,
+        stroke: "#000000",
+        strokeThickness: 6,
+        align: "center",
+        wordWrap: { width: MAX_WIDTH },
+      })
       .setOrigin(0.5)
       .setDepth(20),
     GAME_WIDTH / 2,

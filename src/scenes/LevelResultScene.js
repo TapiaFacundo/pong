@@ -41,6 +41,7 @@ export default class LevelResultScene extends Phaser.Scene {
     const title = this.add
       .text(GAME_WIDTH / 2, 145, getPhrase(this.won ? KEYS.GANASTE : KEYS.PERDISTE), {
         fontSize: "48px",
+        fontStyle: "bold",
         color: this.won ? WIN_COLOR : LOSE_COLOR,
       })
       .setOrigin(0.5);
@@ -52,7 +53,7 @@ export default class LevelResultScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(GAME_WIDTH / 2, 270, `${this.scoreP1} - ${this.scoreP2}`, { fontSize: "44px", color: COLORS.TEXT })
+      .text(GAME_WIDTH / 2, 270, `${this.scoreP1} - ${this.scoreP2}`, { fontSize: "44px", fontStyle: "bold", color: COLORS.TEXT })
       .setOrigin(0.5);
 
     if (unlockedLevelId) {

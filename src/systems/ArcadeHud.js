@@ -29,7 +29,7 @@ export default class ArcadeHud {
     scene.add.rectangle(GAME_WIDTH / 2, ARCADE_PLAY_TOP - 1, GAME_WIDTH, 2, DIVIDER_COLOR);
 
     this.scoreText = scene.add
-      .text(SCORE_X, HUD_Y, "0", { fontSize: "40px", color: COLORS.TEXT })
+      .text(SCORE_X, HUD_Y, "0", { fontSize: "40px", fontStyle: "bold", color: COLORS.TEXT })
       .setOrigin(0, 0.5);
     this.levelText = scene.add.text(0, HUD_Y, "", { fontSize: "20px", color: LEVEL_COLOR }).setOrigin(1, 0.5);
     this.lives = scene.add.graphics();

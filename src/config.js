@@ -1,5 +1,10 @@
 export const GAME_TITLE = "Ponger-up";
 
+// Letra de todos los textos: Space Mono (public/fonts, licencia SIL OFL).
+// Ver ui/GameFont.js.
+export const FONT_NAME = "Space Mono";
+export const FONT_FAMILY = `"${FONT_NAME}", monospace`;
+
 export const GAME_WIDTH = 800;
 export const GAME_HEIGHT = 600;
 

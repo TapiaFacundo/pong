@@ -293,6 +293,7 @@
 <h2>11. Arte y audio</h2>
 <ul>
   <li>Formas simples (rectángulos y círculos) con colores planos: fondo negro, palas y pelota blancas, línea central gris y los power-ups en amarillo, verde o rojo, cada uno con su ícono.</li>
+  <li>Tipografía: <b>Space Mono</b> (licencia libre SIL OFL), incluida en el juego (no se descarga de afuera). Es monoespaciada y geométrica, con aire retro-futurista: encaja con la estética de Pong y se lee bien en tamaño chico. Títulos, marcadores, anuncios y resultados van en negrita; las frases de los rivales, en itálica.</li>
   <li>Los sonidos se generan por código con Web Audio, sin archivos: rebote en pala, punto anotado y power-up agarrado, cada uno distinto.</li>
 </ul>
 
@@ -521,7 +522,7 @@
 │                  mutators.js: los modificadores de la Batalla, que se arman igual que un nivel;
 │                  arcade.js: cómo es cada nivel del Arcade)
 ├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell, PowerUpIcon, TouchControls, RotateNotice, Announcement,
-│                  Pop: salto de un texto que cambia y aparición fundida de los paneles; BackgroundRally: peloteo de fondo del menú; Confetti: papelitos de festejo,
+│                  GameFont: carga la letra (Space Mono) y la pone por defecto en todos los textos; Pop: salto de un texto que cambia y aparición fundida de los paneles; BackgroundRally: peloteo de fondo del menú; Confetti: papelitos de festejo,
 │                  ScreenLayout: medidas comunes de las pantallas y panel de las que se superponen a la partida,
 │                  MenuList: lista de opciones navegable, también con filas de carrusel (CarouselRow); IconButton: íconos ← ? ⚙, pausa y pantalla completa, y el “volver” con Esc)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;
