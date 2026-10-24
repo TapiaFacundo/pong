@@ -16,6 +16,7 @@ import LevelResultScene from "./scenes/LevelResultScene.js";
 import StoryEndScene from "./scenes/StoryEndScene.js";
 import ArcadeScene from "./scenes/ArcadeScene.js";
 import ArcadeResultScene from "./scenes/ArcadeResultScene.js";
+import OptionsScene from "./scenes/OptionsScene.js";
 import { touchControls } from "./ui/TouchControls.js";
 import { mountRotateNotice } from "./ui/RotateNotice.js";
 import { useGameFont, loadGameFont } from "./ui/GameFont.js";
@@ -43,7 +44,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MenuScene, BattleScene, DifficultyScene, PointsScene, MutatorsScene, TutorialScene, ArcadeTutorialScene, LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene, LevelResultScene, StoryEndScene, ArcadeScene, ArcadeResultScene],
+  scene: [MenuScene, BattleScene, DifficultyScene, PointsScene, MutatorsScene, TutorialScene, ArcadeTutorialScene, LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene, LevelResultScene, StoryEndScene, ArcadeScene, ArcadeResultScene, OptionsScene],
 };
 
 // El juego arranca recién cuando la letra está cargada (ver ui/GameFont.js).

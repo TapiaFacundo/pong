@@ -1,7 +1,18 @@
 import Phaser from "phaser";
+import { getSetting } from "../services/SettingsStorage.js";
 
 // Efectos visuales sueltos que usan GameFeel y ArcadeFeel. Son solo dibujo:
 // cada uno se crea, se anima y se borra solo, sin cuerpo físico.
+
+// Sacude la pantalla, salvo que la opción "Sacudir la pantalla" esté apagada.
+export function shakeCamera(scene, duration, intensity) {
+  if (getSetting("screenShake")) scene.cameras.main.shake(duration, intensity);
+}
+
+// Si están permitidos los destellos grandes (opción "Destellos").
+export function flashesEnabled() {
+  return getSetting("flashes");
+}
 
 // Partículas cuadradas que salen de (x, y) hacia `angle`, abiertas ± spread / 2,
 // y se apagan mientras viajan. distance: [mínima, máxima]. Con `spin` giran

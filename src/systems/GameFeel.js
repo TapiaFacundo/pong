@@ -1,7 +1,8 @@
 import Phaser from "phaser";
 import { COLORS, BOSS_COLOR } from "../config.js";
 import { playWallBounce, playBossPhase } from "./SoundEffects.js";
-import { burst, pulse } from "./FeelEffects.js";
+import { burst, pulse, shakeCamera, flashesEnabled } from "./FeelEffects.js";
+import { vibrate } from "../services/Vibration.js";
 
 // Estela: cuánto tiempo de recorrido deja ver detrás de la pelota (más larga
 // cuanto más rápida va) y qué tan visible es.
@@ -39,6 +40,9 @@ const BOSS_FLASH_ALPHA = 0.35;
 const BOSS_FLASH_DURATION = 600;
 const BOSS_SHAKE_DURATION = 300;
 const BOSS_SHAKE_INTENSITY = 0.01;
+// Vibración del celular (ms): al golpear con la pala y con cada gol.
+const PADDLE_VIBRATION = 12;
+const GOAL_VIBRATION = 45;
 
 // "Game feel" de cualquier partida (Batalla, Modo Historia y Arcade): solo
 // imagen y sonido, no cambia nada del juego. Escucha eventos de la escena:
@@ -49,13 +53,18 @@ const BOSS_SHAKE_INTENSITY = 0.01;
 // - "bossPhase": lo emite GameScene cuando el jefe pasa a una fase nueva.
 // y el rebote de las pelotas contra los bordes de la cancha (worldbounds de Phaser).
 //
+// Los sacudones, los destellos grandes y la vibración se pueden apagar en Opciones.
+//
 // options.goalFlashColor: color del destello del gol (en el Arcade, rojo:
 // es una vida perdida).
+// options.vibrateSides: lados con jugador humano: el celular vibra cuando
+// golpean la pelota y con cada gol (["p1"] o ["p1", "p2"]).
 export default class GameFeel {
-  constructor(scene, ballManager, { goalFlashColor = COLORS.PADDLE } = {}) {
+  constructor(scene, ballManager, { goalFlashColor = COLORS.PADDLE, vibrateSides = [] } = {}) {
     this.scene = scene;
     this.ballManager = ballManager;
     this.goalFlashColor = goalFlashColor;
+    this.vibrateSides = vibrateSides;
     this.trails = new Map(); // ball -> [{ x, y, time }]
     this.serving = new Map(); // ball -> { ring, arrow, directionX }
     this.trailGraphics = scene.add.graphics();
@@ -126,6 +135,7 @@ export default class GameFeel {
 
   onPaddleHit({ ball, paddle, directionX }) {
     const ratio = ball.speedRatio;
+    if (this.vibrateSides.includes(ball.lastTouchedBy)) vibrate(PADDLE_VIBRATION);
 
     pulse(this.scene, paddle.rect, { scaleX: 2.4, scaleY: 1.08, duration: HIT_PULSE_DURATION });
     burst(this.scene, ball.x - directionX * ball.radius, ball.y, {
@@ -194,9 +204,11 @@ export default class GameFeel {
 
     // Medio círculo abierto hacia la cancha (los ángulos de Arc van en grados).
     const [startAngle, endAngle] = left ? [-90, 90] : [90, 270];
-    const glow = this.scene.add
-      .arc(edgeX, edgeY, GOAL_GLOW_RADIUS, startAngle, endAngle, false, this.goalFlashColor, GOAL_GLOW_ALPHA)
-      .setScale(0.2);
+    const glow = flashesEnabled()
+      ? this.scene.add
+          .arc(edgeX, edgeY, GOAL_GLOW_RADIUS, startAngle, endAngle, false, this.goalFlashColor, GOAL_GLOW_ALPHA)
+          .setScale(0.2)
+      : null;
     const wave = this.scene.add
       .arc(edgeX, edgeY, GOAL_WAVE_RADIUS, startAngle, endAngle, false)
       .setClosePath(false)
@@ -204,21 +216,26 @@ export default class GameFeel {
       .setScale(0.1);
 
     this.scene.tweens.add({
-      targets: [glow, wave],
+      targets: [glow, wave].filter(Boolean),
       scale: 1,
       alpha: 0,
       duration: GOAL_FLASH_DURATION,
       ease: "Quad.easeOut",
       onComplete: () => {
-        glow.destroy();
+        glow?.destroy();
         wave.destroy();
       },
     });
 
-    this.scene.cameras.main.shake(GOAL_SHAKE_DURATION, GOAL_SHAKE_INTENSITY);
+    shakeCamera(this.scene, GOAL_SHAKE_DURATION, GOAL_SHAKE_INTENSITY);
+    if (this.vibrateSides.length > 0) vibrate(GOAL_VIBRATION);
   }
 
   onBossPhase() {
+    shakeCamera(this.scene, BOSS_SHAKE_DURATION, BOSS_SHAKE_INTENSITY);
+    playBossPhase();
+    if (!flashesEnabled()) return;
+
     const bounds = this.scene.physics.world.bounds;
     const flash = this.scene.add
       .rectangle(bounds.centerX, bounds.centerY, bounds.width, bounds.height, BOSS_COLOR, BOSS_FLASH_ALPHA)
@@ -231,8 +248,6 @@ export default class GameFeel {
       ease: "Quad.easeIn",
       onComplete: () => flash.destroy(),
     });
-    this.scene.cameras.main.shake(BOSS_SHAKE_DURATION, BOSS_SHAKE_INTENSITY);
-    playBossPhase();
   }
 
   onServeWait({ ball, directionX }) {

@@ -42,7 +42,7 @@
   <li><b>Node.js:</b> solo para el entorno de desarrollo y el build.</li>
   <li><b>Publicación:</b> sitio estático en Vercel (salida de <code>npm run build</code>). No hay backend propio ni juego online.</li>
   <li><b>Servicios externos:</b> las traducciones se descargan de la API de Traducila (ver sección 10). Es la única llamada de red del juego.</li>
-  <li><b>Persistencia:</b> solo <code>localStorage</code> del navegador (idioma elegido y progreso del Modo Historia). No hay cuentas de usuario.</li>
+  <li><b>Persistencia:</b> solo <code>localStorage</code> del navegador (opciones e idioma elegidos, progreso del Modo Historia, récord del Arcade y modificadores). No hay cuentas de usuario.</li>
   <li><b>Pantalla:</b> la cancha (800 × 600) se agranda o achica para ocupar toda la ventana sin deformarse; lo que sobra queda como franjas negras.</li>
 </ul>
 
@@ -103,7 +103,7 @@
   <tr><td>En pausa: reanudar</td><td>Esc, el ícono ← o la opción “Reanudar”</td></tr>
   <tr><td>Cómo jugar</td><td>Ícono ? (en un círculo, arriba a la izquierda del menú principal)</td></tr>
   <tr><td>Modificadores: cambiar una opción</td><td>A / D o flechas izquierda / derecha, o clic en ◀ ▶ (Enter o clic en el valor pasa a la siguiente)</td></tr>
-  <tr><td>Cambiar idioma</td><td>Ícono ⚙ del menú principal, u “Opciones” en la pausa. En el panel: W / S o flechas y Enter, o clic; Esc lo cierra</td></tr>
+  <tr><td>Opciones (idioma, volumen…)</td><td>Ícono ⚙ del menú principal, u “Opciones” en la pausa. W / S o flechas para elegir la fila, A / D o flechas izquierda / derecha (o Enter, o clic) para cambiar el valor; Esc o ← vuelven</td></tr>
   <tr><td>Íconos del menú con el teclado</td><td>Desde la primera opción del menú, W / ↑ sube a los íconos; A / D o ← / → pasan de uno a otro, Enter lo abre y S / ↓ vuelve a la lista</td></tr>
 </table>
 <p class="note">Todo lo que se puede tocar con el mouse también se puede usar con el teclado. No hay atajos con números ni textos de ayuda con teclas en pantalla: todas las pantallas se manejan igual (moverse, Enter para confirmar, Esc para volver), y la opción marcada se ve en verde con “▶”. No hay menú de reasignación de teclas.</p>
@@ -267,7 +267,7 @@
       └──(?)──► Cómo jugar ──(Arcade)──► Cómo jugar: Arcade</pre>
 <table>
   <tr><th style="width:22%">Pantalla</th><th>Contenido</th></tr>
-  <tr><td>Menú principal</td><td>Título (con un brillo suave) y tres opciones: “Batalla” (partida casual), “Modo Historia” y “Arcade”. En las esquinas, el ícono ? (cómo jugar) y el ⚙ (panel de idioma). De fondo, en gris oscuro, un peloteo de Pong que se juega solo.</td></tr>
+  <tr><td>Menú principal</td><td>Título (con un brillo suave) y tres opciones: “Batalla” (partida casual), “Modo Historia” y “Arcade”. En las esquinas, el ícono ? (cómo jugar) y el ⚙ (opciones). De fondo, en gris oscuro, un peloteo de Pong que se juega solo.</td></tr>
   <tr><td>Batalla</td><td>“1 Jugador” (contra la CPU) o “2 Jugadores”.</td></tr>
   <tr><td>Dificultad</td><td>Solo con 1 jugador: fácil, normal, difícil o imposible (arranca en normal).</td></tr>
   <tr><td>Puntos</td><td>5, 7 o 10 puntos: al elegir, empieza la partida. Debajo, “Modificadores” (con la cantidad activa entre paréntesis, si hay).</td></tr>
@@ -276,7 +276,17 @@
   <tr><td>Partida del Arcade / Fin del juego</td><td>Ver sección 13.</td></tr>
   <tr><td>Cómo jugar: Arcade</td><td>Una línea por regla, cada una con un dibujito al lado: controles, romper todos los ladrillos para pasar de nivel, perder una vida si se pasa la pelota, dorados y plateados aguantan más golpes, el metal no se rompe, el muro avanza (que no cruce la línea roja) y agarrar las cápsulas con la pala. Esc o ← vuelven a “Cómo jugar”.</td></tr>
   <tr><td>Partida</td><td>Cancha con línea central punteada, marcador de cada jugador arriba (da un salto cuando cambia) con una fila de puntitos debajo: los puntos que hacen falta para ganar, rellenos los que ya hizo. También los indicadores de duración de los efectos activos (ver sección de power-ups).</td></tr>
-  <tr><td>Pausa</td><td>Se superpone a la partida congelada: Reanudar, Volver al menú y Opciones (panel de idioma). Esc o ← reanudan (o cierran el panel de idioma si está abierto).</td></tr>
+  <tr><td>Pausa</td><td>Se superpone a la partida congelada: Reanudar, Volver al menú y Opciones (la pantalla de opciones se abre encima de la pausa y, al volver, se regresa a ella). Esc o ← reanudan.</td></tr>
+  <tr><td>Opciones</td><td>Una fila con carrusel por opción; cada cambio se guarda en el momento (<code>localStorage</code>, clave <code>ponger-up:settings</code>):
+    <ul>
+      <li><b>Idioma:</b> Español / English.</li>
+      <li><b>Volumen:</b> 0 %, 25 %, 50 %, 75 % o <b>100 %</b>. Al cambiarlo suena un golpe con el volumen nuevo.</li>
+      <li><b>Sacudir la pantalla:</b> <b>Sí</b> / No. Apaga todos los sacudones (gol, jefe, muro y explosiones del Arcade). Al activarlo, la pantalla se sacude una vez para mostrarlo.</li>
+      <li><b>Destellos:</b> <b>Sí</b> / No. Apaga los destellos grandes: la media luna del gol, el destello violeta del jefe y el barrido del nivel completo. Al activarlo, destella una vez.</li>
+      <li><b>Vibración:</b> <b>Sí</b> / No. Solo aparece en pantallas táctiles cuyo navegador puede vibrar (Android). El celular vibra al golpear la pelota y con cada gol.</li>
+      <li><b>Borrar progreso:</b> pide confirmación (“¿Borrar todo? Confirmar”); la segunda vez borra el progreso del Modo Historia y el récord del Arcade (las opciones y los modificadores quedan). Si se pasa a otra fila, se cancela.</li>
+    </ul>
+    En negrita, el valor por defecto; los distintos del de por defecto se ven en amarillo.</td></tr>
   <tr><td>Victoria</td><td>“¡Gana {jugador}!” (Jugador 1, Jugador 2 o CPU) y la opción “Volver al menú” (también con Esc). Como la pausa, se superpone a la cancha con el marcador final y se ve centrada y del mismo tamaño aunque la cancha sea más grande que la pantalla.</td></tr>
 </table>
 
@@ -284,7 +294,7 @@
 <ul>
   <li>Idiomas disponibles: español (por defecto) e inglés.</li>
   <li>El español está escrito directamente en el código. Las demás traducciones se descargan de la API de Traducila y se guardan en <code>localStorage</code> bajo la clave <code>translations</code>.</li>
-  <li>Idioma inicial: el que indique la URL (<code>?lang=en</code>), si no el del navegador, y si no español. Después se puede cambiar desde el panel de idioma.</li>
+  <li>Idioma inicial: el que indique la URL (<code>?lang=en</code>), si no el del navegador, y si no español. Después se puede cambiar desde Opciones, y el elegido se recuerda (también al volver al menú y en la próxima visita).</li>
   <li>Cada texto nuevo de la interfaz se agrega como clave en <code>src/enums/keys.js</code> y se muestra con <code>getPhrase()</code>. Las traducciones no se cargan en el momento: las claves nuevas se juntan y se cargan todas juntas en Traducila al final. Mientras tanto, esos textos se muestran en español.</li>
   <li>El nombre del juego, <b>Ponger-up</b>, no se traduce.</li>
 </ul>
@@ -508,7 +518,7 @@
 ├── main.js        punto de entrada y configuración de Phaser
 ├── config.js      constantes globales (cancha, velocidades, colores, teclas, power-ups, IA)
 ├── scenes/        una escena por archivo (MenuScene, BattleScene, DifficultyScene, PointsScene, MutatorsScene, TutorialScene,
-│                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene, BattleResultScene, ArcadeScene, ArcadeResultScene, ArcadeTutorialScene,
+│                  LevelSelectScene, LevelIntroScene, GameScene, PauseScene, OptionsScene, BattleResultScene, ArcadeScene, ArcadeResultScene, ArcadeTutorialScene,
 │                  LevelResultScene, StoryEndScene)
 ├── entities/      objetos del juego (Paddle, Ball, PowerUp, CenterPaddle, GoalBarrier, Brick, Capsule)
 ├── systems/       lógica que no es una entidad (BallManager, PowerUpSpawner, PowerUpEffects,
@@ -521,13 +531,14 @@
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia;
 │                  mutators.js: los modificadores de la Batalla, que se arman igual que un nivel;
 │                  arcade.js: cómo es cada nivel del Arcade)
-├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell, PowerUpIcon, TouchControls, RotateNotice, Announcement,
+├── ui/            componentes de interfaz reutilizables entre escenas (LevelCell, PowerUpIcon, TouchControls, RotateNotice, Announcement,
 │                  GameFont: carga la letra (Space Mono) y la pone por defecto en todos los textos; Pop: salto de un texto que cambia y aparición fundida de los paneles; BackgroundRally: peloteo de fondo del menú; Confetti: papelitos de festejo,
 │                  ScreenLayout: medidas comunes de las pantallas y panel de las que se superponen a la partida,
 │                  MenuList: lista de opciones navegable, también con filas de carrusel (CarouselRow); IconButton: íconos ← ? ⚙, pausa y pantalla completa, y el “volver” con Esc)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;
 │                  ProgressStorage: progreso del Modo Historia en localStorage;
-│                  MutatorStorage: modificadores elegidos; ArcadeStorage: récord del Arcade; los dos en localStorage)
+│                  MutatorStorage: modificadores elegidos; ArcadeStorage: récord del Arcade; SettingsStorage: opciones; todos en localStorage;
+│                  Vibration: vibración del celular)
 └── enums/         constantes compartidas (claves de texto, idiomas, estados de carga)
 public/            assets estáticos servidos directo
 docs/

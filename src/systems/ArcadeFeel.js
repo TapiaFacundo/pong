@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { ARCADE_DANGER_X, ARCADE_LASER_COLOR, POWERUP_COLORS, COLORS } from "../config.js";
 import { playBrickHit, playMetalHit } from "./SoundEffects.js";
-import { burst, pulse } from "./FeelEffects.js";
+import { burst, pulse, shakeCamera, flashesEnabled } from "./FeelEffects.js";
 
 // Ladrillos: destello blanco al recibir un golpe; al romperse, pedazos de su
 // color que salen girando y los puntos que dio flotando hacia arriba.
@@ -110,6 +110,8 @@ export default class ArcadeFeel {
   }
 
   onLevelCleared() {
+    if (!flashesEnabled()) return;
+
     const bounds = this.scene.physics.world.bounds;
     const sweep = this.scene.add.rectangle(ARCADE_DANGER_X, bounds.centerY, SWEEP_WIDTH, bounds.height, 0xffffff, 0.3);
 
@@ -159,6 +161,6 @@ export default class ArcadeFeel {
   }
 
   shake({ duration, intensity }) {
-    this.scene.cameras.main.shake(duration, intensity);
+    shakeCamera(this.scene, duration, intensity);
   }
 }

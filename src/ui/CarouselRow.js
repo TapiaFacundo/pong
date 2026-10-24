@@ -20,7 +20,8 @@ const ARROW_HIT_HEIGHT = 34;
 // Fila con un nombre y un carrusel de opciones: "Cancha   ◀ Normal ▶". Las
 // flechas pasan a la opción anterior o siguiente (en ronda: después de la
 // última vuelve a la primera). Tocar el nombre o el valor pasa a la siguiente.
-// Si la opción elegida no es la de por defecto, el valor se ve en amarillo.
+// Si la opción elegida no es la de por defecto, el valor se ve en amarillo
+// (sin `defaultIndex`, nunca: por ejemplo, el idioma no tiene uno).
 //
 // La maneja MenuList (items con `options`): ella decide cuál fila está
 // marcada y le pasa las teclas izquierda / derecha.
@@ -87,7 +88,7 @@ export default class CarouselRow {
 
   refresh() {
     const option = this.options[this.index];
-    const changed = this.index !== this.defaultIndex;
+    const changed = this.defaultIndex != null && this.index !== this.defaultIndex;
 
     this.label.setText(getPhrase(this.labelKey));
     this.value.setText(option.labelKey ? getPhrase(option.labelKey) : option.label);

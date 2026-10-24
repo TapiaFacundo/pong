@@ -1,3 +1,5 @@
+import { getSetting } from "../services/SettingsStorage.js";
+
 let audioContext = null;
 
 function getContext() {
@@ -19,7 +21,12 @@ function varied(frequency) {
   return frequency * (1 + (Math.random() * 2 - 1) * PITCH_VARIATION);
 }
 
+// volume: el de este sonido; se multiplica por el volumen elegido en Opciones
+// (0 a 100). Con el volumen en 0 no suena nada.
 function playTone({ frequency, duration, type = "sine", delay = 0, volume = 0.2 }) {
+  const masterVolume = getSetting("volume") / 100;
+  if (masterVolume <= 0) return;
+
   const context = getContext();
   const startTime = context.currentTime + delay;
 
@@ -28,7 +35,7 @@ function playTone({ frequency, duration, type = "sine", delay = 0, volume = 0.2 
   oscillator.frequency.setValueAtTime(frequency, startTime);
 
   const gain = context.createGain();
-  gain.gain.setValueAtTime(volume, startTime);
+  gain.gain.setValueAtTime(volume * masterVolume, startTime);
   gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
 
   oscillator.connect(gain);

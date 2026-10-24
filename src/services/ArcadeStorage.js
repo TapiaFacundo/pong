@@ -19,6 +19,15 @@ export function loadArcadeRecord() {
   return { score: 0, level: 0 };
 }
 
+// Borra el récord (opción "Borrar progreso").
+export function clearArcadeRecord() {
+  try {
+    window.localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // Nada que borrar si el almacenamiento no está disponible.
+  }
+}
+
 // Guarda la partida si superó el récord. Devuelve el récord vigente y si es nuevo.
 export function submitArcadeScore(score, level) {
   const record = loadArcadeRecord();

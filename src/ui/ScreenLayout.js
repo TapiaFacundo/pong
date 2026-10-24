@@ -18,6 +18,7 @@ export const PANEL_BORDER_COLOR = 0x555555;
 // Borde de arriba del panel, más claro: le da un poco de relieve.
 const PANEL_TOP_EDGE_COLOR = 0x999999;
 const BACKDROP_ALPHA = 0.6;
+const FULL_BACKDROP_ALPHA = 0.94;
 const PANEL_WIDTH = 440;
 
 export function addTitle(scene, text, { y = TITLE_Y, color = COLORS.TEXT, fontSize = TITLE_FONT_SIZE } = {}) {
@@ -27,6 +28,13 @@ export function addTitle(scene, text, { y = TITLE_Y, color = COLORS.TEXT, fontSi
 // Dónde empieza una lista de `count` opciones para quedar centrada en `centerY`.
 export function menuTop(count, { spacing = MENU_SPACING, centerY = MENU_CENTER_Y } = {}) {
   return centerY - ((count - 1) * spacing) / 2;
+}
+
+// Pantalla que se abre encima de otra (Opciones desde la pausa) y usa todo el
+// ancho: tapa casi del todo lo de atrás, sin panel, y aparece fundiéndose.
+export function addOverlayBackdrop(scene) {
+  scene.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x000000, FULL_BACKDROP_ALPHA);
+  fadeIn(scene, scene.cameras.main);
 }
 
 // Oscurece lo que hay detrás (la partida) y dibuja un panel centrado de alto

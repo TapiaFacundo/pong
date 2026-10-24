@@ -76,7 +76,7 @@ export default class ArcadeScene extends Phaser.Scene {
       "p1"
     );
     this.ballManager = new BallManager(this, this.paddle, null, (_side, ball) => this.onBallOut(ball));
-    new GameFeel(this, this.ballManager, { goalFlashColor: ARCADE_DANGER_COLOR });
+    new GameFeel(this, this.ballManager, { goalFlashColor: ARCADE_DANGER_COLOR, vibrateSides: ["p1"] });
     new PaddleFeel(this, this.ballManager);
     this.feedback = new PowerUpFeedback(this);
     this.wall = new BrickWall(this, this.field, {

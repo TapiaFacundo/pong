@@ -2,12 +2,12 @@ import Phaser from "phaser";
 import { GAME_WIDTH, GAME_HEIGHT, COLORS } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
-import LanguagePanel from "../ui/LanguagePanel.js";
 import MenuList from "../ui/MenuList.js";
 import IconButton from "../ui/IconButton.js";
 import { addOverlayPanel, TITLE_FONT_SIZE, MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
 
-// Pausa de cualquier partida, encima de ella: Reanudar, salir y Opciones (idioma).
+// Pausa de cualquier partida, encima de ella: Reanudar, salir y Opciones
+// (que se abren encima de la pausa).
 export default class PauseScene extends Phaser.Scene {
   constructor() {
     super("PauseScene");
@@ -41,34 +41,26 @@ export default class PauseScene extends Phaser.Scene {
       items: [
         { labelKey: KEYS.REANUDAR, action: () => this.resumeGame() },
         { labelKey: this.exitLabelKey, action: () => this.exitToMenu() },
-        { labelKey: KEYS.OPCIONES, action: () => this.languagePanel.open() },
+        { labelKey: KEYS.OPCIONES, action: () => this.openOptions() },
       ],
     });
 
-    // Volver (ícono o Esc) reanuda la partida; con el panel de idioma abierto, lo cierra.
-    new IconButton(this, 30, 28, "←", () => this.handleBack(), { fontSize: "28px" });
-    this.input.keyboard.on("keydown-ESC", () => this.handleBack());
-
-    this.languagePanel = new LanguagePanel(this, () => this.refreshTexts());
+    // Volver (ícono o Esc) reanuda la partida.
+    new IconButton(this, 30, 28, "←", () => this.resumeGame(), { fontSize: "28px" });
+    this.input.keyboard.on("keydown-ESC", () => this.resumeGame());
   }
 
-  update() {
-    this.languagePanel.update();
-    this.menu.setEnabled(!this.languagePanel.isOpen);
+  // La pausa queda quieta abajo mientras están las opciones; al volver, los
+  // textos se rescriben por si se cambió el idioma.
+  openOptions() {
+    this.events.once("resume", () => this.refreshTexts());
+    this.scene.launch("OptionsScene", { returnTo: "PauseScene" });
+    this.scene.pause();
   }
 
   refreshTexts() {
     this.titleText.setText(getPhrase(KEYS.PAUSA));
     this.menu.refreshTexts();
-  }
-
-  handleBack() {
-    if (this.languagePanel.isOpen) {
-      this.languagePanel.close();
-      return;
-    }
-
-    this.resumeGame();
   }
 
   resumeGame() {

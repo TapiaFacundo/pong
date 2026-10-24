@@ -114,7 +114,7 @@ export default class GameScene extends Phaser.Scene {
       ballSettings
     );
     this.ballsPerRound = rules.ballsPerRound ?? 1;
-    new GameFeel(this, this.ballManager);
+    new GameFeel(this, this.ballManager, { vibrateSides: this.mode === "2p" ? ["p1", "p2"] : ["p1"] });
     new PaddleFeel(this, this.ballManager);
 
     if (rules.trickShot) this.enableTrickShot(rules.trickShot);

@@ -1,15 +1,15 @@
 import Phaser from "phaser";
 import { GAME_TITLE, GAME_WIDTH } from "../config.js";
 import { KEYS } from "../enums/keys.js";
-import { getTranslations, getLanguageConfig } from "../services/translations.js";
-import LanguagePanel from "../ui/LanguagePanel.js";
+import { getTranslations } from "../services/translations.js";
+import { getLanguage } from "../services/SettingsStorage.js";
 import MenuList from "../ui/MenuList.js";
 import IconButton from "../ui/IconButton.js";
 import BackgroundRally from "../ui/BackgroundRally.js";
 import { addTitle, menuTop } from "../ui/ScreenLayout.js";
 
 // Menú principal: Batalla (partidas casuales), Modo Historia o Arcade. En las esquinas,
-// "?" abre cómo jugar y "⚙" el panel de idioma. De fondo, un peloteo que se juega solo.
+// "?" abre cómo jugar y "⚙" las opciones. De fondo, un peloteo que se juega solo.
 // Modos que, al volver, quedan marcados en el menú (después de "Batalla").
 const MENU_MODES = ["story", "arcade"];
 
@@ -23,9 +23,16 @@ export default class MenuScene extends Phaser.Scene {
     this.initialIndex = MENU_MODES.indexOf(data?.mode) + 1;
   }
 
+  // El idioma elegido en Opciones (o, si nunca se eligió, el del navegador).
+  // Si las traducciones no llegan (sin internet), el menú se arma igual.
   create() {
-    this.languagePanel = null;
-    getTranslations(getLanguageConfig(), () => this.buildScene());
+    let built = false;
+    const build = () => {
+      if (built) return;
+      built = true;
+      this.buildScene();
+    };
+    getTranslations(getLanguage(), build).catch(build);
   }
 
   buildScene() {
@@ -34,7 +41,7 @@ export default class MenuScene extends Phaser.Scene {
     addTitle(this, GAME_TITLE, { y: 170, fontSize: "56px" }).setShadow(0, 0, "rgba(255, 255, 255, 0.55)", 14, false, true);
 
     const helpIcon = new IconButton(this, 30, 28, "?", () => this.openTutorial(), { circle: true, fontSize: "20px" });
-    const settingsIcon = new IconButton(this, GAME_WIDTH - 30, 28, "⚙", () => this.languagePanel.toggle(), {
+    const settingsIcon = new IconButton(this, GAME_WIDTH - 30, 28, "⚙", () => this.openOptions(), {
       fontSize: "26px",
     });
     // Pantalla completa, solo donde el navegador lo permite (en iPhone no).
@@ -55,16 +62,14 @@ export default class MenuScene extends Phaser.Scene {
         { labelKey: KEYS.ARCADE, action: () => this.scene.start("ArcadeScene") },
       ],
     });
+  }
 
-    this.languagePanel = new LanguagePanel(this, () => this.menu.refreshTexts());
-
-    this.input.keyboard.on("keydown-ESC", () => this.languagePanel.close());
+  openOptions() {
+    this.scene.start("OptionsScene", { returnTo: "MenuScene" });
   }
 
   // En el celular, además, intenta dejar la pantalla acostada.
   toggleFullscreen() {
-    if (this.languagePanel.isOpen) return;
-
     if (this.scale.isFullscreen) {
       this.scale.stopFullscreen();
       return;
@@ -75,14 +80,7 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   openTutorial() {
-    if (this.languagePanel.isOpen) return;
     this.scene.start("TutorialScene", { returnTo: "MenuScene" });
   }
 
-  update() {
-    if (!this.languagePanel) return;
-
-    this.languagePanel.update();
-    this.menu.setEnabled(!this.languagePanel.isOpen);
-  }
 }

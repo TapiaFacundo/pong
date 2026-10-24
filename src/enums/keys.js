@@ -167,4 +167,14 @@ export const KEYS = {
   EL_CAMPEON: "El Campeón",
   SUMA_TRUCOS_A_MEDIDA_QUE_TE_ACERCAS_A_GANARLE: "Suma trucos a medida que te acercás a ganarle.",
   LLEGASTE_LEJOS_ACA_SE_TERMINA: "Llegaste lejos. Acá se termina.",
+
+  // Pantalla de Opciones (src/scenes/OptionsScene.js).
+  IDIOMA: "Idioma",
+  VOLUMEN: "Volumen",
+  SACUDIR_LA_PANTALLA: "Sacudir la pantalla",
+  DESTELLOS: "Destellos",
+  VIBRACION: "Vibración",
+  BORRAR_PROGRESO: "Borrar progreso",
+  BORRAR_TODO_CONFIRMAR: "¿Borrar todo? Confirmar",
+  PROGRESO_BORRADO: "Progreso borrado",
 };
