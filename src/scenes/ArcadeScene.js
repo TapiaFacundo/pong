@@ -31,7 +31,8 @@ import CapsuleDrops from "../systems/CapsuleDrops.js";
 import ArcadePowerUps from "../systems/ArcadePowerUps.js";
 import MatchPause from "../systems/MatchPause.js";
 import DebugKey from "../systems/DebugKey.js";
-import { playBrickHit, playMetalHit, playScore, playWallAdvance, playPowerUpPickup } from "../systems/SoundEffects.js";
+import { playBrickHit, playMetalHit, playConcede, playWallAdvance, playPowerUpPickup } from "../systems/SoundEffects.js";
+import GameFeel from "../systems/GameFeel.js";
 import { announce } from "../ui/Announcement.js";
 
 // Arcade: romper ladrillos, para 1 jugador. La pala va a la izquierda, como
@@ -67,6 +68,7 @@ export default class ArcadeScene extends Phaser.Scene {
       "p1"
     );
     this.ballManager = new BallManager(this, this.paddle, null, (_side, ball) => this.onBallOut(ball));
+    new GameFeel(this, this.ballManager, { goalFlashColor: ARCADE_DANGER_COLOR });
     this.feedback = new PowerUpFeedback(this);
     this.wall = new BrickWall(this, this.field, {
       onBrickHit: (brick, broken) => this.onBrickHit(brick, broken),
@@ -166,11 +168,13 @@ export default class ArcadeScene extends Phaser.Scene {
     const ball = this.ballManager.addBall(this.paddle.x + ARCADE_SERVE_OFFSET_X, this.paddle.y);
     this.wall.registerBall(ball);
     this.heldBall = ball;
+    this.events.emit("serveWait", { ball, directionX: 1 });
 
     this.time.delayedCall(ARCADE_SERVE_DELAY, () => {
       if (this.heldBall !== ball) return;
       this.heldBall = null;
       ball.launch(1);
+      this.events.emit("serve", { ball });
     });
   }
 
@@ -231,7 +235,7 @@ export default class ArcadeScene extends Phaser.Scene {
     this.powerUps.onBallLost(ball);
     if (this.ballManager.count > 0) return;
 
-    playScore();
+    playConcede();
     this.clearPowerUps();
     this.run.loseLife();
     this.hud.update(this.run);

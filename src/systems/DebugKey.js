@@ -1,4 +1,4 @@
-import { POWERUP_DEFINITIONS } from "../config.js";
+import { POWERUP_DEFINITIONS, BALL_MAX_SPEED } from "../config.js";
 import { ARCADE_POWERUPS } from "../data/arcade.js";
 
 const ICON_GRID_COLUMNS = 9;
@@ -29,10 +29,13 @@ const CAPSULE_ROW_SPACING = 60;
 // - "effectsDemo": activa juntos varios power-ups (los de DEMO_POWERUP_IDS),
 //   como si los hubiera agarrado el jugador 1, para ver los indicadores de
 //   duración de los dos lados y los del centro.
+// - "maxSpeed": pone la pelota en juego a la velocidad máxima, como después
+//   de un peloteo largo (para ver la estela larga, las chispas amarillas y el
+//   golpe de pala más agudo).
 // - "powerUp": activa DEBUG_POWERUP_ID sobre la pelota en juego, como si la
 //   pelota lo hubiera agarrado. En los verdes y rojos cuenta siempre como si la
 //   hubiera mandado el jugador 1 (el verde es para él; el rojo, para el rival).
-const DEBUG_ACTION = "effectsDemo";
+const DEBUG_ACTION = "maxSpeed";
 const DEBUG_POWERUP_ID = "cannon-green";
 const DEMO_POWERUP_IDS = [
   "grow-green",
@@ -66,11 +69,21 @@ export default class DebugKey {
       this.scene.awardPoint("p1");
     } else if (DEBUG_ACTION === "allPowerUps") {
       this.spawnAllPowerUps();
+    } else if (DEBUG_ACTION === "maxSpeed") {
+      this.maxOutBallSpeed();
     } else if (DEBUG_ACTION === "effectsDemo") {
       DEMO_POWERUP_IDS.forEach((id) => this.activatePowerUp(id));
     } else {
       this.activatePowerUp(DEBUG_POWERUP_ID);
     }
+  }
+
+  maxOutBallSpeed() {
+    const ball = this.scene.ballManager.primary;
+    if (!ball) return;
+
+    ball.speed = BALL_MAX_SPEED;
+    ball.setDirection(ball.heading.x, ball.heading.y);
   }
 
   dropAllCapsules() {

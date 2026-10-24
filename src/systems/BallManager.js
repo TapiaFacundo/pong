@@ -80,7 +80,8 @@ export default class BallManager {
 
     ball.bounceOffPaddle(offset, directionX);
     this.shotModifier?.afterBounce(ball, playerId, offset);
-    playPaddleHit();
+    playPaddleHit(ball.speedRatio);
+    this.scene.events.emit("paddleHit", { ball, paddle, directionX });
   }
 
   update(delta) {
@@ -95,13 +96,18 @@ export default class BallManager {
       // El punto cuenta cuando la pelota salió entera (su tamaño puede cambiar).
       const radius = ball.radius;
       if (ball.x < -radius) {
-        this.removeBall(ball);
-        this.onBallOut("left", ball);
+        this.ballOut(ball, "left");
       } else if (ball.x > this.scene.physics.world.bounds.right + radius) {
-        this.removeBall(ball);
-        this.onBallOut("right", ball);
+        this.ballOut(ball, "right");
       }
     }
+  }
+
+  // Avisa la salida (para el "game feel") antes de borrarla, con dónde estaba.
+  ballOut(ball, exitSide) {
+    this.scene.events.emit("ballOut", { ball, x: ball.x, y: ball.y, exitSide });
+    this.removeBall(ball);
+    this.onBallOut(exitSide, ball);
   }
 
   removeBall(ball) {

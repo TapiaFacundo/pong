@@ -11,6 +11,14 @@ function getContext() {
   return audioContext;
 }
 
+// Cuánto puede variar al azar el tono de los sonidos que se repiten mucho
+// (golpes), para que no suenen siempre idénticos.
+const PITCH_VARIATION = 0.04;
+
+function varied(frequency) {
+  return frequency * (1 + (Math.random() * 2 - 1) * PITCH_VARIATION);
+}
+
 function playTone({ frequency, duration, type = "sine", delay = 0, volume = 0.2 }) {
   const context = getContext();
   const startTime = context.currentTime + delay;
@@ -61,8 +69,15 @@ export function playWallAdvance() {
   playTone({ frequency: 90, duration: 0.2, type: "sawtooth", volume: 0.15 });
 }
 
-export function playPaddleHit() {
-  playTone({ frequency: 220, duration: 0.07, type: "sine", volume: 0.25 });
+// intensity (0 a 1): qué tan rápida va la pelota. Más rápida, más agudo: un
+// peloteo largo se escucha cada vez más tenso.
+export function playPaddleHit(intensity = 0) {
+  playTone({ frequency: varied(220 * (1 + 0.6 * intensity)), duration: 0.07, type: "sine", volume: 0.25 });
+}
+
+// Pelota contra el techo, el piso o una pared: un "tic" más grave y suave que el de la pala.
+export function playWallBounce() {
+  playTone({ frequency: varied(150), duration: 0.05, type: "sine", volume: 0.15 });
 }
 
 export function playCannonShot() {
@@ -80,4 +95,11 @@ export function playVictoryFanfare() {
 export function playScore() {
   playTone({ frequency: 440, duration: 0.15, type: "sawtooth", volume: 0.22 });
   playTone({ frequency: 220, duration: 0.25, type: "sawtooth", volume: 0.18, delay: 0.1 });
+}
+
+// Punto en contra (de la CPU) o vida perdida en el Arcade: tres notas que bajan.
+export function playConcede() {
+  [330, 262, 196].forEach((frequency, index) => {
+    playTone({ frequency, duration: index === 2 ? 0.3 : 0.12, type: "triangle", volume: 0.22, delay: index * 0.1 });
+  });
 }

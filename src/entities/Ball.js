@@ -24,6 +24,8 @@ export default class Ball {
     this.circle.body.setCircle(this.baseRadius);
     this.circle.body.setCollideWorldBounds(true);
     this.circle.body.setBounce(1, 1);
+    // Avisa sus rebotes contra los bordes (evento "worldbounds"; lo usa GameFeel).
+    this.circle.body.onWorldBounds = true;
 
     this.speed = baseSpeed;
     this.lastTouchedBy = null;
@@ -53,6 +55,12 @@ export default class Ball {
 
   get radius() {
     return this.circle.radius;
+  }
+
+  // Qué tan rápida va, de 0 (velocidad de saque) a 1 (tope, o más con el Turbo).
+  get speedRatio() {
+    const range = BALL_MAX_SPEED - this.baseSpeed;
+    return range > 0 ? Phaser.Math.Clamp((this.speed - this.baseSpeed) / range, 0, 1) : 1;
   }
 
   // Cambia el tamaño de la pelota (dibujo y choque) respecto de su tamaño

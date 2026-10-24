@@ -28,8 +28,9 @@ import ScoreBoard from "../systems/ScoreBoard.js";
 import PowerUpSpawner from "../systems/PowerUpSpawner.js";
 import PowerUpEffects from "../systems/PowerUpEffects.js";
 import PowerUpFeedback from "../systems/PowerUpFeedback.js";
-import { playPowerUpPickup, playScore } from "../systems/SoundEffects.js";
+import { playPowerUpPickup, playScore, playConcede } from "../systems/SoundEffects.js";
 import BallManager from "../systems/BallManager.js";
+import GameFeel from "../systems/GameFeel.js";
 import BallEffects from "../systems/BallEffects.js";
 import CenterPaddleEffect from "../systems/CenterPaddleEffect.js";
 import TrickShot from "../systems/TrickShot.js";
@@ -112,6 +113,7 @@ export default class GameScene extends Phaser.Scene {
       ballSettings
     );
     this.ballsPerRound = rules.ballsPerRound ?? 1;
+    new GameFeel(this, this.ballManager);
 
     if (rules.trickShot) this.enableTrickShot(rules.trickShot);
 
@@ -278,7 +280,9 @@ export default class GameScene extends Phaser.Scene {
     this.scoreManager.addPoint(scoringSide);
     this.scoreBoard.update({ p1: this.scoreManager.scoreP1, p2: this.scoreManager.scoreP2 });
     this.updateDoublePointIndicator();
-    playScore();
+    // Contra la CPU, el punto del rival suena distinto (para abajo).
+    if (scoringSide === "p2" && this.mode !== "2p") playConcede();
+    else playScore();
 
     // "Gana quien llegue primero": el partido termina apenas se alcanza el
     // puntaje objetivo, aunque queden otras pelotas en cancha por salir.
@@ -344,9 +348,14 @@ export default class GameScene extends Phaser.Scene {
   }
 
   // Saca las pelotas después de "delay" y recién ahí arranca el spawn de power-ups.
+  // Mientras esperan, GameFeel muestra que están por salir y hacia dónde.
   serveAfter(delay, balls) {
+    balls.forEach(({ ball, directionX }) => this.events.emit("serveWait", { ball, directionX }));
     this.time.delayedCall(delay, () => {
-      balls.forEach(({ ball, directionX }) => ball.launch(directionX));
+      balls.forEach(({ ball, directionX }) => {
+        ball.launch(directionX);
+        this.events.emit("serve", { ball });
+      });
       this.powerUpSpawner.startTimer();
     });
   }
