@@ -7,6 +7,7 @@ import ProgressStorage from "../services/ProgressStorage.js";
 import { MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
 import MenuList from "../ui/MenuList.js";
 import { addBackNavigation } from "../ui/IconButton.js";
+import { pop } from "../ui/Pop.js";
 
 const WIN_COLOR = "#33dd55";
 const LOSE_COLOR = "#dd3333";
@@ -32,12 +33,13 @@ export default class LevelResultScene extends Phaser.Scene {
     const unlockedLevelId = this.won ? this.saveProgress() : null;
     const rivalName = getPhrase(this.level.nameKey);
 
-    this.add
+    const title = this.add
       .text(GAME_WIDTH / 2, 145, getPhrase(this.won ? KEYS.GANASTE : KEYS.PERDISTE), {
         fontSize: "48px",
         color: this.won ? WIN_COLOR : LOSE_COLOR,
       })
       .setOrigin(0.5);
+    pop(this, title, { from: 0.6, duration: 320 });
 
     const summaryKey = this.won ? KEYS.LE_GANASTE_A_RIVAL : KEYS.RIVAL_TE_GANO;
     this.add

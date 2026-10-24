@@ -7,6 +7,7 @@ export const LEVEL_CELL_HEIGHT = 110;
 const COLORS = {
   fill: 0x111111,
   lockedFill: 0x0a0a0a,
+  selectedFill: 0x1c1c1c,
   border: 0xaaaaaa,
   lockedBorder: 0x333333,
   completedBorder: 0x33dd55,
@@ -18,15 +19,18 @@ const COLORS = {
   check: "#33dd55",
   lock: 0x555555,
 };
+const CURSOR_PULSE_ALPHA = 0.35;
+const CURSOR_PULSE_DURATION = 500;
 
 // Una casilla de la grilla de selección de nivel: número, nombre del rival,
 // marca de jefe, marca de superado o candado si está bloqueado, y el borde
-// amarillo cuando es la casilla elegida.
+// amarillo (que late) y el fondo un poco más claro cuando es la casilla elegida.
 export default class LevelCell {
   constructor(scene, x, y, level, { unlocked, completed }) {
     this.level = level;
     this.unlocked = unlocked;
     this.completed = completed;
+    this.selected = false;
 
     this.box = scene.add
       .rectangle(x, y, LEVEL_CELL_WIDTH, LEVEL_CELL_HEIGHT, unlocked ? COLORS.fill : COLORS.lockedFill)
@@ -70,10 +74,23 @@ export default class LevelCell {
   }
 
   setSelected(selected) {
+    if (selected === this.selected) return;
+    this.selected = selected;
+
+    const box = this.box;
+    box.scene.tweens.killTweensOf(box);
     if (selected) {
-      this.box.setStrokeStyle(3, COLORS.cursor);
+      box.setStrokeStyle(3, COLORS.cursor).setFillStyle(COLORS.selectedFill);
+      box.scene.tweens.add({
+        targets: box,
+        strokeAlpha: CURSOR_PULSE_ALPHA,
+        duration: CURSOR_PULSE_DURATION,
+        ease: "Sine.easeInOut",
+        yoyo: true,
+        repeat: -1,
+      });
     } else {
-      this.box.setStrokeStyle(1, this.baseBorderColor());
+      box.setStrokeStyle(1, this.baseBorderColor()).setFillStyle(this.unlocked ? COLORS.fill : COLORS.lockedFill);
     }
   }
 }

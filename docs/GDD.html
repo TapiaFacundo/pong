@@ -229,7 +229,7 @@
 </ul>
 
 <h3>Indicadores de duración</h3>
-<p>Mientras un efecto está activo, su ícono (más chico que en la cancha) se ve arriba de la pantalla, y se va borrando en el sentido de las agujas del reloj, empezando por las 12, a medida que se le acaba el tiempo.</p>
+<p>Mientras un efecto está activo, su ícono (más chico que en la cancha) se ve arriba de la pantalla, y se va borrando en el sentido de las agujas del reloj, empezando por las 12, a medida que se le acaba el tiempo. Detrás queda su círculo completo apagado, para ver cuánto se gastó del total, y en los últimos 3 segundos el ícono parpadea.</p>
 <ul>
   <li><b>Efectos sobre un jugador</b> (pala, controles, escudo, arco chico, cañón, punto doble): en la esquina de arriba de su lado, en fila desde la esquina hacia el centro. Se dejan libres los costados y la parte de abajo para los botones táctiles de la versión para celulares.</li>
   <li><b>Color según a quién afecta:</b> verde si le conviene a ese jugador y rojo si lo perjudica, sin importar el color del power-up que lo causó. Por ejemplo, si el rival agarra una “Pala grande” roja, tu pala crece y el ícono aparece verde de tu lado. Los sabotajes y refuerzos del Saboteador se muestran igual.</li>
@@ -267,7 +267,7 @@
       └──(?)──► Cómo jugar ──(Arcade)──► Cómo jugar: Arcade</pre>
 <table>
   <tr><th style="width:22%">Pantalla</th><th>Contenido</th></tr>
-  <tr><td>Menú principal</td><td>Título y tres opciones: “Batalla” (partida casual), “Modo Historia” y “Arcade”. En las esquinas, el ícono ? (cómo jugar) y el ⚙ (panel de idioma).</td></tr>
+  <tr><td>Menú principal</td><td>Título (con un brillo suave) y tres opciones: “Batalla” (partida casual), “Modo Historia” y “Arcade”. En las esquinas, el ícono ? (cómo jugar) y el ⚙ (panel de idioma). De fondo, en gris oscuro, un peloteo de Pong que se juega solo.</td></tr>
   <tr><td>Batalla</td><td>“1 Jugador” (contra la CPU) o “2 Jugadores”.</td></tr>
   <tr><td>Dificultad</td><td>Solo con 1 jugador: fácil, normal, difícil o imposible (arranca en normal).</td></tr>
   <tr><td>Puntos</td><td>5, 7 o 10 puntos: al elegir, empieza la partida. Debajo, “Modificadores” (con la cantidad activa entre paréntesis, si hay).</td></tr>
@@ -275,7 +275,7 @@
   <tr><td>Cómo jugar</td><td>Se abre con el ícono ? del menú (y antes del nivel 1 del Modo Historia). Texto corto: controles de cada jugador, Esc para pausar, y que los power-ups se tocan con la pelota: verde a tu favor, rojo en tu contra, amarillo para los dos. Desde el menú, abajo tiene la opción “Arcade”, que lleva a cómo jugar el Arcade (antes del nivel 1, en su lugar está “Jugar”).</td></tr>
   <tr><td>Partida del Arcade / Fin del juego</td><td>Ver sección 13.</td></tr>
   <tr><td>Cómo jugar: Arcade</td><td>Una línea por regla, cada una con un dibujito al lado: controles, romper todos los ladrillos para pasar de nivel, perder una vida si se pasa la pelota, dorados y plateados aguantan más golpes, el metal no se rompe, el muro avanza (que no cruce la línea roja) y agarrar las cápsulas con la pala. Esc o ← vuelven a “Cómo jugar”.</td></tr>
-  <tr><td>Partida</td><td>Cancha con línea central punteada, marcador de cada jugador arriba y los indicadores de duración de los efectos activos (ver sección de power-ups).</td></tr>
+  <tr><td>Partida</td><td>Cancha con línea central punteada, marcador de cada jugador arriba (da un salto cuando cambia) con una fila de puntitos debajo: los puntos que hacen falta para ganar, rellenos los que ya hizo. También los indicadores de duración de los efectos activos (ver sección de power-ups).</td></tr>
   <tr><td>Pausa</td><td>Se superpone a la partida congelada: Reanudar, Volver al menú y Opciones (panel de idioma). Esc o ← reanudan (o cierran el panel de idioma si está abierto).</td></tr>
   <tr><td>Victoria</td><td>“¡Gana {jugador}!” (Jugador 1, Jugador 2 o CPU) y la opción “Volver al menú” (también con Esc). Como la pausa, se superpone a la cancha con el marcador final y se ve centrada y del mismo tamaño aunque la cancha sea más grande que la pantalla.</td></tr>
 </table>
@@ -490,13 +490,14 @@
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
 │                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrickShot,
 │                  Field, Sabotage, SlowMotionEffect, ShieldEffect, SmallGoalEffect, CannonEffect,
-│                  BossPhases, EffectIndicators, MatchPause (pausa y botones táctiles de cualquier partida),
+│                  BossPhases, EffectIndicators, ScoreBoard (marcador), MatchPause (pausa y botones táctiles de cualquier partida),
 │                  BrickWall, ArcadeRun, ArcadeHud, CapsuleDrops, ArcadePowerUps, ArcadeLaser (Arcade),
 │                  DebugKey: tecla de prueba, solo en desarrollo)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia;
 │                  mutators.js: los modificadores de la Batalla, que se arman igual que un nivel;
 │                  arcade.js: cómo es cada nivel del Arcade)
 ├── ui/            componentes de interfaz reutilizables entre escenas (LanguagePanel, LevelCell, PowerUpIcon, TouchControls, RotateNotice, Announcement,
+│                  Pop: salto de un texto que cambia y aparición fundida de los paneles; BackgroundRally: peloteo de fondo del menú,
 │                  ScreenLayout: medidas comunes de las pantallas y panel de las que se superponen a la partida,
 │                  MenuList: lista de opciones navegable, también con filas de carrusel (CarouselRow); IconButton: íconos ← ? ⚙, pausa y pantalla completa, y el “volver” con Esc)
 ├── services/      acceso a servicios externos y al navegador (translations: API de Traducila;

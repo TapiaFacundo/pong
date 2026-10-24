@@ -10,6 +10,8 @@ const CIRCLE_COLOR = 0xffffff;
 const CIRCLE_HIGHLIGHT_COLOR = 0x66ff66;
 const DRAWN_COLOR = 0xffffff;
 const DRAWN_HIGHLIGHT_COLOR = 0x66ff66;
+// Resaltado, el ícono se agranda un poco.
+const HIGHLIGHT_SCALE = 1.15;
 
 // Íconos dibujados (para símbolos que no todas las fuentes tienen). Cada uno
 // se dibuja centrado en (0, 0), dentro de un cuadrado de ICON_SIZE.
@@ -37,13 +39,14 @@ export const DRAWN_ICONS = {
 
 // Ícono clicable: "←" (volver), "?" (cómo jugar), "⚙" (idioma), o uno de
 // DRAWN_ICONS (pausa, pantalla completa). Con `circle` se dibuja encerrado en
-// un círculo. Se resalta en verde al pasar el mouse o cuando tiene el foco del
+// un círculo. Se resalta en verde (y se agranda un poco) al pasar el mouse o cuando tiene el foco del
 // teclado (ver `topIcons` en MenuList).
 export default class IconButton {
   constructor(scene, x, y, symbol, onClick, { circle = false, fontSize = "24px" } = {}) {
     this.onClick = onClick;
     this.hovered = false;
     this.focused = false;
+    this.baseScale = 1;
     this.drawIcon = DRAWN_ICONS[symbol] ?? null;
 
     // La zona de toque va en coordenadas locales: centrada en (0, 0) para el
@@ -109,12 +112,18 @@ export default class IconButton {
       this.display.setColor(highlighted ? HIGHLIGHT_COLOR : COLORS.TEXT);
     }
     this.circle?.setStrokeStyle(2, highlighted ? CIRCLE_HIGHLIGHT_COLOR : CIRCLE_COLOR);
+
+    const scale = this.baseScale * (highlighted ? HIGHLIGHT_SCALE : 1);
+    this.display.setScale(scale);
+    this.circle?.setScale(scale);
   }
 
   // Ubica el ícono en coordenadas de pantalla aunque la cámara esté alejada (ver Field).
   placeOnScreen(field, screenX, screenY) {
     field.placeOnScreen(this.display, screenX, screenY);
     if (this.circle) field.placeOnScreen(this.circle, screenX, screenY);
+    this.baseScale = this.display.scaleX;
+    this.refreshColor();
     return this;
   }
 

@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 import {
-  GAME_WIDTH,
   GAME_HEIGHT,
   PADDLE_OFFSET_X,
   PADDLE_HEIGHT,
@@ -25,6 +24,7 @@ import Paddle from "../entities/Paddle.js";
 import PlayerController from "../systems/PlayerController.js";
 import AI from "../systems/AI.js";
 import ScoreManager from "../systems/ScoreManager.js";
+import ScoreBoard from "../systems/ScoreBoard.js";
 import PowerUpSpawner from "../systems/PowerUpSpawner.js";
 import PowerUpEffects from "../systems/PowerUpEffects.js";
 import PowerUpFeedback from "../systems/PowerUpFeedback.js";
@@ -122,17 +122,7 @@ export default class GameScene extends Phaser.Scene {
         ? new PlayerController(this, this.paddleRight, { up: KEYS.P2_UP, down: KEYS.P2_DOWN }, "p2")
         : new AI(this.paddleRight, this.ballManager, "right", this.casualAiSettings());
 
-    // El marcador va en coordenadas de pantalla: no se achica con la cámara alejada.
-    this.scoreTextLeft = field.placeOnScreen(
-      this.add.text(0, 0, "0", { fontSize: "48px", color: COLORS.TEXT }).setOrigin(0.5),
-      GAME_WIDTH / 2 - 60,
-      30
-    );
-    this.scoreTextRight = field.placeOnScreen(
-      this.add.text(0, 0, "0", { fontSize: "48px", color: COLORS.TEXT }).setOrigin(0.5),
-      GAME_WIDTH / 2 + 60,
-      30
-    );
+    this.scoreBoard = new ScoreBoard(this, field, this.winScore);
 
     this.powerUpEffects = new PowerUpEffects(
       this,
@@ -286,8 +276,7 @@ export default class GameScene extends Phaser.Scene {
   // partido si alguien llegó al puntaje. Devuelve true si el partido terminó.
   awardPoint(scoringSide) {
     this.scoreManager.addPoint(scoringSide);
-    this.scoreTextLeft.setText(String(this.scoreManager.scoreP1));
-    this.scoreTextRight.setText(String(this.scoreManager.scoreP2));
+    this.scoreBoard.update({ p1: this.scoreManager.scoreP1, p2: this.scoreManager.scoreP2 });
     this.updateDoublePointIndicator();
     playScore();
 

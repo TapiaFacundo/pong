@@ -1,6 +1,7 @@
 import { GAME_WIDTH, COLORS, ARCADE_PLAY_TOP } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
+import { pop } from "../ui/Pop.js";
 
 const HUD_Y = 30;
 // A la izquierda del ícono de pausa (arriba al centro) van los indicadores de
@@ -16,8 +17,11 @@ const DIVIDER_COLOR = 0x444444;
 // Marcador del Arcade: puntaje, nivel y vidas (una pelotita por vida, arriba
 // a la derecha), en la franja de arriba, separada de la cancha por una línea.
 // La mitad izquierda de la franja queda para los indicadores de los power-ups.
+// El puntaje da un saltito cada vez que sube.
 export default class ArcadeHud {
   constructor(scene) {
+    this.scene = scene;
+    this.score = 0;
     scene.add.rectangle(GAME_WIDTH / 2, ARCADE_PLAY_TOP - 1, GAME_WIDTH, 2, DIVIDER_COLOR);
 
     this.scoreText = scene.add
@@ -29,6 +33,8 @@ export default class ArcadeHud {
 
   update(run) {
     this.scoreText.setText(String(run.score));
+    if (run.score > this.score) pop(this.scene, this.scoreText, { from: 1.2, duration: 160 });
+    this.score = run.score;
     this.levelText.setText(getPhrase(KEYS.NIVEL_N).replace("{n}", run.level));
 
     this.lives.clear().fillStyle(COLORS.BALL);

@@ -1,16 +1,21 @@
 import { GAME_WIDTH } from "../config.js";
 import { getPhrase } from "../services/translations.js";
 import CarouselRow from "./CarouselRow.js";
+import { pop } from "./Pop.js";
 
 const SELECTED_COLOR = "#66ff66";
 const UNSELECTED_COLOR = "#888888";
 // Separación entre la marca "▶" y el texto de la opción marcada.
 const MARKER_GAP = 12;
+// La marca va y viene un poco hacia la izquierda, para que se note dónde está el foco.
+const MARKER_SWAY = 6;
+const MARKER_SWAY_DURATION = 450;
 
 // Lista vertical de opciones que se usa en todos los menús. Se navega con
 // W / S o las flechas arriba / abajo y se confirma con Enter; con el mouse,
 // pasar por encima marca la opción y el clic la confirma. La opción marcada
-// se ve en verde con "▶" adelante. La marca es un texto aparte, a la izquierda:
+// se ve en verde con "▶" adelante (que se balancea) y da un saltito al
+// marcarla. La marca es un texto aparte, a la izquierda:
 // así cada opción queda centrada igual, esté marcada o no.
 //
 // items: [{ labelKey, action }] (labelKey es una clave de texto; también se
@@ -30,6 +35,16 @@ export default class MenuList {
     this.iconIndex = null; // null: el foco está en la lista
 
     this.marker = scene.add.text(0, 0, "▶", { fontSize, color: SELECTED_COLOR }).setOrigin(1, 0.5);
+    this.markerShift = 0;
+    scene.tweens.add({
+      targets: this,
+      markerShift: -MARKER_SWAY,
+      duration: MARKER_SWAY_DURATION,
+      ease: "Sine.easeInOut",
+      yoyo: true,
+      repeat: -1,
+      onUpdate: () => this.placeMarker(),
+    });
 
     let gaps = 0;
     this.items = items.map((item, index) => {
@@ -123,7 +138,11 @@ export default class MenuList {
   }
 
   select(index) {
+    const changed = index !== this.selectedIndex;
     this.selectedIndex = index;
+    const text = this.items[index].text;
+    if (changed && text) pop(this.scene, text, { from: 1.12, duration: 180 });
+
     if (this.iconIndex !== null) {
       this.focusIcon(null);
     } else {
@@ -160,7 +179,7 @@ export default class MenuList {
     const item = this.iconIndex === null ? this.items[this.selectedIndex] : null;
     const text = item?.text;
     this.marker.setVisible(!!text);
-    if (text) this.marker.setPosition(text.x - text.displayWidth / 2 - MARKER_GAP, text.y);
+    if (text) this.marker.setPosition(text.x - text.displayWidth / 2 - MARKER_GAP + this.markerShift, text.y);
   }
 
   // Mientras hay un panel encima (por ejemplo el de idioma), la lista no responde.

@@ -3,6 +3,7 @@ import { GAME_WIDTH, COLORS } from "../config.js";
 import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import MenuList from "../ui/MenuList.js";
+import { pop } from "../ui/Pop.js";
 import { addOverlayPanel, MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
 
 const DETAIL_COLOR = "#888888";
@@ -28,7 +29,8 @@ export default class ArcadeResultScene extends Phaser.Scene {
     addOverlayPanel(this, 360);
 
     this.add.text(centerX, 165, getPhrase(KEYS.FIN_DEL_JUEGO), { fontSize: "40px", color: COLORS.TEXT }).setOrigin(0.5);
-    this.add.text(centerX, 228, String(score), { fontSize: "56px", color: COLORS.TEXT }).setOrigin(0.5);
+    const scoreText = this.add.text(centerX, 228, String(score), { fontSize: "56px", color: COLORS.TEXT }).setOrigin(0.5);
+    pop(this, scoreText, { from: 0.6, duration: 320 });
     this.add
       .text(centerX, 278, getPhrase(KEYS.NIVEL_N).replace("{n}", level), { fontSize: "20px", color: DETAIL_COLOR })
       .setOrigin(0.5);

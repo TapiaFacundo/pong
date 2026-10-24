@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { GAME_WIDTH, POWERUP_RADIUS } from "../config.js";
+import { GAME_WIDTH, POWERUP_RADIUS, POWERUP_COLORS } from "../config.js";
 import PowerUpIcon from "../ui/PowerUpIcon.js";
 import { isBuffKind } from "./PowerUpEffects.js";
 
@@ -12,11 +12,19 @@ const NEUTRAL_ROW_Y = 84;
 // Debajo del tinte azul de la cámara lenta, encima de pelotas y palas.
 const INDICATOR_DEPTH = 5;
 const START_ANGLE = -90; // las 12 del reloj
+// Detrás de cada ícono con tiempo, su círculo completo apagado: se ve cuánto
+// se gastó del total.
+const TRACK_ALPHA = 0.25;
+// En los últimos segundos el ícono parpadea, para avisar que se termina.
+const WARNING_TIME = 3000;
+const WARNING_BLINK = 200;
+const WARNING_DIM_ALPHA = 0.3;
 
 // Indicadores de los efectos activos: el ícono de cada efecto que afecta a un
 // jugador aparece en la esquina de arriba de su lado, y los neutros (amarillos)
 // en el centro, debajo del marcador. Cada ícono se va borrando como una aguja
-// de reloj a medida que se le acaba el tiempo.
+// de reloj a medida que se le acaba el tiempo (sobre su círculo completo
+// apagado) y parpadea en los últimos segundos.
 //
 // No lleva la cuenta del tiempo: lee el temporizador de cada efecto, así que
 // el ícono desaparece solo cuando el efecto vence, se reemplaza o se corta
@@ -25,7 +33,7 @@ export default class EffectIndicators {
   constructor(scene, field) {
     this.scene = scene;
     this.field = field;
-    this.entries = new Map(); // key -> { side, icon, timer, mask }
+    this.entries = new Map(); // key -> { side, icon, track, timer, mask }
 
     // Las máscaras no están en la escena: Phaser no las borra solo al salir.
     scene.events.once("shutdown", () => this.clearAll());
@@ -54,6 +62,12 @@ export default class EffectIndicators {
     const key = this.keyFor(side, kind);
     this.remove(key, false);
 
+    let track = null;
+    if (timer) {
+      track = this.scene.add
+        .circle(0, 0, POWERUP_RADIUS, POWERUP_COLORS[colorCategory], TRACK_ALPHA)
+        .setDepth(INDICATOR_DEPTH);
+    }
     const icon = new PowerUpIcon(this.scene, 0, 0, kind, colorCategory).setDepth(INDICATOR_DEPTH);
 
     let mask = null;
@@ -62,7 +76,7 @@ export default class EffectIndicators {
       icon.setMask(mask.createGeometryMask());
     }
 
-    this.entries.set(key, { side, icon, timer, mask });
+    this.entries.set(key, { side, icon, track, timer, mask });
     this.layout();
     this.update();
   }
@@ -81,16 +95,18 @@ export default class EffectIndicators {
     if (!entry) return;
 
     entry.icon.destroy();
+    entry.track?.destroy();
     entry.mask?.destroy();
     this.entries.delete(key);
     if (relayout) this.layout();
   }
 
   update() {
-    for (const [key, { timer, mask }] of this.entries) {
+    for (const [key, { icon, timer, mask }] of this.entries) {
       if (!timer) continue;
 
-      const remaining = timer.getRemaining() / timer.delay;
+      const remainingTime = timer.getRemaining();
+      const remaining = remainingTime / timer.delay;
       if (remaining <= 0) {
         this.remove(key);
         continue;
@@ -109,6 +125,9 @@ export default class EffectIndicators {
         false
       );
       mask.fillPath();
+
+      const dimmed = remainingTime < WARNING_TIME && Math.floor(remainingTime / WARNING_BLINK) % 2 === 1;
+      icon.setAlpha(dimmed ? WARNING_DIM_ALPHA : 1);
     }
   }
 
@@ -128,9 +147,12 @@ export default class EffectIndicators {
   }
 
   // En pantalla y con el mismo tamaño aunque la cámara esté alejada (cancha grande).
-  place({ icon, mask }, screenX, screenY) {
-    this.field.placeOnScreen(icon, screenX, screenY);
-    icon.setScale(icon.scaleX * ICON_SCALE);
+  place({ icon, track, mask }, screenX, screenY) {
+    for (const shape of [icon, track]) {
+      if (!shape) continue;
+      this.field.placeOnScreen(shape, screenX, screenY);
+      shape.setScale(shape.scaleX * ICON_SCALE);
+    }
     if (mask) this.field.placeOnScreen(mask, screenX, screenY);
   }
 

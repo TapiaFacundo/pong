@@ -5,10 +5,11 @@ import { getTranslations, getLanguageConfig } from "../services/translations.js"
 import LanguagePanel from "../ui/LanguagePanel.js";
 import MenuList from "../ui/MenuList.js";
 import IconButton from "../ui/IconButton.js";
+import BackgroundRally from "../ui/BackgroundRally.js";
 import { addTitle, menuTop } from "../ui/ScreenLayout.js";
 
 // Menú principal: Batalla (partidas casuales), Modo Historia o Arcade. En las esquinas,
-// "?" abre cómo jugar y "⚙" el panel de idioma.
+// "?" abre cómo jugar y "⚙" el panel de idioma. De fondo, un peloteo que se juega solo.
 // Modos que, al volver, quedan marcados en el menú (después de "Batalla").
 const MENU_MODES = ["story", "arcade"];
 
@@ -28,7 +29,9 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   buildScene() {
-    addTitle(this, GAME_TITLE, { y: 170, fontSize: "56px" });
+    new BackgroundRally(this);
+    // El título con un brillo suave, como en una pantalla vieja.
+    addTitle(this, GAME_TITLE, { y: 170, fontSize: "56px" }).setShadow(0, 0, "rgba(255, 255, 255, 0.55)", 14, false, true);
 
     const helpIcon = new IconButton(this, 30, 28, "?", () => this.openTutorial(), { circle: true, fontSize: "20px" });
     const settingsIcon = new IconButton(this, GAME_WIDTH - 30, 28, "⚙", () => this.languagePanel.toggle(), {

@@ -4,6 +4,7 @@ import { KEYS } from "../enums/keys.js";
 import { getPhrase } from "../services/translations.js";
 import MenuList from "../ui/MenuList.js";
 import { addOverlayPanel, MENU_FONT_SIZE } from "../ui/ScreenLayout.js";
+import { pop } from "../ui/Pop.js";
 
 // Resultado de una partida de la Batalla: "¡Gana {jugador}!" y "Volver al
 // menú" (también con Esc), encima de la cancha con el marcador final. Es una
@@ -21,12 +22,13 @@ export default class BattleResultScene extends Phaser.Scene {
 
   create() {
     addOverlayPanel(this, 200);
-    this.add
+    const title = this.add
       .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 35, getPhrase(KEYS.GANA_LABEL).replace("{label}", this.winnerLabel), {
         fontSize: "40px",
         color: COLORS.TEXT,
       })
       .setOrigin(0.5);
+    pop(this, title, { from: 0.6, duration: 320 });
 
     const backToMenu = () => {
       this.scene.stop("GameScene");
