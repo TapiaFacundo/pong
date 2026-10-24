@@ -11,7 +11,7 @@ const ICON_GRID_SPACING = 56;
 // Para probar otra cosa, se cambia DEBUG_ACTION (y DEBUG_POWERUP_ID si hace falta).
 
 const DEBUG_KEY = "G";
-const ARCADE_DEBUG_ACTION = "allCapsules";
+const ARCADE_DEBUG_ACTION = "advanceWall";
 const CAPSULE_ROW_START_X = 260;
 const CAPSULE_ROW_SPACING = 60;
 
@@ -20,6 +20,9 @@ const CAPSULE_ROW_SPACING = 60;
 //   paso de nivel sin jugarlo entero).
 // - "allCapsules": suelta una cápsula de cada power-up del Arcade en fila,
 //   frente a la pala, para agarrarlas una detrás de otra sin moverse.
+// - "advanceWall": muestra la línea de peligro (aunque el nivel no la tenga)
+//   y hace avanzar el muro un paso, para ver el sacudón y cómo late la línea
+//   a medida que el muro se acerca. Si cruza la línea, fin del juego.
 //
 // Qué se prueba ahora (en la Batalla y el Modo Historia):
 // - "playerPoint": le suma un punto al jugador 1 (sirve para avanzar las fases
@@ -61,6 +64,7 @@ export default class DebugKey {
 
     if (this.scene.wall) {
       if (ARCADE_DEBUG_ACTION === "allCapsules") this.dropAllCapsules();
+      else if (ARCADE_DEBUG_ACTION === "advanceWall") this.advanceWall();
       else this.breakAllBricksButOne();
       return;
     }
@@ -84,6 +88,11 @@ export default class DebugKey {
 
     ball.speed = BALL_MAX_SPEED;
     ball.setDirection(ball.heading.x, ball.heading.y);
+  }
+
+  advanceWall() {
+    this.scene.dangerLine.setVisible(true);
+    this.scene.advanceWall();
   }
 
   dropAllCapsules() {

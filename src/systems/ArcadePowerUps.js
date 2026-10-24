@@ -134,6 +134,7 @@ export default class ArcadePowerUps {
       this.explosiveCharges.remaining -= 1;
       this.feedback.spawnBurst(brick.x, brick.y, ARCADE_EXPLOSION_COLOR);
       playExplosion();
+      this.scene.events.emit("brickExplosion", { x: brick.x, y: brick.y });
       this.wall.explode(brick);
     } else if (piercing) {
       this.wall.smash(brick);

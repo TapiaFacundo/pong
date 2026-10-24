@@ -35,8 +35,10 @@ export default class ArcadeLaser {
   fire() {
     const x = this.paddle.x + PADDLE_WIDTH / 2 + SHOT_WIDTH / 2;
     const offset = this.paddle.rect.height * SHOT_SPREAD;
-    [this.paddle.y - offset, this.paddle.y + offset].forEach((y) => this.addShot(x, y));
+    const ys = [this.paddle.y - offset, this.paddle.y + offset];
+    ys.forEach((y) => this.addShot(x, y));
     playLaserShot();
+    this.scene.events.emit("laserShot", { x, ys });
   }
 
   addShot(x, y) {

@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { COLORS } from "../config.js";
 import { playWallBounce } from "./SoundEffects.js";
+import { burst, pulse } from "./FeelEffects.js";
 
 // Estela: cuánto tiempo de recorrido deja ver detrás de la pelota (más larga
 // cuanto más rápida va) y qué tan visible es.
@@ -117,20 +118,9 @@ export default class GameFeel {
 
   onPaddleHit({ ball, paddle, directionX }) {
     const ratio = ball.speedRatio;
-    const rect = paddle.rect;
 
-    const pulse = this.scene.add.rectangle(rect.x, rect.y, rect.width, rect.height, COLORS.PADDLE, 0.5);
-    this.scene.tweens.add({
-      targets: pulse,
-      scaleX: 2.4,
-      scaleY: 1.08,
-      alpha: 0,
-      duration: HIT_PULSE_DURATION,
-      ease: "Quad.easeOut",
-      onComplete: () => pulse.destroy(),
-    });
-
-    this.burst(ball.x - directionX * ball.radius, ball.y, {
+    pulse(this.scene, paddle.rect, { scaleX: 2.4, scaleY: 1.08, duration: HIT_PULSE_DURATION });
+    burst(this.scene, ball.x - directionX * ball.radius, ball.y, {
       count: HIT_SPARKS_MIN + Math.round(HIT_SPARKS_EXTRA * ratio),
       color: ratio > FAST_SPARK_RATIO ? FAST_SPARK_COLOR : COLORS.PADDLE,
       angle: directionX > 0 ? 0 : Math.PI,
@@ -163,7 +153,14 @@ export default class GameFeel {
     }
 
     playWallBounce();
-    this.burst(x, y, { count: 3, color: WALL_DUST_COLOR, angle, spread: Math.PI / 2.5, distance: [8, 20], size: 2 });
+    burst(this.scene, x, y, {
+      count: 3,
+      color: WALL_DUST_COLOR,
+      angle,
+      spread: Math.PI / 2.5,
+      distance: [8, 20],
+      size: 2,
+    });
   }
 
   // La pelota explota contra el borde por donde salió: media luna de luz, una
@@ -177,7 +174,7 @@ export default class GameFeel {
     const edgeX = left ? bounds.left : bounds.right;
     const edgeY = Phaser.Math.Clamp(y, bounds.top, bounds.bottom);
 
-    this.burst(edgeX, edgeY, {
+    burst(this.scene, edgeX, edgeY, {
       count: GOAL_PARTICLES,
       color: COLORS.BALL,
       angle: left ? 0 : Math.PI,
@@ -253,7 +250,14 @@ export default class GameFeel {
     if (!this.serving.has(ball)) return;
 
     this.clearServe(ball);
-    this.burst(ball.x, ball.y, { count: 6, color: COLORS.BALL, angle: 0, spread: Math.PI, distance: [10, 26], size: 2 });
+    burst(this.scene, ball.x, ball.y, {
+      count: 6,
+      color: COLORS.BALL,
+      angle: 0,
+      spread: Math.PI,
+      distance: [10, 26],
+      size: 2,
+    });
   }
 
   // El anillo y la flecha acompañan a la pelota (en el Arcade espera pegada a la pala, que se mueve).
@@ -277,26 +281,5 @@ export default class GameFeel {
     serving.ring.destroy();
     serving.arrow.destroy();
     this.serving.delete(ball);
-  }
-
-  // Partículas que salen de (x, y) hacia `angle`, abiertas ± spread / 2, y se
-  // apagan mientras viajan. distance: [mínima, máxima].
-  burst(x, y, { count, color, angle, spread, distance, size = 3, duration = 260 }) {
-    for (let i = 0; i < count; i++) {
-      const direction = angle + Phaser.Math.FloatBetween(-spread / 2, spread / 2);
-      const travel = Phaser.Math.FloatBetween(distance[0], distance[1]);
-      const particle = this.scene.add.rectangle(x, y, size, size, color);
-
-      this.scene.tweens.add({
-        targets: particle,
-        x: x + Math.cos(direction) * travel,
-        y: y + Math.sin(direction) * travel,
-        alpha: 0,
-        scale: 0.3,
-        duration: duration * Phaser.Math.FloatBetween(0.7, 1.1),
-        ease: "Quad.easeOut",
-        onComplete: () => particle.destroy(),
-      });
-    }
   }
 }

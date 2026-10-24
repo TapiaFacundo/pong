@@ -31,8 +31,9 @@ import CapsuleDrops from "../systems/CapsuleDrops.js";
 import ArcadePowerUps from "../systems/ArcadePowerUps.js";
 import MatchPause from "../systems/MatchPause.js";
 import DebugKey from "../systems/DebugKey.js";
-import { playBrickHit, playMetalHit, playConcede, playWallAdvance, playPowerUpPickup } from "../systems/SoundEffects.js";
+import { playConcede, playWallAdvance, playPowerUpPickup } from "../systems/SoundEffects.js";
 import GameFeel from "../systems/GameFeel.js";
+import ArcadeFeel from "../systems/ArcadeFeel.js";
 import { announce } from "../ui/Announcement.js";
 
 // Arcade: romper ladrillos, para 1 jugador. La pala va a la izquierda, como
@@ -77,6 +78,7 @@ export default class ArcadeScene extends Phaser.Scene {
     });
     this.hud = new ArcadeHud(this);
     this.dangerLine = this.drawDangerLine();
+    new ArcadeFeel(this, { wall: this.wall, dangerLine: this.dangerLine });
 
     this.indicators = new EffectIndicators(this, this.field);
     this.drops = new CapsuleDrops(this, this.paddle, {
@@ -110,9 +112,9 @@ export default class ArcadeScene extends Phaser.Scene {
   }
 
   // Línea punteada roja tenue: si un ladrillo rompible la cruza, fin del juego.
-  // Se ve solo en los niveles en los que el muro avanza.
+  // Se ve solo en los niveles en los que el muro avanza (y late cuando el muro se acerca: ArcadeFeel).
   drawDangerLine() {
-    const graphics = this.add.graphics().lineStyle(2, ARCADE_DANGER_COLOR, 0.4);
+    const graphics = this.add.graphics().setAlpha(0.4).lineStyle(2, ARCADE_DANGER_COLOR);
     for (let y = ARCADE_PLAY_TOP; y < GAME_HEIGHT; y += 20) {
       graphics.lineBetween(ARCADE_DANGER_X, y, ARCADE_DANGER_X, y + 10);
     }
@@ -141,6 +143,7 @@ export default class ArcadeScene extends Phaser.Scene {
 
     this.wall.advance();
     playWallAdvance();
+    this.events.emit("wallAdvance");
     if (this.wall.frontX <= ARCADE_DANGER_X) this.gameOver();
   }
 
@@ -155,6 +158,7 @@ export default class ArcadeScene extends Phaser.Scene {
     this.powerUps.activate(definition.kind);
     this.feedback.playPickup(capsule.x, capsule.y, definition, this.paddle);
     playPowerUpPickup();
+    this.events.emit("capsuleCaught", { paddle: this.paddle, colorCategory: definition.colorCategory });
   }
 
   // Al perder una vida o pasar de nivel: sin efectos ni cápsulas en camino.
@@ -190,18 +194,18 @@ export default class ArcadeScene extends Phaser.Scene {
     this.powerUps.update(delta, this.ballManager.balls);
   }
 
+  // El sonido y los efectos de cada golpe los pone ArcadeFeel (evento "brickHit").
   onBrickHit(brick, broken) {
-    if (brick.isMetal) {
-      playMetalHit();
+    if (brick.isMetal || !broken) {
+      this.events.emit("brickHit", { brick, broken, points: 0 });
       return;
     }
 
-    playBrickHit(broken);
-    if (!broken) return;
-
     // Los resistentes valen más: 10 por cada golpe que aguantaban.
+    const scoreBefore = this.run.score;
     this.feedback.spawnBurst(brick.x, brick.y, brick.color);
     this.run.addPoints(ARCADE_BRICK_POINTS * brick.maxHits);
+    this.events.emit("brickHit", { brick, broken, points: this.run.score - scoreBefore });
     this.drops.maybeDrop(brick.x, brick.y);
     this.hud.update(this.run);
 
@@ -216,6 +220,7 @@ export default class ArcadeScene extends Phaser.Scene {
   clearLevel() {
     this.clearingLevel = false;
     const completedLevel = this.run.level;
+    this.events.emit("levelCleared");
     this.run.addPoints(ARCADE_LEVEL_BONUS * completedLevel);
     this.clearPowerUps();
     this.ballManager.clearAll();

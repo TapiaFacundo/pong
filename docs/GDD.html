@@ -304,6 +304,16 @@
   <li><b>Rebote en el techo, el piso o la pared del Arcade:</b> un “tic” más grave que el de la pala y un poco de polvo gris contra el borde.</li>
   <li><b>Gol:</b> la pelota explota contra el borde por donde salió: una media luna de luz y una onda curva que se abren desde ese punto hacia la cancha (en rojo en el Arcade, donde es una vida perdida), con partículas, y la pantalla se sacude un instante. Contra la CPU y en el Arcade, el punto en contra suena distinto: tres notas que bajan.</li>
   <li><b>Saque:</b> mientras la pelota espera, parpadea, la rodea un anillo que late y una flechita muestra hacia dónde va a salir. Al salir, un pequeño estallido.</li>
+  <li><b>Arcade:</b>
+    <ul>
+      <li>Ladrillo golpeado sin romperse: destella en blanco (el metal, más suave). Al romperse, sus pedazos salen girando y los puntos que dio (“+10”, “+30”…) suben flotando.</li>
+      <li>Racha: cada ladrillo roto seguido, sin que la pelota vuelva a la pala, suena un semitono más agudo, hasta una octava. Se corta al tocar la pala o al sacar.</li>
+      <li>El muro que avanza y la pelota explosiva sacuden la pantalla. La línea de peligro late, cada vez más fuerte y rápido, cuando el muro se acerca.</li>
+      <li>Al completar el nivel, una franja de luz barre la zona del muro. El láser tiene un fogonazo en cada punta de la pala al disparar.</li>
+      <li>Las cápsulas laten mientras caen, y al agarrarlas la pala hace un pulso del color del power-up.</li>
+      <li>En el marcador, la vida que se pierde se agranda y se apaga en rojo; la que se gana aparece con un anillo.</li>
+    </ul>
+  </li>
 </ul>
 
 <h2>12. Modo Historia</h2>
@@ -500,7 +510,7 @@
 │                  BallEffects, CenterPaddleEffect, PowerUpFeedback, ScoreManager, AI,
 │                  PlayerController, SoundEffects, ZigzagMotion, CurveMotion, TrickShot,
 │                  Field, Sabotage, SlowMotionEffect, ShieldEffect, SmallGoalEffect, CannonEffect,
-│                  BossPhases, EffectIndicators, ScoreBoard (marcador), GameFeel (efectos de golpe, estela, gol y saque), MatchPause (pausa y botones táctiles de cualquier partida),
+│                  BossPhases, EffectIndicators, ScoreBoard (marcador), GameFeel (efectos de golpe, estela, gol y saque), ArcadeFeel (efectos de ladrillos, racha, muro y cápsulas), FeelEffects (partículas y pulsos que usan los dos), MatchPause (pausa y botones táctiles de cualquier partida),
 │                  BrickWall, ArcadeRun, ArcadeHud, CapsuleDrops, ArcadePowerUps, ArcadeLaser (Arcade),
 │                  DebugKey: tecla de prueba, solo en desarrollo)
 ├── data/          contenido del juego como datos (levels.js: los 10 niveles del Modo Historia;

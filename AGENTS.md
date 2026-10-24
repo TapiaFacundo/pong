@@ -21,7 +21,7 @@ src/
 ├── config.js     # constantes globales (cancha, velocidades, colores, teclas, power-ups, IA)
 ├── scenes/       # una escena por archivo (MenuScene.js, GameScene.js, etc.)
 ├── entities/     # clases jugables/objetos (Paddle.js, Ball.js, PowerUp.js)
-├── systems/      # lógica que no es una entidad (PowerUpSpawner.js, ScoreManager.js, AI.js; GameFeel.js: efectos de imagen y sonido de golpes, estela, gol y saque, que escuchan eventos de la escena)
+├── systems/      # lógica que no es una entidad (PowerUpSpawner.js, ScoreManager.js, AI.js; GameFeel.js: efectos de imagen y sonido de golpes, estela, gol y saque, que escuchan eventos de la escena; ArcadeFeel.js: lo mismo para ladrillos, racha, muro y cápsulas del Arcade; FeelEffects.js: partículas y pulsos que usan los dos)
 ├── data/         # contenido del juego descrito como datos (levels.js: niveles del Modo Historia; mutators.js: modificadores de la Batalla; arcade.js: niveles del Arcade)
 ├── ui/           # componentes de interfaz reutilizables entre escenas (LanguagePanel.js; MenuList.js: lista de opciones navegable, con filas de carrusel de CarouselRow.js; IconButton.js: íconos y "volver" con Esc; PowerUpIcon.js: ícono dibujado de cada power-up; TouchControls.js y RotateNotice.js: botones táctiles y aviso de girar el celular, en HTML; ScreenLayout.js: medidas comunes de las pantallas; Pop.js: animaciones de salto y aparición; BackgroundRally.js: peloteo decorativo de fondo del menú)
 ├── services/     # acceso a servicios externos y al navegador (translations.js, ProgressStorage.js, MutatorStorage.js, ArcadeStorage.js)

@@ -43,9 +43,11 @@ export function playPowerUpPickup() {
   playTone({ frequency: 990, duration: 0.1, type: "square", delay: 0.08 });
 }
 
-// Ladrillo del Arcade: más agudo si se rompe que si solo se agrieta.
-export function playBrickHit(broken) {
-  playTone({ frequency: broken ? 520 : 330, duration: 0.06, type: "square", volume: 0.12 });
+// Ladrillo del Arcade: más agudo si se rompe que si solo se agrieta. streak:
+// cuántos se rompieron seguidos antes que este; cada uno sube un semitono.
+export function playBrickHit(broken, streak = 0) {
+  const frequency = (broken ? 520 : 330) * 2 ** (streak / 12);
+  playTone({ frequency, duration: 0.06, type: "square", volume: 0.12 });
 }
 
 // Pelota contra un ladrillo de metal: un "clink" metálico.
